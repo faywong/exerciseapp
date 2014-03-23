@@ -2,7 +2,13 @@
 <resources>
 
     <string name="app_name">ExerciseApp</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
-
+    <string name="settings_content_desc">系统设置</string>
+    <string name="mute_content_desc">打开关闭系统声音</string>
+    <string name="free_mode_desc">打开关闭系统声音</string>
+    <string name="free_mode">自由模式</string>
+    <string name="intelli_mode">智能模式</string>
+    <string name="intelli_mode_desc">智能健身模式</string>
+    <string name="immersion_mode">实景体验</string>
+    <string name="immersion_mode_desc">实景体验</string>
+    <string name="exercise_start_stop_content_desc">启动/结束健身</string>
 </resources>

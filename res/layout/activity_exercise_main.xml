@@ -1,55 +1,124 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0099cc"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
     tools:context=".ExerciseMain" >
 
-    <!--
-         The primary full-screen view. This can be replaced with whatever view
-         is needed to present your content, e.g. VideoView, SurfaceView,
-         TextureView, etc.
-    -->
-
-    <TextView
-        android:id="@+id/fullscreen_content"
+    <LinearLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/mute"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/mute_content_desc"
+            android:scaleType="fitXY"
+            android:src="@drawable/mute" >
+        </ImageButton>
+
+        <ImageButton
+            android:id="@+id/settings"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/settings_content_desc"
+            android:scaleType="fitXY"
+            android:src="@drawable/settings" >
+        </ImageButton>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/exercise_mode_container_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
         android:gravity="center"
-        android:keepScreenOn="true"
-        android:text="@string/dummy_content"
-        android:textColor="#33b5e5"
-        android:textSize="50sp"
-        android:textStyle="bold" />
-
-    <!--
-         This FrameLayout insets its children based on system windows using
-         android:fitsSystemWindows.
-    -->
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true" >
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp" >
 
         <LinearLayout
-            android:id="@+id/fullscreen_content_controls"
-            style="?buttonBarStyle"
-            android:layout_width="match_parent"
+            android:id="@+id/exercise_free_mode_layout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:background="@color/black_overlay"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent" >
+            android:layout_marginTop="48dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp" >
 
-            <Button
-                android:id="@+id/dummy_button"
-                style="?buttonBarButtonStyle"
-                android:layout_width="0dp"
+            <ImageButton
+                android:id="@+id/free_mode_btn"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:contentDescription="@string/free_mode_desc"
+                android:scaleType="fitXY"
+                android:src="@drawable/mute" >
+            </ImageButton>
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/dummy_button" />
+                android:text="@string/free_mode" >
+            </TextView>
         </LinearLayout>
-    </FrameLayout>
 
-</FrameLayout>
+        <LinearLayout
+            android:id="@+id/exercise_intelli_mode_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp" >
+
+            <ImageButton
+                android:id="@+id/intelli_mode_btn"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:contentDescription="@string/intelli_mode_desc"
+                android:scaleType="fitXY"
+                android:src="@drawable/mute" >
+            </ImageButton>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/intelli_mode" >
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/exercise_immersion_mode_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp" >
+
+            <ImageButton
+                android:id="@+id/immersion_mode_btn"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:contentDescription="@string/immersion_mode_desc"
+                android:scaleType="fitXY"
+                android:src="@drawable/mute" >
+            </ImageButton>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/immersion_mode" >
+            </TextView>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

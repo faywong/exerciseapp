@@ -1,0 +1,118 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    tools:context=".ExerciseMain" >
+
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="时间" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/distance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="距离" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/caroli"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="卡路里" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/speed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="速度" >
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/client_container_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp" >
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="48dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp" >
+
+        <ImageButton
+            android:id="@+id/music_btn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/free_mode_desc"
+            android:scaleType="fitXY"
+            android:src="@drawable/music" >
+        </ImageButton>
+
+        <ImageButton
+            android:id="@+id/video_btn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/free_mode_desc"
+            android:scaleType="fitXY"
+            android:src="@drawable/video" >
+        </ImageButton>
+
+        <ImageButton
+            android:id="@+id/tv_btn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/free_mode_desc"
+            android:scaleType="fitXY"
+            android:src="@drawable/iptv" >
+        </ImageButton>
+
+        <ImageButton
+            android:id="@+id/surf_btn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/exercise_start_stop_content_desc"
+            android:scaleType="fitXY"
+            android:src="@drawable/internet_surf" >
+        </ImageButton>
+
+        <ImageButton
+            android:id="@+id/start_btn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/exercise_start_stop_content_desc"
+            android:scaleType="fitXY"
+            android:src="@drawable/start" 
+            android:layout_gravity="right">
+        </ImageButton>
+    </LinearLayout>
+
+</RelativeLayout>
