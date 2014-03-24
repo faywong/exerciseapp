@@ -6,44 +6,137 @@
     android:paddingRight="16dp"
     tools:context=".ExerciseMain" >
 
-    <LinearLayout
+  <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="right"
         android:orientation="horizontal" >
+        <!--    时间控件     -->        
+        <RelativeLayout
+            android:id="@+id/time_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
 
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="时间" >
-        </TextView>
+            <TextView
+                android:id="@+id/time_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="时间" >
+            </TextView>
 
-        <TextView
-            android:id="@+id/distance"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="距离" >
-        </TextView>
+            <ImageView
+                android:id="@+id/time_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/time_label"
+                android:src="@drawable/icon_" >
+            </ImageView>
 
-        <TextView
-            android:id="@+id/caroli"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="卡路里" >
-        </TextView>
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/time_icon"
+                android:layout_toRightOf="@id/time_icon"
+                android:text="0:00" >
+            </TextView>
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/speed"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="速度" >
-        </TextView>
+        
+        <!--    距离控件     -->        
+        <RelativeLayout
+            android:id="@+id/distance_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/distance_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="距离(KM)" >
+            </TextView>
+
+            <ImageView
+                android:id="@+id/distance_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/distance_label"
+                android:src="@drawable/icon_" >
+            </ImageView>
+
+            <TextView
+                android:id="@+id/distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/distance_label"
+                android:layout_toRightOf="@id/distance_icon"
+                android:text="0.00" >
+            </TextView>
+        </RelativeLayout>
+        
+       <!--    卡路里控件     -->        
+        <RelativeLayout
+            android:id="@+id/calorie_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/calorie_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="卡路里(Kcal)" >
+            </TextView>
+
+            <ImageView
+                android:id="@+id/calorie_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/calorie_label"
+                android:src="@drawable/icon_" >
+            </ImageView>
+
+            <TextView
+                android:id="@+id/calorie"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/calorie_label"
+                android:layout_toRightOf="@id/calorie_label"
+                android:text="0.00" >
+            </TextView>
+        </RelativeLayout>
+        
+       <!--    速度控件     -->        
+        <RelativeLayout
+            android:id="@+id/speed_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/speed_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="速度(Km/h)" >
+            </TextView>
+
+            <ImageView
+                android:id="@+id/speed_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/speed_label"
+                android:src="@drawable/icon_" >
+            </ImageView>
+
+            <TextView
+                android:id="@+id/speed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/speed_label"
+                android:layout_toRightOf="@id/speed_icon"
+                android:text="0" >
+            </TextView>
+        </RelativeLayout>
+
     </LinearLayout>
 
     <LinearLayout
