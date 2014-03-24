@@ -63,7 +63,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="48dp"
-        android:gravity="center"
         android:orientation="horizontal"
         android:paddingLeft="16dp"
         android:paddingRight="16dp" >
