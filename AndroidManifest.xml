@@ -16,6 +16,7 @@
         <activity
             android:name="io.github.faywong.exerciseapp.ExerciseMain"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="landscape"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
             <intent-filter>
@@ -28,6 +29,7 @@
         <activity
             android:name="io.github.faywong.exerciseapp.FreeMode"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="landscape"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
