@@ -10,71 +10,71 @@
     tools:context=".FreeMode" >
 
     <LinearLayout
-        android:id="@+id/time_selection_group"
+        android:id="@+id/calorie_selection_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/time_selection_10min"
+            android:id="@+id/calorie_selection_100kcal"
             style="@style/btnStyleBeige"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:padding="4dp"
-            android:text="@string/time_selection_10min" />
+            android:text="@string/calorie_selection_100kcal" />
 
         <Button
-            android:id="@+id/time_selection_20min"
-            style="@style/btnStyleBeige"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:gravity="center_horizontal"
-            android:padding="4dp"
-            android:text="@string/time_selection_20min" />
-
-        <Button
-            android:id="@+id/time_selection_30min"
+            android:id="@+id/calorie_selection_200kcal"
             style="@style/btnStyleBeige"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:gravity="center_horizontal"
             android:padding="4dp"
-            android:text="@string/time_selection_30min" />
+            android:text="@string/calorie_selection_200kcal" />
 
         <Button
-            android:id="@+id/time_selection_40min"
+            android:id="@+id/calorie_selection_300kcal"
+            style="@style/btnStyleBeige"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_horizontal"
+            android:padding="4dp"
+            android:text="@string/calorie_selection_300kcal" />
+
+        <Button
+            android:id="@+id/calorie_selection_400kcal"
             style="@style/btnStyleBeige"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:padding="4dp"
-            android:text="@string/time_selection_40min" />
+            android:text="@string/calorie_selection_400kcal" />
 
         <Button
-            android:id="@+id/time_selection_50min"
+            android:id="@+id/calorie_selection_500kcal"
             style="@style/btnStyleBeige"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:padding="4dp"
-            android:text="@string/time_selection_50min" />
+            android:text="@string/calorie_selection_500kcal" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/time_adjust_group"
+        android:id="@+id/calorie_adjust_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/time_selection_group"
+        android:layout_below="@id/calorie_selection_group"
         android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/sub_time_btn"
+            android:id="@+id/sub_calorie_btn"
             style="@style/btnStyleBeige"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -83,16 +83,16 @@
             android:text="@string/sub" />
         
         <TextView
-            android:id="@+id/adjusted_time_val"
+            android:id="@+id/adjusted_calorie_val"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="@string/default_time_display"
+            android:text="@string/default_calorie_display"
             android:textColor="#333333" >
         </TextView>
             
         <Button
-            android:id="@+id/add_time_btn"
+            android:id="@+id/add_calorie_btn"
             style="@style/btnStyleBeige"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

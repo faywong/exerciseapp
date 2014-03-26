@@ -11,4 +11,28 @@
     <string name="immersion_mode">实景体验</string>
     <string name="immersion_mode_desc">实景体验</string>
     <string name="exercise_start_stop_content_desc">启动/结束健身</string>
+    <string name="default_time_display">0分钟</string>
+    <string name="time_selection_10min">10分钟</string>
+    <string name="time_selection_20min">20分钟</string>
+    <string name="time_selection_30min">30分钟</string>
+    <string name="time_selection_40min">40分钟</string>
+    <string name="time_selection_50min">50分钟</string>
+    <string name="sub">-</string>
+    <string name="add">+</string>
+    
+    <string name="distance_selection_1km">1km</string>
+    <string name="distance_selection_2km">2km</string>
+    <string name="distance_selection_3km">3km</string>
+    <string name="distance_selection_4km">4km</string>
+    <string name="distance_selection_5km">5km</string>
+    <string name="default_distance_display">0km</string>
+    
+    <string name="calorie_selection_100kcal">100千卡</string>
+    <string name="calorie_selection_200kcal">200千卡</string>
+    <string name="calorie_selection_300kcal">300千卡</string>
+    <string name="calorie_selection_400kcal">400千卡</string>
+    <string name="calorie_selection_500kcal">500千卡</string>
+    <string name="default_calorie_display">0千卡</string>
+    
+    
 </resources>

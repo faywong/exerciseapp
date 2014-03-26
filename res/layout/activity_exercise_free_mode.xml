@@ -14,6 +14,7 @@
         android:orientation="horizontal" >
 
         <!-- 时间控件 -->
+
         <RelativeLayout
             android:id="@+id/time_control"
             android:layout_width="wrap_content"
@@ -90,7 +91,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:clickable="true"  >
+            android:clickable="true" >
 
             <TextView
                 android:id="@+id/calorie_label"
@@ -158,12 +159,20 @@
     <include
         android:id="@+id/time_selection"
         layout="@layout/time_setting_panel" />
-    
+
+    <include
+        android:id="@+id/distance_selection"
+        layout="@layout/distance_setting_panel" />
+
+    <include
+        android:id="@+id/calorie_selection"
+        layout="@layout/calorie_setting_panel" />
+
     <LinearLayout
         android:id="@+id/client_container_layout"
-        android:layout_below="@id/time_selection"
         android:layout_width="match_parent"
-        android:layout_height="360dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/time_selection"
         android:layout_marginTop="48dp"
         android:gravity="center"
         android:orientation="horizontal"
