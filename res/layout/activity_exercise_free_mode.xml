@@ -217,11 +217,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/time_selection"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="48dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingLeft="16dp"
         android:paddingRight="16dp" >
+        <TextView 
+            android:id="@+id/count_down_text"
+            android:textSize="80sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="20dp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -270,15 +277,16 @@
             android:src="@drawable/internet_surf" >
         </ImageButton>
 
-        <ImageButton
-            android:id="@+id/start_btn"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="right"
-            android:contentDescription="@string/exercise_start_stop_content_desc"
-            android:scaleType="fitXY"
-            android:src="@drawable/start" >
-        </ImageButton>
     </LinearLayout>
 
+    <ImageButton
+        android:id="@+id/start_btn"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:contentDescription="@string/exercise_start_stop_content_desc"
+        android:scaleType="fitXY"
+        android:src="@drawable/start" >
+    </ImageButton>
 </RelativeLayout>

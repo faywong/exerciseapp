@@ -7,12 +7,15 @@ import java.util.regex.Pattern;
 import android.R.integer;
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import io.github.faywong.exerciseapp.R;
@@ -26,6 +29,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 	private Button subTimeBtn;
 	private TextView timeValueText;
 	private TextView distanceValueText;
+	private boolean exerciseSessionStarted = false;
 
 	final static private String TIME_DISPLAY_FORMAT = "%s分钟";
 	final static private String DISTANCE_DISPLAY_FORMAT = "%skm";
@@ -42,13 +46,13 @@ public class FreeMode extends Activity implements View.OnClickListener {
 	final static private int TIME_ADJUST_STEP = 10;
 	final static private int DISTANCE_ADJUST_STEP = 1;
 	final static private int CALORIE_ADJUST_STEP = 100;
-	final static private int SPEED_ADJUST_STEP = 2;
-	final static private int INCLINE_ADJUST_STEP = 3;
+	final static private int SPEED_ADJUST_STEP = 1;
+	final static private int INCLINE_ADJUST_STEP = 1;
 
 	private WidgetGroup timeGroup;
 	// id of parent layout of header button control --> associated panel
 	// WidgetGroup
-	private SparseArray<WidgetGroup> headerControlMaps = new SparseArray<WidgetGroup>();
+	private SparseArray<WidgetGroup<Button, TextView>> headerControlMaps = new SparseArray<WidgetGroup<Button, TextView>>();
 	private RelativeLayout distanceControlLayout;
 	private RelativeLayout distanceControlPanel;
 	private Button addDistanceBtn;
@@ -72,18 +76,30 @@ public class FreeMode extends Activity implements View.OnClickListener {
 	private Button subInclineBtn;
 	private TextView inclineValueText;
 	private WidgetGroup<Button, TextView> inclineGroup;
-
+	private ImageButton startBtn;
+	private TextView countDownText;
+	
+	private ArrayList<RelativeLayout> panelLayouts = new ArrayList<RelativeLayout>();
+	private Handler hander = new Handler();
+	private Runnable operationTimeOutRunable = new Runnable() {
+		
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			dismissAllPanels();
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.activity_exercise_free_mode);
 
 		// initialize time related views/handlers
 		timeControlLayout = (RelativeLayout) findViewById(R.id.time_control);
 		timeControlLayout.setOnClickListener(this);
 		timeControlPanel = (RelativeLayout) findViewById(R.id.time_selection);
+		panelLayouts.add(timeControlPanel);
 		addTimeBtn = (Button) findViewById(R.id.add_time_btn);
 		addTimeBtn.setOnClickListener(this);
 		subTimeBtn = (Button) findViewById(R.id.sub_time_btn);
@@ -102,6 +118,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		distanceControlLayout = (RelativeLayout) findViewById(R.id.distance_control);
 		distanceControlLayout.setOnClickListener(this);
 		distanceControlPanel = (RelativeLayout) findViewById(R.id.distance_selection);
+		panelLayouts.add(distanceControlPanel);
 		addDistanceBtn = (Button) findViewById(R.id.add_distance_btn);
 		addDistanceBtn.setOnClickListener(this);
 		subDistanceBtn = (Button) findViewById(R.id.sub_distance_btn);
@@ -123,6 +140,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		calorieControlLayout = (RelativeLayout) findViewById(R.id.calorie_control);
 		calorieControlLayout.setOnClickListener(this);
 		calorieControlPanel = (RelativeLayout) findViewById(R.id.calorie_selection);
+		panelLayouts.add(calorieControlPanel);
 		addCalorieBtn = (Button) findViewById(R.id.add_calorie_btn);
 		addCalorieBtn.setOnClickListener(this);
 		subCalorieBtn = (Button) findViewById(R.id.sub_calorie_btn);
@@ -143,6 +161,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		speedControlLayout = (RelativeLayout) findViewById(R.id.speed_control);
 		speedControlLayout.setOnClickListener(this);
 		speedControlPanel = (RelativeLayout) findViewById(R.id.speed_selection);
+		panelLayouts.add(speedControlPanel);
 		addSpeedBtn = (Button) findViewById(R.id.add_speed_btn);
 		addSpeedBtn.setOnClickListener(this);
 		subSpeedBtn = (Button) findViewById(R.id.sub_speed_btn);
@@ -164,6 +183,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		inclineControlLayout = (RelativeLayout) findViewById(R.id.incline_control);
 		inclineControlLayout.setOnClickListener(this);
 		inclineControlPanel = (RelativeLayout) findViewById(R.id.incline_selection);
+		panelLayouts.add(inclineControlPanel);
 		addInclineBtn = (Button) findViewById(R.id.add_incline_btn);
 		addInclineBtn.setOnClickListener(this);
 		subInclineBtn = (Button) findViewById(R.id.sub_incline_btn);
@@ -179,6 +199,24 @@ public class FreeMode extends Activity implements View.OnClickListener {
 						R.id.incline_selection_12_percent },
 				R.id.incline_selection, this);
 		headerControlMaps.append(R.id.incline_control, inclineGroup);
+		
+		startBtn = (ImageButton) findViewById(R.id.start_btn);
+		startBtn.setOnClickListener(this);
+		
+		countDownText = (TextView) findViewById(R.id.count_down_text);
+	}
+
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+	}
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		dismissAllPanels();
 	}
 
 	@Override
@@ -221,6 +259,17 @@ public class FreeMode extends Activity implements View.OnClickListener {
 			throws IllegalArgumentException {
 		return parse(INCLINE_PATTERN, targetString);
 	}
+	
+	private void startCountDown(long totalMillis, long deltaMillis) {
+		new CountDownTimer(totalMillis, deltaMillis) {
+	        public void onTick(long millisUntilFinished) {
+		        	countDownText.setText("" + millisUntilFinished / 1000);
+	           }
+	           public void onFinish() {
+	        	   countDownText.setText("GO!");
+	           }
+	    }.start();
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -232,6 +281,21 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		int containerIdBecameVisible = 0;
 		final int viewId = v.getId();
 		Log.d(TAG, "onClick() viewId:" + viewId);
+		if (viewId == R.id.start_btn) {
+			dismissAllPanels();
+			if (exerciseSessionStarted) {
+				startBtn.setImageResource(R.drawable.start);
+			} else {
+				startBtn.setImageResource(R.drawable.stop);
+			}
+			exerciseSessionStarted = (!exerciseSessionStarted);
+			if (exerciseSessionStarted) {
+				startCountDown(6000, 1000);
+			} else {
+				// TODO: stop the current exercise session
+			}
+		}
+		
 		if (viewId == R.id.time_control || viewId == R.id.distance_control
 				|| viewId == R.id.calorie_control
 				|| viewId == R.id.speed_control
@@ -290,7 +354,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 			final int oldTime = parseSpeed(oldString);
 			speedValueText.setText(String.format(SPEED_DISPLAY_FORMAT, String
 					.valueOf(Math.max(oldTime - SPEED_ADJUST_STEP,
-							SPEED_ADJUST_STEP))));
+							0))));
 		} else if (viewId == R.id.add_incline_btn) {
 			final String oldString = inclineValueText.getText().toString();
 			final int oldTime = parseIncline(oldString);
@@ -298,10 +362,10 @@ public class FreeMode extends Activity implements View.OnClickListener {
 					String.valueOf(oldTime + INCLINE_ADJUST_STEP)));
 		} else if (viewId == R.id.sub_incline_btn) {
 			final String oldString = inclineValueText.getText().toString();
-			final int oldTime = parseSpeed(oldString);
+			final int oldTime = parseIncline(oldString);
 			inclineValueText.setText(String.format(INCLINE_DISPLAY_FORMAT, String
 					.valueOf(Math.max(oldTime - INCLINE_ADJUST_STEP,
-							INCLINE_ADJUST_STEP))));
+							0))));
 		}
 
 		for (int i = 0; i < headerControlMaps.size(); i++) {
@@ -326,6 +390,16 @@ public class FreeMode extends Activity implements View.OnClickListener {
 			// if (containerLayout.getVisibility() == View.VISIBLE) {
 			group.associateAction(viewId);
 			// }
+		}
+
+		hander.removeCallbacks(operationTimeOutRunable);
+		hander.postDelayed(operationTimeOutRunable, 3000);
+	}
+
+	private void dismissAllPanels() {
+		// TODO Auto-generated method stub
+		for (RelativeLayout panel: panelLayouts) {
+			panel.setVisibility(View.GONE);
 		}
 	}
 }
