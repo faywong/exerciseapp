@@ -11,12 +11,13 @@
     <string name="immersion_mode">实景体验</string>
     <string name="immersion_mode_desc">实景体验</string>
     <string name="exercise_start_stop_content_desc">启动/结束健身</string>
-    <string name="default_time_display">0分钟</string>
+    
     <string name="time_selection_10min">10分钟</string>
     <string name="time_selection_20min">20分钟</string>
     <string name="time_selection_30min">30分钟</string>
     <string name="time_selection_40min">40分钟</string>
     <string name="time_selection_50min">50分钟</string>
+    <string name="default_time_display">10分钟</string>
     <string name="sub">-</string>
     <string name="add">+</string>
     
@@ -25,14 +26,26 @@
     <string name="distance_selection_3km">3km</string>
     <string name="distance_selection_4km">4km</string>
     <string name="distance_selection_5km">5km</string>
-    <string name="default_distance_display">0km</string>
+    <string name="default_distance_display">1km</string>
     
     <string name="calorie_selection_100kcal">100千卡</string>
     <string name="calorie_selection_200kcal">200千卡</string>
     <string name="calorie_selection_300kcal">300千卡</string>
     <string name="calorie_selection_400kcal">400千卡</string>
     <string name="calorie_selection_500kcal">500千卡</string>
-    <string name="default_calorie_display">0千卡</string>
+    <string name="default_calorie_display">100千卡</string>
     
+    <string name="speed_selection_4km_per_h">4km/h</string>
+    <string name="speed_selection_6km_per_h">6km/h</string>
+    <string name="speed_selection_8km_per_h">8km/h</string>
+    <string name="speed_selection_10km_per_h">10km/h</string>
+    <string name="speed_selection_12km_per_h">12km/h</string>
+    <string name="default_speed_display">4km/h</string>
     
+    <string name="incline_selection_0_percent">0%</string>
+    <string name="incline_selection_3_percent">3%</string>
+    <string name="incline_selection_6_percent">6%</string>
+    <string name="incline_selection_9_percent">9%</string>
+    <string name="incline_selection_12_percent">12%</string>
+    <string name="default_incline_display">0%</string>    
 </resources>

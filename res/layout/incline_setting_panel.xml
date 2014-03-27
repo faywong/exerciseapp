@@ -1,0 +1,105 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/header"
+    android:layout_centerHorizontal="true"
+    android:background="@drawable/table_normal_selector"
+    android:visibility="gone"
+    android:padding="12dp"
+    tools:context=".FreeMode" >
+
+    <LinearLayout
+        android:id="@+id/incline_selection_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/incline_selection_0_percent"
+            style="@style/btnStyleBeige"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:padding="4dp"
+            android:text="@string/incline_selection_0_percent" />
+
+        <Button
+            android:id="@+id/incline_selection_3_percent"
+            style="@style/btnStyleBeige"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_horizontal"
+            android:padding="4dp"
+            android:text="@string/incline_selection_3_percent" />
+
+        <Button
+            android:id="@+id/incline_selection_6_percent"
+            style="@style/btnStyleBeige"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_horizontal"
+            android:padding="4dp"
+            android:text="@string/incline_selection_6_percent" />
+
+        <Button
+            android:id="@+id/incline_selection_9_percent"
+            style="@style/btnStyleBeige"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:padding="4dp"
+            android:text="@string/incline_selection_9_percent" />
+
+        <Button
+            android:id="@+id/incline_selection_12_percent"
+            style="@style/btnStyleBeige"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:padding="4dp"
+            android:text="@string/incline_selection_12_percent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/incline_adjust_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/incline_selection_group"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/sub_incline_btn"
+            style="@style/btnStyleBeige"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:padding="10dp"
+            android:text="@string/sub" />
+        
+        <TextView
+            android:id="@+id/adjusted_incline_val"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/default_incline_display"
+            android:textColor="#333333" >
+        </TextView>
+            
+        <Button
+            android:id="@+id/add_incline_btn"
+            style="@style/btnStyleBeige"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="10dp"
+            android:padding="10dp"
+            android:text="@string/add" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -154,6 +154,42 @@
                 android:text="0" >
             </TextView>
         </RelativeLayout>
+        
+        <!-- 坡度控件 -->
+
+        <RelativeLayout
+            android:id="@+id/incline_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:clickable="true" >
+
+            <TextView
+                android:id="@+id/incline_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="坡度(%)" >
+            </TextView>
+
+            <ImageView
+                android:id="@+id/incline_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/incline_label"
+                android:src="@drawable/icon_" >
+            </ImageView>
+
+            <TextView
+                android:id="@+id/incline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/incline_label"
+                android:layout_marginLeft="4dp"
+                android:layout_toRightOf="@id/incline_icon"
+                android:text="0" >
+            </TextView>
+        </RelativeLayout>
+        
     </LinearLayout>
 
     <include
@@ -168,6 +204,14 @@
         android:id="@+id/calorie_selection"
         layout="@layout/calorie_setting_panel" />
 
+    <include
+        android:id="@+id/speed_selection"
+        layout="@layout/speed_setting_panel" />
+    
+    <include
+        android:id="@+id/incline_selection"
+        layout="@layout/incline_setting_panel" />
+    
     <LinearLayout
         android:id="@+id/client_container_layout"
         android:layout_width="match_parent"

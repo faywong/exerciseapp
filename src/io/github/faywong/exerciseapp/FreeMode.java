@@ -30,15 +30,21 @@ public class FreeMode extends Activity implements View.OnClickListener {
 	final static private String TIME_DISPLAY_FORMAT = "%s分钟";
 	final static private String DISTANCE_DISPLAY_FORMAT = "%skm";
 	final static private String CALORIE_DISPLAY_FORMAT = "%s千卡";
-	
+	final static private String SPEED_DISPLAY_FORMAT = "%skm/h";
+	final static private String INCLINE_DISPLAY_FORMAT = "%s%%";
+
 	final static private Pattern TIME_PATTERN = Pattern.compile("(\\d+)分钟");
 	final static private Pattern DISTANCE_PATTERN = Pattern.compile("(\\d+)km");
 	final static private Pattern CALORIE_PATTERN = Pattern.compile("(\\d+)千卡");
+	final static private Pattern SPEED_PATTERN = Pattern.compile("(\\d+)km/h");
+	final static private Pattern INCLINE_PATTERN = Pattern.compile("(\\d+)%");
 
 	final static private int TIME_ADJUST_STEP = 10;
 	final static private int DISTANCE_ADJUST_STEP = 1;
 	final static private int CALORIE_ADJUST_STEP = 100;
-	
+	final static private int SPEED_ADJUST_STEP = 2;
+	final static private int INCLINE_ADJUST_STEP = 3;
+
 	private WidgetGroup timeGroup;
 	// id of parent layout of header button control --> associated panel
 	// WidgetGroup
@@ -58,6 +64,15 @@ public class FreeMode extends Activity implements View.OnClickListener {
 	private Button addSpeedBtn;
 	private Button subSpeedBtn;
 	private WidgetGroup<Button, TextView> calorieGroup;
+	private TextView speedValueText;
+	private WidgetGroup<Button, TextView> speedGroup;
+	private RelativeLayout inclineControlLayout;
+	private RelativeLayout inclineControlPanel;
+	private Button addInclineBtn;
+	private Button subInclineBtn;
+	private TextView inclineValueText;
+	private WidgetGroup<Button, TextView> inclineGroup;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,12 +92,9 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		ArrayList<TextView> timeAssocaiteBuddy = new ArrayList<TextView>();
 		timeAssocaiteBuddy.add(timeValueText);
 		timeGroup = new WidgetGroup<Button, TextView>(timeAssocaiteBuddy,
-				new int[] { 
-						R.id.time_selection_10min,
-						R.id.time_selection_20min, 
-						R.id.time_selection_30min,
-						R.id.time_selection_40min, 
-						R.id.time_selection_50min },
+				new int[] { R.id.time_selection_10min,
+						R.id.time_selection_20min, R.id.time_selection_30min,
+						R.id.time_selection_40min, R.id.time_selection_50min },
 				R.id.time_selection, this);
 		headerControlMaps.append(R.id.time_control, timeGroup);
 
@@ -118,22 +130,62 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		calorieValueText = (TextView) findViewById(R.id.adjusted_calorie_val);
 		ArrayList<TextView> calorieAssocaiteBuddy = new ArrayList<TextView>();
 		calorieAssocaiteBuddy.add(calorieValueText);
-		calorieGroup = new WidgetGroup<Button, TextView>(
-				distanceAssocaiteBuddy, new int[] {
-						R.id.calorie_selection_100kcal,
-						R.id.calorie_selection_100kcal,
-						R.id.calorie_selection_100kcal,
-						R.id.calorie_selection_100kcal,
-						R.id.calorie_selection_100kcal },
-				R.id.distance_selection, this);
+		calorieGroup = new WidgetGroup<Button, TextView>(calorieAssocaiteBuddy,
+				new int[] { R.id.calorie_selection_100kcal,
+						R.id.calorie_selection_200kcal,
+						R.id.calorie_selection_300kcal,
+						R.id.calorie_selection_400kcal,
+						R.id.calorie_selection_500kcal },
+				R.id.calorie_selection, this);
 		headerControlMaps.append(R.id.calorie_control, calorieGroup);
+
+		// initialize speed related views/handlers
+		speedControlLayout = (RelativeLayout) findViewById(R.id.speed_control);
+		speedControlLayout.setOnClickListener(this);
+		speedControlPanel = (RelativeLayout) findViewById(R.id.speed_selection);
+		addSpeedBtn = (Button) findViewById(R.id.add_speed_btn);
+		addSpeedBtn.setOnClickListener(this);
+		subSpeedBtn = (Button) findViewById(R.id.sub_speed_btn);
+		subSpeedBtn.setOnClickListener(this);
+		speedValueText = (TextView) findViewById(R.id.adjusted_speed_val);
+		ArrayList<TextView> speedAssocaiteBuddy = new ArrayList<TextView>();
+		speedAssocaiteBuddy.add(speedValueText);
+		speedGroup = new WidgetGroup<Button, TextView>(speedAssocaiteBuddy,
+				new int[] { R.id.speed_selection_4km_per_h,
+						R.id.speed_selection_6km_per_h,
+						R.id.speed_selection_8km_per_h,
+						R.id.speed_selection_10km_per_h,
+						R.id.speed_selection_12km_per_h },
+				R.id.speed_selection, this);
+		headerControlMaps.append(R.id.speed_control, speedGroup);
+		
+
+		// initialize incline related views/handlers
+		inclineControlLayout = (RelativeLayout) findViewById(R.id.incline_control);
+		inclineControlLayout.setOnClickListener(this);
+		inclineControlPanel = (RelativeLayout) findViewById(R.id.incline_selection);
+		addInclineBtn = (Button) findViewById(R.id.add_incline_btn);
+		addInclineBtn.setOnClickListener(this);
+		subInclineBtn = (Button) findViewById(R.id.sub_incline_btn);
+		subInclineBtn.setOnClickListener(this);
+		inclineValueText = (TextView) findViewById(R.id.adjusted_incline_val);
+		ArrayList<TextView> inclineAssocaiteBuddy = new ArrayList<TextView>();
+		inclineAssocaiteBuddy.add(inclineValueText);
+		inclineGroup = new WidgetGroup<Button, TextView>(inclineAssocaiteBuddy,
+				new int[] { R.id.incline_selection_0_percent,
+						R.id.incline_selection_3_percent,
+						R.id.incline_selection_6_percent,
+						R.id.incline_selection_9_percent,
+						R.id.incline_selection_12_percent },
+				R.id.incline_selection, this);
+		headerControlMaps.append(R.id.incline_control, inclineGroup);
 	}
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 	}
-	
+
 	private static int parse(final Pattern pattern, final String targetString)
 			throws IllegalArgumentException {
 		Matcher m = pattern.matcher(targetString);
@@ -144,21 +196,30 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		throw new IllegalArgumentException("The string(" + targetString
 				+ ") format is invalid!");
 	}
-	
+
 	private static int parseTime(final String targetString)
 			throws IllegalArgumentException {
 		return parse(TIME_PATTERN, targetString);
 	}
 
-	
 	private static int parseDistance(final String targetString)
 			throws IllegalArgumentException {
 		return parse(DISTANCE_PATTERN, targetString);
 	}
-	
+
 	private static int parseCalorie(final String targetString)
 			throws IllegalArgumentException {
 		return parse(CALORIE_PATTERN, targetString);
+	}
+
+	private static int parseSpeed(final String targetString)
+			throws IllegalArgumentException {
+		return parse(SPEED_PATTERN, targetString);
+	}
+
+	private static int parseIncline(final String targetString)
+			throws IllegalArgumentException {
+		return parse(INCLINE_PATTERN, targetString);
 	}
 
 	@Override
@@ -171,9 +232,10 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		int containerIdBecameVisible = 0;
 		final int viewId = v.getId();
 		Log.d(TAG, "onClick() viewId:" + viewId);
-		if (viewId == R.id.time_control 
-	         || viewId == R.id.distance_control
-		     || viewId == R.id.calorie_control) {
+		if (viewId == R.id.time_control || viewId == R.id.distance_control
+				|| viewId == R.id.calorie_control
+				|| viewId == R.id.speed_control
+				|| viewId == R.id.incline_control) {
 			final int containerId = headerControlMaps.get(viewId)
 					.getContainerId();
 			final RelativeLayout controlLayout = (RelativeLayout) findViewById(containerId);
@@ -193,18 +255,53 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		} else if (viewId == R.id.sub_time_btn) {
 			final String oldString = timeValueText.getText().toString();
 			final int oldTime = parseTime(oldString);
-			timeValueText.setText(String.format(TIME_DISPLAY_FORMAT,
-					String.valueOf(Math.max(oldTime - TIME_ADJUST_STEP, 0))));
+			timeValueText.setText(String.format(TIME_DISPLAY_FORMAT, String
+					.valueOf(Math.max(oldTime - TIME_ADJUST_STEP,
+							TIME_ADJUST_STEP))));
 		} else if (viewId == R.id.add_distance_btn) {
 			final String oldString = distanceValueText.getText().toString();
 			final int oldTime = parseDistance(oldString);
-			timeValueText.setText(String.format(DISTANCE_DISPLAY_FORMAT,
+			distanceValueText.setText(String.format(DISTANCE_DISPLAY_FORMAT,
 					String.valueOf(oldTime + DISTANCE_ADJUST_STEP)));
 		} else if (viewId == R.id.sub_distance_btn) {
 			final String oldString = distanceValueText.getText().toString();
 			final int oldTime = parseDistance(oldString);
-			timeValueText.setText(String.format(DISTANCE_DISPLAY_FORMAT,
-					String.valueOf(Math.max(oldTime - DISTANCE_ADJUST_STEP, 0))));
+			distanceValueText.setText(String.format(DISTANCE_DISPLAY_FORMAT,
+					String.valueOf(Math.max(oldTime - DISTANCE_ADJUST_STEP,
+							DISTANCE_ADJUST_STEP))));
+		} else if (viewId == R.id.add_calorie_btn) {
+			final String oldString = calorieValueText.getText().toString();
+			final int oldTime = parseCalorie(oldString);
+			calorieValueText.setText(String.format(CALORIE_DISPLAY_FORMAT,
+					String.valueOf(oldTime + CALORIE_ADJUST_STEP)));
+		} else if (viewId == R.id.sub_calorie_btn) {
+			final String oldString = calorieValueText.getText().toString();
+			final int oldTime = parseCalorie(oldString);
+			calorieValueText.setText(String.format(CALORIE_DISPLAY_FORMAT,
+					String.valueOf(Math.max(oldTime - CALORIE_ADJUST_STEP,
+							CALORIE_ADJUST_STEP))));
+		} else if (viewId == R.id.add_speed_btn) {
+			final String oldString = speedValueText.getText().toString();
+			final int oldTime = parseSpeed(oldString);
+			speedValueText.setText(String.format(SPEED_DISPLAY_FORMAT,
+					String.valueOf(oldTime + SPEED_ADJUST_STEP)));
+		} else if (viewId == R.id.sub_speed_btn) {
+			final String oldString = speedValueText.getText().toString();
+			final int oldTime = parseSpeed(oldString);
+			speedValueText.setText(String.format(SPEED_DISPLAY_FORMAT, String
+					.valueOf(Math.max(oldTime - SPEED_ADJUST_STEP,
+							SPEED_ADJUST_STEP))));
+		} else if (viewId == R.id.add_incline_btn) {
+			final String oldString = inclineValueText.getText().toString();
+			final int oldTime = parseIncline(oldString);
+			inclineValueText.setText(String.format(INCLINE_DISPLAY_FORMAT,
+					String.valueOf(oldTime + INCLINE_ADJUST_STEP)));
+		} else if (viewId == R.id.sub_incline_btn) {
+			final String oldString = inclineValueText.getText().toString();
+			final int oldTime = parseSpeed(oldString);
+			inclineValueText.setText(String.format(INCLINE_DISPLAY_FORMAT, String
+					.valueOf(Math.max(oldTime - INCLINE_ADJUST_STEP,
+							INCLINE_ADJUST_STEP))));
 		}
 
 		for (int i = 0; i < headerControlMaps.size(); i++) {
