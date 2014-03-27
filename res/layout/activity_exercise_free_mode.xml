@@ -1,292 +1,304 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    tools:context=".FreeMode" >
+    android:layout_height="match_parent" >
 
-    <LinearLayout
-        android:id="@+id/header"
+    <ImageView
+        android:id="@+id/bg_image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:orientation="horizontal" >
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/background_blue" />
 
-        <!-- 时间控件 -->
-
-        <RelativeLayout
-            android:id="@+id/time_control"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true" >
-
-            <TextView
-                android:id="@+id/time_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="时间" >
-            </TextView>
-
-            <ImageView
-                android:id="@+id/time_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/time_label"
-                android:src="@drawable/icon_" >
-            </ImageView>
-
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/time_icon"
-                android:layout_below="@id/time_label"
-                android:layout_marginLeft="4dp"
-                android:layout_toRightOf="@id/time_icon"
-                android:text="0:00" >
-            </TextView>
-        </RelativeLayout>
-
-        <!-- 距离控件 -->
-
-        <RelativeLayout
-            android:id="@+id/distance_control"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:clickable="true" >
-
-            <TextView
-                android:id="@+id/distance_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="距离(KM)" >
-            </TextView>
-
-            <ImageView
-                android:id="@+id/distance_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/distance_label"
-                android:src="@drawable/icon_" >
-            </ImageView>
-
-            <TextView
-                android:id="@+id/distance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/distance_icon"
-                android:layout_below="@id/distance_label"
-                android:layout_marginLeft="4dp"
-                android:layout_toRightOf="@id/distance_icon"
-                android:text="0.00" >
-            </TextView>
-        </RelativeLayout>
-
-        <!-- 卡路里控件 -->
-
-        <RelativeLayout
-            android:id="@+id/calorie_control"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:clickable="true" >
-
-            <TextView
-                android:id="@+id/calorie_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="卡路里(Kcal)" >
-            </TextView>
-
-            <ImageView
-                android:id="@+id/calorie_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/calorie_label"
-                android:src="@drawable/icon_" >
-            </ImageView>
-
-            <TextView
-                android:id="@+id/calorie"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/calorie_icon"
-                android:layout_below="@id/calorie_label"
-                android:layout_marginLeft="4dp"
-                android:layout_toRightOf="@id/calorie_icon"
-                android:text="0.00" >
-            </TextView>
-        </RelativeLayout>
-
-        <!-- 速度控件 -->
-
-        <RelativeLayout
-            android:id="@+id/speed_control"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:clickable="true" >
-
-            <TextView
-                android:id="@+id/speed_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="速度(Km/h)" >
-            </TextView>
-
-            <ImageView
-                android:id="@+id/speed_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/speed_label"
-                android:src="@drawable/icon_" >
-            </ImageView>
-
-            <TextView
-                android:id="@+id/speed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/speed_label"
-                android:layout_marginLeft="4dp"
-                android:layout_toRightOf="@id/speed_icon"
-                android:text="0" >
-            </TextView>
-        </RelativeLayout>
-        
-        <!-- 坡度控件 -->
-
-        <RelativeLayout
-            android:id="@+id/incline_control"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:clickable="true" >
-
-            <TextView
-                android:id="@+id/incline_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="坡度(%)" >
-            </TextView>
-
-            <ImageView
-                android:id="@+id/incline_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/incline_label"
-                android:src="@drawable/icon_" >
-            </ImageView>
-
-            <TextView
-                android:id="@+id/incline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/incline_label"
-                android:layout_marginLeft="4dp"
-                android:layout_toRightOf="@id/incline_icon"
-                android:text="0" >
-            </TextView>
-        </RelativeLayout>
-        
-    </LinearLayout>
-
-    <include
-        android:id="@+id/time_selection"
-        layout="@layout/time_setting_panel" />
-
-    <include
-        android:id="@+id/distance_selection"
-        layout="@layout/distance_setting_panel" />
-
-    <include
-        android:id="@+id/calorie_selection"
-        layout="@layout/calorie_setting_panel" />
-
-    <include
-        android:id="@+id/speed_selection"
-        layout="@layout/speed_setting_panel" />
-    
-    <include
-        android:id="@+id/incline_selection"
-        layout="@layout/incline_setting_panel" />
-    
-    <LinearLayout
-        android:id="@+id/client_container_layout"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/time_selection"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="48dp"
-        android:gravity="center"
-        android:orientation="horizontal"
+        android:layout_height="match_parent"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp" >
-        <TextView 
-            android:id="@+id/count_down_text"
-            android:textSize="80sp"
-            android:layout_width="wrap_content"
+        android:paddingRight="16dp"
+        tools:context=".FreeMode" >
+
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp"/>
-    </LinearLayout>
+            android:gravity="left"
+            android:orientation="horizontal" >
 
-    <LinearLayout
-        android:id="@+id/bottom_tools"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="48dp"
-        android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp" >
+            <!-- 时间控件 -->
+
+            <RelativeLayout
+                android:id="@+id/time_control"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true" >
+
+                <TextView
+                    android:id="@+id/time_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="时间" >
+                </TextView>
+
+                <ImageView
+                    android:id="@+id/time_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/time_label"
+                    android:src="@drawable/icon_" >
+                </ImageView>
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/time_icon"
+                    android:layout_below="@id/time_label"
+                    android:layout_marginLeft="4dp"
+                    android:layout_toRightOf="@id/time_icon"
+                    android:text="0:00" >
+                </TextView>
+            </RelativeLayout>
+
+            <!-- 距离控件 -->
+
+            <RelativeLayout
+                android:id="@+id/distance_control"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:clickable="true" >
+
+                <TextView
+                    android:id="@+id/distance_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="距离(KM)" >
+                </TextView>
+
+                <ImageView
+                    android:id="@+id/distance_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/distance_label"
+                    android:src="@drawable/icon_" >
+                </ImageView>
+
+                <TextView
+                    android:id="@+id/distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/distance_icon"
+                    android:layout_below="@id/distance_label"
+                    android:layout_marginLeft="4dp"
+                    android:layout_toRightOf="@id/distance_icon"
+                    android:text="0.00" >
+                </TextView>
+            </RelativeLayout>
+
+            <!-- 卡路里控件 -->
+
+            <RelativeLayout
+                android:id="@+id/calorie_control"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:clickable="true" >
+
+                <TextView
+                    android:id="@+id/calorie_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="卡路里(Kcal)" >
+                </TextView>
+
+                <ImageView
+                    android:id="@+id/calorie_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/calorie_label"
+                    android:src="@drawable/icon_" >
+                </ImageView>
+
+                <TextView
+                    android:id="@+id/calorie"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/calorie_icon"
+                    android:layout_below="@id/calorie_label"
+                    android:layout_marginLeft="4dp"
+                    android:layout_toRightOf="@id/calorie_icon"
+                    android:text="0.00" >
+                </TextView>
+            </RelativeLayout>
+
+            <!-- 速度控件 -->
+
+            <RelativeLayout
+                android:id="@+id/speed_control"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:clickable="true" >
+
+                <TextView
+                    android:id="@+id/speed_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="速度(Km/h)" >
+                </TextView>
+
+                <ImageView
+                    android:id="@+id/speed_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/speed_label"
+                    android:src="@drawable/icon_" >
+                </ImageView>
+
+                <TextView
+                    android:id="@+id/speed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/speed_label"
+                    android:layout_marginLeft="4dp"
+                    android:layout_toRightOf="@id/speed_icon"
+                    android:text="0" >
+                </TextView>
+            </RelativeLayout>
+
+            <!-- 坡度控件 -->
+
+            <RelativeLayout
+                android:id="@+id/incline_control"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:clickable="true" >
+
+                <TextView
+                    android:id="@+id/incline_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="坡度(%)" >
+                </TextView>
+
+                <ImageView
+                    android:id="@+id/incline_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/incline_label"
+                    android:src="@drawable/icon_" >
+                </ImageView>
+
+                <TextView
+                    android:id="@+id/incline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/incline_label"
+                    android:layout_marginLeft="4dp"
+                    android:layout_toRightOf="@id/incline_icon"
+                    android:text="0" >
+                </TextView>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <include
+            android:id="@+id/time_selection"
+            layout="@layout/time_setting_panel" />
+
+        <include
+            android:id="@+id/distance_selection"
+            layout="@layout/distance_setting_panel" />
+
+        <include
+            android:id="@+id/calorie_selection"
+            layout="@layout/calorie_setting_panel" />
+
+        <include
+            android:id="@+id/speed_selection"
+            layout="@layout/speed_setting_panel" />
+
+        <include
+            android:id="@+id/incline_selection"
+            layout="@layout/incline_setting_panel" />
+
+        <LinearLayout
+            android:id="@+id/client_container_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/time_selection"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="48dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp" >
+
+            <TextView
+                android:id="@+id/count_down_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:textSize="80sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bottom_tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="48dp"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp" >
+
+            <ImageButton
+                android:id="@+id/music_btn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/free_mode_desc"
+                android:scaleType="fitXY"
+                android:src="@drawable/music" >
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/video_btn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/free_mode_desc"
+                android:scaleType="fitXY"
+                android:src="@drawable/video" >
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/tv_btn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/free_mode_desc"
+                android:scaleType="fitXY"
+                android:src="@drawable/iptv" >
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/surf_btn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/exercise_start_stop_content_desc"
+                android:scaleType="fitXY"
+                android:src="@drawable/internet_surf" >
+            </ImageButton>
+        </LinearLayout>
 
         <ImageButton
-            android:id="@+id/music_btn"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:contentDescription="@string/free_mode_desc"
-            android:scaleType="fitXY"
-            android:src="@drawable/music" >
-        </ImageButton>
-
-        <ImageButton
-            android:id="@+id/video_btn"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:contentDescription="@string/free_mode_desc"
-            android:scaleType="fitXY"
-            android:src="@drawable/video" >
-        </ImageButton>
-
-        <ImageButton
-            android:id="@+id/tv_btn"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:contentDescription="@string/free_mode_desc"
-            android:scaleType="fitXY"
-            android:src="@drawable/iptv" >
-        </ImageButton>
-
-        <ImageButton
-            android:id="@+id/surf_btn"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:id="@+id/start_btn"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
             android:contentDescription="@string/exercise_start_stop_content_desc"
             android:scaleType="fitXY"
-            android:src="@drawable/internet_surf" >
+            android:src="@drawable/start" >
         </ImageButton>
+    </RelativeLayout>
 
-    </LinearLayout>
-
-    <ImageButton
-        android:id="@+id/start_btn"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:contentDescription="@string/exercise_start_stop_content_desc"
-        android:scaleType="fitXY"
-        android:src="@drawable/start" >
-    </ImageButton>
-</RelativeLayout>
+</FrameLayout>

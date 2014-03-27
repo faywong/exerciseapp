@@ -12,10 +12,15 @@ import android.os.Handler;
 import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
+import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import io.github.faywong.exerciseapp.R;
@@ -78,17 +83,21 @@ public class FreeMode extends Activity implements View.OnClickListener {
 	private WidgetGroup<Button, TextView> inclineGroup;
 	private ImageButton startBtn;
 	private TextView countDownText;
-	
+
 	private ArrayList<RelativeLayout> panelLayouts = new ArrayList<RelativeLayout>();
 	private Handler hander = new Handler();
 	private Runnable operationTimeOutRunable = new Runnable() {
-		
+
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
 			dismissAllPanels();
 		}
 	};
+	private ImageView bgImage;
+
+	private static final int SWIPE_MIN_DISTANCE = 120;
+	private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -177,7 +186,6 @@ public class FreeMode extends Activity implements View.OnClickListener {
 						R.id.speed_selection_12km_per_h },
 				R.id.speed_selection, this);
 		headerControlMaps.append(R.id.speed_control, speedGroup);
-		
 
 		// initialize incline related views/handlers
 		inclineControlLayout = (RelativeLayout) findViewById(R.id.incline_control);
@@ -199,11 +207,83 @@ public class FreeMode extends Activity implements View.OnClickListener {
 						R.id.incline_selection_12_percent },
 				R.id.incline_selection, this);
 		headerControlMaps.append(R.id.incline_control, inclineGroup);
-		
+
 		startBtn = (ImageButton) findViewById(R.id.start_btn);
 		startBtn.setOnClickListener(this);
-		
+
 		countDownText = (TextView) findViewById(R.id.count_down_text);
+		bgImage = (ImageView) findViewById(R.id.bg_image);
+
+		final GestureDetector gdt = new GestureDetector(this,
+				new OnGestureListener() {
+
+					@Override
+					public boolean onDown(MotionEvent e) {
+						// TODO Auto-generated method stub
+						return false;
+					}
+
+					@Override
+					public boolean onFling(MotionEvent e1, MotionEvent e2,
+							float velocityX, float velocityY) {
+						// TODO Auto-generated method stub
+						if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
+								&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+							Log.d(TAG, "Right to left fing!");
+							return false; // Right to left
+						} else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
+								&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+							Log.d(TAG, "Left to right fing!");
+							return false; // Left to right
+						}
+
+						if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE
+								&& Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+							Log.d(TAG, "Bottom to top fing!");
+							return false; // Bottom to top
+						} else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE
+								&& Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+							Log.d(TAG, "Top to bottom fing!");
+							return false; // Top to bottom
+						}
+						return false;
+					}
+
+					@Override
+					public void onLongPress(MotionEvent e) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public boolean onScroll(MotionEvent e1, MotionEvent e2,
+							float distanceX, float distanceY) {
+						// TODO Auto-generated method stub
+						return false;
+					}
+
+					@Override
+					public void onShowPress(MotionEvent e) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public boolean onSingleTapUp(MotionEvent e) {
+						// TODO Auto-generated method stub
+						return false;
+					}
+
+				});
+
+		bgImage.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View view, MotionEvent event) {
+				// TODO Auto-generated method stub
+				return !gdt.onTouchEvent(event);
+			}
+		});
 	}
 
 	@Override
@@ -259,16 +339,19 @@ public class FreeMode extends Activity implements View.OnClickListener {
 			throws IllegalArgumentException {
 		return parse(INCLINE_PATTERN, targetString);
 	}
-	
+
 	private void startCountDown(long totalMillis, long deltaMillis) {
+		countDownText.setVisibility(View.VISIBLE);
 		new CountDownTimer(totalMillis, deltaMillis) {
-	        public void onTick(long millisUntilFinished) {
-		        	countDownText.setText("" + millisUntilFinished / 1000);
-	           }
-	           public void onFinish() {
-	        	   countDownText.setText("GO!");
-	           }
-	    }.start();
+			public void onTick(long millisUntilFinished) {
+				countDownText.setText("" + millisUntilFinished / 1000);
+			}
+
+			public void onFinish() {
+				countDownText.setText("GO!");
+				countDownText.setVisibility(View.GONE);
+			}
+		}.start();
 	}
 
 	@Override
@@ -295,7 +378,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 				// TODO: stop the current exercise session
 			}
 		}
-		
+
 		if (viewId == R.id.time_control || viewId == R.id.distance_control
 				|| viewId == R.id.calorie_control
 				|| viewId == R.id.speed_control
@@ -352,9 +435,8 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		} else if (viewId == R.id.sub_speed_btn) {
 			final String oldString = speedValueText.getText().toString();
 			final int oldTime = parseSpeed(oldString);
-			speedValueText.setText(String.format(SPEED_DISPLAY_FORMAT, String
-					.valueOf(Math.max(oldTime - SPEED_ADJUST_STEP,
-							0))));
+			speedValueText.setText(String.format(SPEED_DISPLAY_FORMAT,
+					String.valueOf(Math.max(oldTime - SPEED_ADJUST_STEP, 0))));
 		} else if (viewId == R.id.add_incline_btn) {
 			final String oldString = inclineValueText.getText().toString();
 			final int oldTime = parseIncline(oldString);
@@ -363,9 +445,11 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		} else if (viewId == R.id.sub_incline_btn) {
 			final String oldString = inclineValueText.getText().toString();
 			final int oldTime = parseIncline(oldString);
-			inclineValueText.setText(String.format(INCLINE_DISPLAY_FORMAT, String
-					.valueOf(Math.max(oldTime - INCLINE_ADJUST_STEP,
-							0))));
+			inclineValueText
+					.setText(String.format(
+							INCLINE_DISPLAY_FORMAT,
+							String.valueOf(Math.max(oldTime
+									- INCLINE_ADJUST_STEP, 0))));
 		}
 
 		for (int i = 0; i < headerControlMaps.size(); i++) {
@@ -398,7 +482,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 
 	private void dismissAllPanels() {
 		// TODO Auto-generated method stub
-		for (RelativeLayout panel: panelLayouts) {
+		for (RelativeLayout panel : panelLayouts) {
 			panel.setVisibility(View.GONE);
 		}
 	}
