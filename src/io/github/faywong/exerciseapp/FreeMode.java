@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.R.color;
 import android.R.integer;
+import android.R.string;
 import android.app.Activity;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -18,6 +21,10 @@ import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.webkit.WebStorage.Origin;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -54,7 +61,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 	final static private int SPEED_ADJUST_STEP = 1;
 	final static private int INCLINE_ADJUST_STEP = 1;
 
-	private WidgetGroup timeGroup;
+	private WidgetGroup<Button, TextView> timeGroup;
 	// id of parent layout of header button control --> associated panel
 	// WidgetGroup
 	private SparseArray<WidgetGroup<Button, TextView>> headerControlMaps = new SparseArray<WidgetGroup<Button, TextView>>();
@@ -94,16 +101,58 @@ public class FreeMode extends Activity implements View.OnClickListener {
 			dismissAllPanels();
 		}
 	};
-	private ImageView bgImage;
+	
+	private Runnable countDownTextOperationTimeOutRunable = new Runnable() {
 
-	private static final int SWIPE_MIN_DISTANCE = 120;
-	private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			countDownText.setTextColor(color.transparent);
+		}
+	};
+	private TextView timeHeadText;
+	private TextView distanceHeadText;
+	private TextView calorieHeadText;
+	private TextView speedHeadText;
+	private TextView inclineHeadText;
+	
+	private ColorStateList defaultColorStateList;
+	
+	final Animation countDownTextIn = new AlphaAnimation(0.0f, 1.0f);
+	final Animation countDownTextOut = new AlphaAnimation(1.0f, 0.0f);
 
-	@Override
+	private static final int SWIPE_MIN_DISTANCE_HORIZONTAL = 80;//120;
+	private static final int SWIPE_THRESHOLD_VELOCITY_HORIZONTAL = 100;//200;
+	private static final int SWIPE_MIN_DISTANCE_VERTICAL = SWIPE_MIN_DISTANCE_HORIZONTAL / 2;//120;
+	private static final int SWIPE_THRESHOLD_VELOCITY_VERTICAL = SWIPE_MIN_DISTANCE_VERTICAL * 2 / 3;
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_exercise_free_mode);
+		// initialize animations
+		countDownTextIn.setDuration(2000);
+		countDownTextOut.setDuration(2000);
+		countDownTextOut.setAnimationListener(new AnimationListener() {
 
+		    @Override
+		    public void onAnimationEnd(Animation animation) {
+		        //countDownText.startAnimation(countDownTextOut);
+				countDownText.setTextColor(color.transparent);;
+		    }
+
+			@Override
+			public void onAnimationRepeat(Animation arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onAnimationStart(Animation arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
 		// initialize time related views/handlers
 		timeControlLayout = (RelativeLayout) findViewById(R.id.time_control);
 		timeControlLayout.setOnClickListener(this);
@@ -114,6 +163,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		subTimeBtn = (Button) findViewById(R.id.sub_time_btn);
 		subTimeBtn.setOnClickListener(this);
 		timeValueText = (TextView) findViewById(R.id.adjusted_time_val);
+		timeHeadText = (TextView) findViewById(R.id.time);
 		ArrayList<TextView> timeAssocaiteBuddy = new ArrayList<TextView>();
 		timeAssocaiteBuddy.add(timeValueText);
 		timeGroup = new WidgetGroup<Button, TextView>(timeAssocaiteBuddy,
@@ -133,6 +183,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		subDistanceBtn = (Button) findViewById(R.id.sub_distance_btn);
 		subDistanceBtn.setOnClickListener(this);
 		distanceValueText = (TextView) findViewById(R.id.adjusted_distance_val);
+		distanceHeadText = (TextView) findViewById(R.id.distance);
 		ArrayList<TextView> distanceAssocaiteBuddy = new ArrayList<TextView>();
 		distanceAssocaiteBuddy.add(distanceValueText);
 		distanceGroup = new WidgetGroup<Button, TextView>(
@@ -155,6 +206,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		subCalorieBtn = (Button) findViewById(R.id.sub_calorie_btn);
 		subCalorieBtn.setOnClickListener(this);
 		calorieValueText = (TextView) findViewById(R.id.adjusted_calorie_val);
+		calorieHeadText = (TextView) findViewById(R.id.calorie);
 		ArrayList<TextView> calorieAssocaiteBuddy = new ArrayList<TextView>();
 		calorieAssocaiteBuddy.add(calorieValueText);
 		calorieGroup = new WidgetGroup<Button, TextView>(calorieAssocaiteBuddy,
@@ -176,6 +228,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		subSpeedBtn = (Button) findViewById(R.id.sub_speed_btn);
 		subSpeedBtn.setOnClickListener(this);
 		speedValueText = (TextView) findViewById(R.id.adjusted_speed_val);
+		speedHeadText = (TextView) findViewById(R.id.speed);
 		ArrayList<TextView> speedAssocaiteBuddy = new ArrayList<TextView>();
 		speedAssocaiteBuddy.add(speedValueText);
 		speedGroup = new WidgetGroup<Button, TextView>(speedAssocaiteBuddy,
@@ -197,6 +250,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		subInclineBtn = (Button) findViewById(R.id.sub_incline_btn);
 		subInclineBtn.setOnClickListener(this);
 		inclineValueText = (TextView) findViewById(R.id.adjusted_incline_val);
+		inclineHeadText = (TextView) findViewById(R.id.incline);
 		ArrayList<TextView> inclineAssocaiteBuddy = new ArrayList<TextView>();
 		inclineAssocaiteBuddy.add(inclineValueText);
 		inclineGroup = new WidgetGroup<Button, TextView>(inclineAssocaiteBuddy,
@@ -212,8 +266,8 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		startBtn.setOnClickListener(this);
 
 		countDownText = (TextView) findViewById(R.id.count_down_text);
-		bgImage = (ImageView) findViewById(R.id.bg_image);
 
+		
 		final GestureDetector gdt = new GestureDetector(this,
 				new OnGestureListener() {
 
@@ -227,23 +281,27 @@ public class FreeMode extends Activity implements View.OnClickListener {
 					public boolean onFling(MotionEvent e1, MotionEvent e2,
 							float velocityX, float velocityY) {
 						// TODO Auto-generated method stub
-						if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
-								&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+						if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE_HORIZONTAL
+								&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY_HORIZONTAL) {
 							Log.d(TAG, "Right to left fing!");
+							handleHorizontalFling(false);
 							return false; // Right to left
-						} else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
-								&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+						} else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE_HORIZONTAL
+								&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY_HORIZONTAL) {
 							Log.d(TAG, "Left to right fing!");
+							handleHorizontalFling(true);
 							return false; // Left to right
 						}
 
-						if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE
-								&& Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+						if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE_VERTICAL
+								&& Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY_VERTICAL) {
 							Log.d(TAG, "Bottom to top fing!");
+							handleVerticalFling(true);
 							return false; // Bottom to top
-						} else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE
-								&& Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+						} else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE_VERTICAL
+								&& Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY_VERTICAL) {
 							Log.d(TAG, "Top to bottom fing!");
+							handleVerticalFling(false);
 							return false; // Top to bottom
 						}
 						return false;
@@ -276,7 +334,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 
 				});
 
-		bgImage.setOnTouchListener(new OnTouchListener() {
+		countDownText.setOnTouchListener(new OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View view, MotionEvent event) {
@@ -286,6 +344,50 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		});
 	}
 
+	private void handleHorizontalFling(final boolean right) {
+		if (!defaultColorStateList.equals(countDownText.getTextColors())) {
+			Log.d(TAG, "start to display case");
+			countDownText.setText(speedHeadText.getText());
+			countDownText.setTextColor(defaultColorStateList);
+/*			countDownText.clearAnimation();
+			countDownTextIn.setDuration(500);
+			countDownText.startAnimation(countDownTextIn);*/
+		} else {
+			final String newValue = getNewSpeedText(speedHeadText.getText().toString(), right);
+			countDownText.setText(newValue);
+			speedHeadText.setText(newValue);
+
+/*			countDownText.clearAnimation();
+			countDownTextOut.setDuration(2000);
+			countDownText.startAnimation(countDownTextOut);*/
+		}
+
+		hander.removeCallbacks(countDownTextOperationTimeOutRunable);
+		hander.postDelayed(countDownTextOperationTimeOutRunable, 3000);
+	}
+	
+
+	private void handleVerticalFling(final boolean top) {
+		if (!defaultColorStateList.equals(countDownText.getTextColors())) {
+			Log.d(TAG, "start to display case");
+			countDownText.setText(inclineHeadText.getText());
+			countDownText.setTextColor(defaultColorStateList);
+/*			countDownText.clearAnimation();
+			countDownTextIn.setDuration(500);
+			countDownText.startAnimation(countDownTextIn);*/
+		} else {
+			final String newValue = getNewInclineText(inclineHeadText.getText().toString(), top);
+			countDownText.setText(newValue);
+			inclineHeadText.setText(newValue);
+/*			countDownText.clearAnimation();
+			countDownTextOut.setDuration(2000);
+			countDownText.startAnimation(countDownTextOut);*/
+		}
+
+		hander.removeCallbacks(countDownTextOperationTimeOutRunable);
+		hander.postDelayed(countDownTextOperationTimeOutRunable, 3000);
+	}
+	
 	@Override
 	protected void onStart() {
 		// TODO Auto-generated method stub
@@ -342,6 +444,12 @@ public class FreeMode extends Activity implements View.OnClickListener {
 
 	private void startCountDown(long totalMillis, long deltaMillis) {
 		countDownText.setVisibility(View.VISIBLE);
+		if (defaultColorStateList == null) {
+			defaultColorStateList = countDownText.getTextColors();
+		} else {
+			countDownText.setTextColor(defaultColorStateList);
+		}
+
 		new CountDownTimer(totalMillis, deltaMillis) {
 			public void onTick(long millisUntilFinished) {
 				countDownText.setText("" + millisUntilFinished / 1000);
@@ -349,11 +457,27 @@ public class FreeMode extends Activity implements View.OnClickListener {
 
 			public void onFinish() {
 				countDownText.setText("GO!");
-				countDownText.setVisibility(View.GONE);
+				countDownText.clearAnimation();
+				countDownTextOut.setDuration(2000);
+		        countDownText.startAnimation(countDownTextOut);
 			}
 		}.start();
 	}
 
+	private static String getNewSpeedText(final String origin, boolean incr) {
+		final int oldSpeed = parseSpeed(origin);
+		final String newValue = String.format(SPEED_DISPLAY_FORMAT,
+				String.valueOf(incr ? (oldSpeed + SPEED_ADJUST_STEP) : (Math.max(oldSpeed - SPEED_ADJUST_STEP, 0))));
+		return newValue;
+	}
+	
+	private static String getNewInclineText(final String origin, boolean incr) {
+		final int oldIncline = parseIncline(origin);
+		final String newValue = String.format(INCLINE_DISPLAY_FORMAT,
+				String.valueOf(incr ? (oldIncline + INCLINE_ADJUST_STEP) : (Math.max(oldIncline - INCLINE_ADJUST_STEP, 0))));
+		return newValue;
+	}
+	
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -397,59 +521,69 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		} else if (viewId == R.id.add_time_btn) {
 			final String oldString = timeValueText.getText().toString();
 			final int oldTime = parseTime(oldString);
-			timeValueText.setText(String.format(TIME_DISPLAY_FORMAT,
-					String.valueOf(oldTime + TIME_ADJUST_STEP)));
+			final String newValue = String.format(TIME_DISPLAY_FORMAT,
+					String.valueOf(oldTime + TIME_ADJUST_STEP));
+			timeValueText.setText(newValue);
+			timeHeadText.setText(newValue);
 		} else if (viewId == R.id.sub_time_btn) {
 			final String oldString = timeValueText.getText().toString();
 			final int oldTime = parseTime(oldString);
-			timeValueText.setText(String.format(TIME_DISPLAY_FORMAT, String
+			final String newValue = String.format(TIME_DISPLAY_FORMAT, String
 					.valueOf(Math.max(oldTime - TIME_ADJUST_STEP,
-							TIME_ADJUST_STEP))));
+							TIME_ADJUST_STEP)));
+			timeValueText.setText(newValue);
+			timeHeadText.setText(newValue);
 		} else if (viewId == R.id.add_distance_btn) {
 			final String oldString = distanceValueText.getText().toString();
 			final int oldTime = parseDistance(oldString);
-			distanceValueText.setText(String.format(DISTANCE_DISPLAY_FORMAT,
-					String.valueOf(oldTime + DISTANCE_ADJUST_STEP)));
+			final String newValue = String.format(DISTANCE_DISPLAY_FORMAT,
+					String.valueOf(oldTime + DISTANCE_ADJUST_STEP));
+			distanceValueText.setText(newValue);
+			distanceHeadText.setText(newValue);
 		} else if (viewId == R.id.sub_distance_btn) {
 			final String oldString = distanceValueText.getText().toString();
 			final int oldTime = parseDistance(oldString);
-			distanceValueText.setText(String.format(DISTANCE_DISPLAY_FORMAT,
+			final String newValue = String.format(DISTANCE_DISPLAY_FORMAT,
 					String.valueOf(Math.max(oldTime - DISTANCE_ADJUST_STEP,
-							DISTANCE_ADJUST_STEP))));
+							DISTANCE_ADJUST_STEP)));
+			distanceValueText.setText(newValue);
+			distanceHeadText.setText(newValue);
 		} else if (viewId == R.id.add_calorie_btn) {
 			final String oldString = calorieValueText.getText().toString();
 			final int oldTime = parseCalorie(oldString);
-			calorieValueText.setText(String.format(CALORIE_DISPLAY_FORMAT,
-					String.valueOf(oldTime + CALORIE_ADJUST_STEP)));
+			final String newValue = String.format(CALORIE_DISPLAY_FORMAT,
+					String.valueOf(oldTime + CALORIE_ADJUST_STEP));
+			calorieValueText.setText(newValue);
+			calorieHeadText.setText(newValue);
 		} else if (viewId == R.id.sub_calorie_btn) {
 			final String oldString = calorieValueText.getText().toString();
 			final int oldTime = parseCalorie(oldString);
-			calorieValueText.setText(String.format(CALORIE_DISPLAY_FORMAT,
+			final String newValue = String.format(CALORIE_DISPLAY_FORMAT,
 					String.valueOf(Math.max(oldTime - CALORIE_ADJUST_STEP,
-							CALORIE_ADJUST_STEP))));
+							CALORIE_ADJUST_STEP)));
+			calorieValueText.setText(newValue);
+			calorieHeadText.setText(newValue);
 		} else if (viewId == R.id.add_speed_btn) {
 			final String oldString = speedValueText.getText().toString();
-			final int oldTime = parseSpeed(oldString);
-			speedValueText.setText(String.format(SPEED_DISPLAY_FORMAT,
-					String.valueOf(oldTime + SPEED_ADJUST_STEP)));
+			final String newValue = getNewSpeedText(oldString, true);
+			speedValueText.setText(newValue);
+			speedHeadText.setText(newValue);
 		} else if (viewId == R.id.sub_speed_btn) {
 			final String oldString = speedValueText.getText().toString();
-			final int oldTime = parseSpeed(oldString);
-			speedValueText.setText(String.format(SPEED_DISPLAY_FORMAT,
-					String.valueOf(Math.max(oldTime - SPEED_ADJUST_STEP, 0))));
+			final String newValue = getNewSpeedText(oldString, false);
+			speedValueText.setText(newValue);
+			speedHeadText.setText(newValue);
 		} else if (viewId == R.id.add_incline_btn) {
 			final String oldString = inclineValueText.getText().toString();
-			final int oldTime = parseIncline(oldString);
-			inclineValueText.setText(String.format(INCLINE_DISPLAY_FORMAT,
-					String.valueOf(oldTime + INCLINE_ADJUST_STEP)));
+			final String newValue = getNewInclineText(oldString, true);
+			inclineValueText.setText(newValue);
+			inclineHeadText.setText(newValue);
 		} else if (viewId == R.id.sub_incline_btn) {
 			final String oldString = inclineValueText.getText().toString();
-			final int oldTime = parseIncline(oldString);
+			final String newValue = getNewInclineText(oldString, false);
 			inclineValueText
-					.setText(String.format(
-							INCLINE_DISPLAY_FORMAT,
-							String.valueOf(Math.max(oldTime
-									- INCLINE_ADJUST_STEP, 0))));
+					.setText(newValue);
+			inclineHeadText.setText(newValue);
 		}
 
 		for (int i = 0; i < headerControlMaps.size(); i++) {
@@ -462,11 +596,8 @@ public class FreeMode extends Activity implements View.OnClickListener {
 			final RelativeLayout containerLayout = (RelativeLayout) findViewById(containerId);
 
 			// dismiss all the unwanted containers
-			Log.d(TAG, "containerId:" + containerId);
 			if (containerBecomeVisible
 					&& containerId != containerIdBecameVisible) {
-				Log.d(TAG, "containerLayout:" + containerLayout
-						+ " containerId:" + containerId);
 				containerLayout.setVisibility(View.GONE);
 			}
 
