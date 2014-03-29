@@ -166,6 +166,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		timeHeadText = (TextView) findViewById(R.id.time);
 		ArrayList<TextView> timeAssocaiteBuddy = new ArrayList<TextView>();
 		timeAssocaiteBuddy.add(timeValueText);
+		timeAssocaiteBuddy.add(timeHeadText);
 		timeGroup = new WidgetGroup<Button, TextView>(timeAssocaiteBuddy,
 				new int[] { R.id.time_selection_10min,
 						R.id.time_selection_20min, R.id.time_selection_30min,
@@ -186,6 +187,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		distanceHeadText = (TextView) findViewById(R.id.distance);
 		ArrayList<TextView> distanceAssocaiteBuddy = new ArrayList<TextView>();
 		distanceAssocaiteBuddy.add(distanceValueText);
+		distanceAssocaiteBuddy.add(distanceHeadText);
 		distanceGroup = new WidgetGroup<Button, TextView>(
 				distanceAssocaiteBuddy, new int[] {
 						R.id.distance_selection_1km,
@@ -209,6 +211,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		calorieHeadText = (TextView) findViewById(R.id.calorie);
 		ArrayList<TextView> calorieAssocaiteBuddy = new ArrayList<TextView>();
 		calorieAssocaiteBuddy.add(calorieValueText);
+		calorieAssocaiteBuddy.add(calorieHeadText);
 		calorieGroup = new WidgetGroup<Button, TextView>(calorieAssocaiteBuddy,
 				new int[] { R.id.calorie_selection_100kcal,
 						R.id.calorie_selection_200kcal,
@@ -231,6 +234,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		speedHeadText = (TextView) findViewById(R.id.speed);
 		ArrayList<TextView> speedAssocaiteBuddy = new ArrayList<TextView>();
 		speedAssocaiteBuddy.add(speedValueText);
+		speedAssocaiteBuddy.add(speedHeadText);
 		speedGroup = new WidgetGroup<Button, TextView>(speedAssocaiteBuddy,
 				new int[] { R.id.speed_selection_4km_per_h,
 						R.id.speed_selection_6km_per_h,
@@ -253,6 +257,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		inclineHeadText = (TextView) findViewById(R.id.incline);
 		ArrayList<TextView> inclineAssocaiteBuddy = new ArrayList<TextView>();
 		inclineAssocaiteBuddy.add(inclineValueText);
+		inclineAssocaiteBuddy.add(inclineHeadText);
 		inclineGroup = new WidgetGroup<Button, TextView>(inclineAssocaiteBuddy,
 				new int[] { R.id.incline_selection_0_percent,
 						R.id.incline_selection_3_percent,
@@ -356,6 +361,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 			final String newValue = getNewSpeedText(speedHeadText.getText().toString(), right);
 			countDownText.setText(newValue);
 			speedHeadText.setText(newValue);
+			speedValueText.setText(newValue);
 
 /*			countDownText.clearAnimation();
 			countDownTextOut.setDuration(2000);
@@ -379,6 +385,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 			final String newValue = getNewInclineText(inclineHeadText.getText().toString(), top);
 			countDownText.setText(newValue);
 			inclineHeadText.setText(newValue);
+			inclineValueText.setText(newValue);
 /*			countDownText.clearAnimation();
 			countDownTextOut.setDuration(2000);
 			countDownText.startAnimation(countDownTextOut);*/
