@@ -13,5 +13,15 @@
         <item name="android:background">@drawable/custom_btn_beige</item>
         <item name="android:padding">10dip</item>
     </style>
-
+    <style  name = "transDialog" parent = "android:Theme.Dialog">
+        <item name = "android:windowBackground">
+            @color/dialog_back 
+        </item>
+    </style>
+    
+    <style  name = "transActivity" parent = "android:Theme.Translucent.NoTitleBar">
+        <item name = "android:windowBackground">
+            @color/dialog_back 
+        </item>
+    </style>
 </resources>
