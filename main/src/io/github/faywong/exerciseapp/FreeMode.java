@@ -10,6 +10,7 @@ import android.R.color;
 import android.R.integer;
 import android.R.string;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -37,6 +38,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import io.github.faywong.exerciseapp.R;
 import io.github.faywong.exerciseapp.interfaces.WidgetGroup;
+import io.github.faywong.exerciseapp.thirdparty.VideoPlayerActivity;
 
 public class FreeMode extends Activity implements View.OnClickListener {
 	private static final String TAG = "FreeMode";
@@ -126,6 +128,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 	final Animation countDownTextIn = new AlphaAnimation(0.0f, 1.0f);
 	final Animation countDownTextOut = new AlphaAnimation(1.0f, 0.0f);
 	private UnityPlayer mUnityPlayer;
+	private ImageButton videoPlayBtn;
 
 	private static final int SWIPE_MIN_DISTANCE_HORIZONTAL = 80;//120;
 	private static final int SWIPE_THRESHOLD_VELOCITY_HORIZONTAL = 100;//200;
@@ -354,6 +357,14 @@ public class FreeMode extends Activity implements View.OnClickListener {
 			}
 		});
 		initializeUnityView();
+		initializeBottomTools();
+		
+	}
+
+	private void initializeBottomTools() {
+		// TODO Auto-generated method stub
+		videoPlayBtn = (ImageButton) findViewById(R.id.video_btn);
+		videoPlayBtn.setOnClickListener(this);
 	}
 
 	private void initializeUnityView() {
@@ -542,11 +553,14 @@ public class FreeMode extends Activity implements View.OnClickListener {
 			if (exerciseSessionStarted) {
 				startCountDown(6000, 1000);
 			} else {
+				countDownText.setVisibility(View.GONE);
 				// TODO: stop the current exercise session
 			}
+		} else if (viewId == R.id.video_btn) {
+			Intent intent = new Intent(this, VideoPlayerActivity.class);
+			startActivity(intent);
 		}
-
-		if (viewId == R.id.time_control || viewId == R.id.distance_control
+		else if (viewId == R.id.time_control || viewId == R.id.distance_control
 				|| viewId == R.id.calorie_control
 				|| viewId == R.id.speed_control
 				|| viewId == R.id.incline_control) {

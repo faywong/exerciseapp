@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    tools:context=".ExerciseMain" >
+    tools:context=".Main" >
 
     <LinearLayout
         android:id="@+id/header"
@@ -36,7 +36,8 @@
         android:id="@+id/exercise_mode_container_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:baselineAligned="false"
+        android:layout_marginTop="96dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingLeft="16dp"
@@ -46,7 +47,6 @@
             android:id="@+id/exercise_free_mode_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
             android:layout_weight="1"
             android:orientation="vertical"
             android:paddingLeft="16dp"
@@ -64,6 +64,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="24sp"
                 android:text="@string/free_mode" >
             </TextView>
         </LinearLayout>
@@ -72,7 +74,6 @@
             android:id="@+id/exercise_intelli_mode_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
             android:layout_weight="1"
             android:orientation="vertical"
             android:paddingLeft="16dp"
@@ -90,6 +91,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="24sp"
                 android:text="@string/intelli_mode" >
             </TextView>
         </LinearLayout>
@@ -98,7 +101,6 @@
             android:id="@+id/exercise_immersion_mode_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
             android:layout_weight="1"
             android:orientation="vertical"
             android:paddingLeft="16dp"
@@ -116,6 +118,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="24sp"
                 android:text="@string/immersion_mode" >
             </TextView>
         </LinearLayout>
