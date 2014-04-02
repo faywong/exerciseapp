@@ -130,10 +130,12 @@ public class FreeMode extends Activity implements View.OnClickListener {
 	private UnityPlayer mUnityPlayer;
 	private ImageButton videoPlayBtn;
 
-	private static final int SWIPE_MIN_DISTANCE_HORIZONTAL = 80;//120;
-	private static final int SWIPE_THRESHOLD_VELOCITY_HORIZONTAL = 100;//200;
-	private static final int SWIPE_MIN_DISTANCE_VERTICAL = SWIPE_MIN_DISTANCE_HORIZONTAL / 2;//120;
+	private static final int SWIPE_MIN_DISTANCE_HORIZONTAL = 80;
+	private static final int SWIPE_THRESHOLD_VELOCITY_HORIZONTAL = 100;
+	private static final int SWIPE_MIN_DISTANCE_VERTICAL = SWIPE_MIN_DISTANCE_HORIZONTAL / 2;
 	private static final int SWIPE_THRESHOLD_VELOCITY_VERTICAL = SWIPE_MIN_DISTANCE_VERTICAL * 2 / 3;
+	
+	private SettingObservable mSettingObservable;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -358,7 +360,6 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		});
 		initializeUnityView();
 		initializeBottomTools();
-		
 	}
 
 	private void initializeBottomTools() {
@@ -371,7 +372,11 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		// TODO Auto-generated method stub
 		 mUnityPlayer = new UnityPlayer(this);
 		 int glesMode = mUnityPlayer.getSettings().getInt("gles_mode", 1);
-		 mUnityPlayer.init(glesMode, false);
+		 try {
+			 mUnityPlayer.init(glesMode, false);
+		 } catch (Exception e) {
+			 Log.e(TAG, "FATAL ERROR, init unity player failed!");
+		 }
 		 
 		 FrameLayout layout = (FrameLayout) findViewById(R.id.unity_view);
 		 LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -383,7 +388,11 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		// TODO Auto-generated method stub
 		super.onResume();
 		if (mUnityPlayer != null) {
-			mUnityPlayer.resume();
+			try {
+				mUnityPlayer.resume();
+			} catch (Exception e) {
+				Log.e(TAG, "FATAL ERROR! Unity player failed in on resume!");
+			}
 		}
 	}
 

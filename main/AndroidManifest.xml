@@ -12,17 +12,28 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_exercise"
         android:label="@string/app_name"
+        android:persistent="true"
         android:theme="@android:style/Theme.NoTitleBar" >
         <activity
             android:name="io.github.faywong.exerciseapp.Main"
+            android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+            android:stateNotNeeded="true"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:windowSoftInputMode="adjustPan" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.MONKEY" />
             </intent-filter>
         </activity>
         <activity
@@ -59,16 +70,16 @@
                 android:name="unityplayer.ForwardNativeEventsToDalvik"
                 android:value="false" />
         </activity>
-		<!--        need to verify -->
+        <!-- need to verify -->
         <activity
             android:name="io.github.faywong.exerciseapp.TabActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="landscape" >
         </activity>
-        
-        <!--  SeeJoyPlayer -->
-         <activity
+
+        <!-- SeeJoyPlayer -->
+        <activity
             android:name="io.github.faywong.exerciseapp.thirdparty.VideoPlayerActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
@@ -99,7 +110,6 @@
             android:screenOrientation="landscape"
             android:theme="@style/transActivity" >
         </activity>
-        
     </application>
 
 </manifest>
