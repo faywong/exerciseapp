@@ -604,9 +604,9 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
 		return false;
 	}
 
-	@Override
-	public int getAudioSessionId() {
+	// Note: do not set the target API to be 19
+/*	public int getAudioSessionId() {
 		// TODO Auto-generated method stub
 		return 0;
-	}
+	}*/
 }
