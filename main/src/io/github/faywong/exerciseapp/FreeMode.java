@@ -10,16 +10,20 @@ import android.R.color;
 import android.R.integer;
 import android.R.string;
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
@@ -40,7 +44,7 @@ import io.github.faywong.exerciseapp.R;
 import io.github.faywong.exerciseapp.interfaces.WidgetGroup;
 import io.github.faywong.exerciseapp.thirdparty.VideoPlayerActivity;
 
-public class FreeMode extends Activity implements View.OnClickListener {
+public class FreeMode extends FragmentActivity implements View.OnClickListener {
 	private static final String TAG = "FreeMode";
 	private RelativeLayout timeControlLayout;
 	private RelativeLayout timeControlPanel;
@@ -108,7 +112,7 @@ public class FreeMode extends Activity implements View.OnClickListener {
 			dismissAllPanels();
 		}
 	};
-	
+
 	private Runnable countDownTextOperationTimeOutRunable = new Runnable() {
 
 		@Override
@@ -122,48 +126,55 @@ public class FreeMode extends Activity implements View.OnClickListener {
 	private TextView calorieHeadText;
 	private TextView speedHeadText;
 	private TextView inclineHeadText;
-	
+
 	private ColorStateList defaultColorStateList;
-	
+
 	final Animation countDownTextIn = new AlphaAnimation(0.0f, 1.0f);
 	final Animation countDownTextOut = new AlphaAnimation(1.0f, 0.0f);
-	private UnityPlayer mUnityPlayer;
 	private ImageButton videoPlayBtn;
 
 	private static final int SWIPE_MIN_DISTANCE_HORIZONTAL = 80;
 	private static final int SWIPE_THRESHOLD_VELOCITY_HORIZONTAL = 100;
 	private static final int SWIPE_MIN_DISTANCE_VERTICAL = SWIPE_MIN_DISTANCE_HORIZONTAL / 2;
 	private static final int SWIPE_THRESHOLD_VELOCITY_VERTICAL = SWIPE_MIN_DISTANCE_VERTICAL * 2 / 3;
-	
+
 	private SettingObservable mSettingObservable;
-	
+	private FragmentManager mFragmentManager;
+	private LayoutInflater mInflater;
+	private UnityFragment mUnityFragment;
+	private ImageButton unityBtn;
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_exercise_free_mode);
+
+		mFragmentManager = getSupportFragmentManager();
+		mInflater = LayoutInflater.from(this);
 		// initialize animations
 		countDownTextIn.setDuration(2000);
 		countDownTextOut.setDuration(2000);
 		countDownTextOut.setAnimationListener(new AnimationListener() {
 
-		    @Override
-		    public void onAnimationEnd(Animation animation) {
-		        //countDownText.startAnimation(countDownTextOut);
-				countDownText.setTextColor(color.transparent);;
-		    }
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				// countDownText.startAnimation(countDownTextOut);
+				countDownText.setTextColor(color.transparent);
+				;
+			}
 
 			@Override
 			public void onAnimationRepeat(Animation arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void onAnimationStart(Animation arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
-		
+
 		// initialize time related views/handlers
 		timeControlLayout = (RelativeLayout) findViewById(R.id.time_control);
 		timeControlLayout.setOnClickListener(this);
@@ -283,7 +294,6 @@ public class FreeMode extends Activity implements View.OnClickListener {
 
 		countDownText = (TextView) findViewById(R.id.count_down_text);
 
-		
 		final GestureDetector gdt = new GestureDetector(this,
 				new OnGestureListener() {
 
@@ -358,8 +368,13 @@ public class FreeMode extends Activity implements View.OnClickListener {
 				return !gdt.onTouchEvent(event);
 			}
 		});
-		initializeUnityView();
+		unityBtn = (ImageButton) findViewById(R.id.unity_btn);
+		unityBtn.setOnClickListener(this);
 		initializeBottomTools();
+		
+		if (mUnityFragment == null) {
+			mUnityFragment = new UnityFragment();
+		}
 	}
 
 	private void initializeBottomTools() {
@@ -368,40 +383,30 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		videoPlayBtn.setOnClickListener(this);
 	}
 
-	private void initializeUnityView() {
-		// TODO Auto-generated method stub
-		 mUnityPlayer = new UnityPlayer(this);
-		 int glesMode = mUnityPlayer.getSettings().getInt("gles_mode", 1);
-		 try {
-			 mUnityPlayer.init(glesMode, false);
-		 } catch (Exception e) {
-			 Log.e(TAG, "FATAL ERROR, init unity player failed!");
-		 }
-		 
-		 FrameLayout layout = (FrameLayout) findViewById(R.id.unity_view);
-		 LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-		 layout.addView(mUnityPlayer.getView(), 0, lp);
+	private void switchToUnityView() {
+		if (mFragmentManager == null) {
+			return;
+		}
+
+		android.support.v4.app.FragmentTransaction fragmentTransaction = mFragmentManager
+				.beginTransaction();
+		fragmentTransaction.replace(R.id.fragment_container, mUnityFragment);
+		fragmentTransaction.commit();
 	}
 
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		if (mUnityPlayer != null) {
-			try {
-				mUnityPlayer.resume();
-			} catch (Exception e) {
-				Log.e(TAG, "FATAL ERROR! Unity player failed in on resume!");
-			}
-		}
+
 	}
 
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		// TODO Auto-generated method stub
 		super.onWindowFocusChanged(hasFocus);
-		if (mUnityPlayer != null) {
-			mUnityPlayer.windowFocusChanged(hasFocus);
+		if (mUnityFragment != null) {
+			mUnityFragment.windowFocusChanged(hasFocus);
 		}
 	}
 
@@ -410,47 +415,54 @@ public class FreeMode extends Activity implements View.OnClickListener {
 			Log.d(TAG, "start to display case");
 			countDownText.setText(speedHeadText.getText());
 			countDownText.setTextColor(defaultColorStateList);
-/*			countDownText.clearAnimation();
-			countDownTextIn.setDuration(500);
-			countDownText.startAnimation(countDownTextIn);*/
+			/*
+			 * countDownText.clearAnimation(); countDownTextIn.setDuration(500);
+			 * countDownText.startAnimation(countDownTextIn);
+			 */
 		} else {
-			final String newValue = getNewSpeedText(speedHeadText.getText().toString(), right);
+			final String newValue = getNewSpeedText(speedHeadText.getText()
+					.toString(), right);
 			countDownText.setText(newValue);
 			speedHeadText.setText(newValue);
 			speedValueText.setText(newValue);
 
-/*			countDownText.clearAnimation();
-			countDownTextOut.setDuration(2000);
-			countDownText.startAnimation(countDownTextOut);*/
+			/*
+			 * countDownText.clearAnimation();
+			 * countDownTextOut.setDuration(2000);
+			 * countDownText.startAnimation(countDownTextOut);
+			 */
 		}
 
 		hander.removeCallbacks(countDownTextOperationTimeOutRunable);
 		hander.postDelayed(countDownTextOperationTimeOutRunable, 3000);
 	}
-	
 
 	private void handleVerticalFling(final boolean top) {
 		if (!defaultColorStateList.equals(countDownText.getTextColors())) {
 			Log.d(TAG, "start to display case");
 			countDownText.setText(inclineHeadText.getText());
 			countDownText.setTextColor(defaultColorStateList);
-/*			countDownText.clearAnimation();
-			countDownTextIn.setDuration(500);
-			countDownText.startAnimation(countDownTextIn);*/
+			/*
+			 * countDownText.clearAnimation(); countDownTextIn.setDuration(500);
+			 * countDownText.startAnimation(countDownTextIn);
+			 */
 		} else {
-			final String newValue = getNewInclineText(inclineHeadText.getText().toString(), top);
+			final String newValue = getNewInclineText(inclineHeadText.getText()
+					.toString(), top);
 			countDownText.setText(newValue);
 			inclineHeadText.setText(newValue);
 			inclineValueText.setText(newValue);
-/*			countDownText.clearAnimation();
-			countDownTextOut.setDuration(2000);
-			countDownText.startAnimation(countDownTextOut);*/
+			/*
+			 * countDownText.clearAnimation();
+			 * countDownTextOut.setDuration(2000);
+			 * countDownText.startAnimation(countDownTextOut);
+			 */
 		}
 
 		hander.removeCallbacks(countDownTextOperationTimeOutRunable);
 		hander.postDelayed(countDownTextOperationTimeOutRunable, 3000);
 	}
-	
+
 	@Override
 	protected void onStart() {
 		// TODO Auto-generated method stub
@@ -522,25 +534,27 @@ public class FreeMode extends Activity implements View.OnClickListener {
 				countDownText.setText("GO!");
 				countDownText.clearAnimation();
 				countDownTextOut.setDuration(2000);
-		        countDownText.startAnimation(countDownTextOut);
+				countDownText.startAnimation(countDownTextOut);
 			}
 		}.start();
 	}
 
 	private static String getNewSpeedText(final String origin, boolean incr) {
 		final int oldSpeed = parseSpeed(origin);
-		final String newValue = String.format(SPEED_DISPLAY_FORMAT,
-				String.valueOf(incr ? (oldSpeed + SPEED_ADJUST_STEP) : (Math.max(oldSpeed - SPEED_ADJUST_STEP, 0))));
+		final String newValue = String.format(SPEED_DISPLAY_FORMAT, String
+				.valueOf(incr ? (oldSpeed + SPEED_ADJUST_STEP) : (Math.max(
+						oldSpeed - SPEED_ADJUST_STEP, 0))));
 		return newValue;
 	}
-	
+
 	private static String getNewInclineText(final String origin, boolean incr) {
 		final int oldIncline = parseIncline(origin);
-		final String newValue = String.format(INCLINE_DISPLAY_FORMAT,
-				String.valueOf(incr ? (oldIncline + INCLINE_ADJUST_STEP) : (Math.max(oldIncline - INCLINE_ADJUST_STEP, 0))));
+		final String newValue = String.format(INCLINE_DISPLAY_FORMAT, String
+				.valueOf(incr ? (oldIncline + INCLINE_ADJUST_STEP) : (Math.max(
+						oldIncline - INCLINE_ADJUST_STEP, 0))));
 		return newValue;
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -568,8 +582,8 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		} else if (viewId == R.id.video_btn) {
 			Intent intent = new Intent(this, VideoPlayerActivity.class);
 			startActivity(intent);
-		}
-		else if (viewId == R.id.time_control || viewId == R.id.distance_control
+		} else if (viewId == R.id.time_control
+				|| viewId == R.id.distance_control
 				|| viewId == R.id.calorie_control
 				|| viewId == R.id.speed_control
 				|| viewId == R.id.incline_control) {
@@ -647,9 +661,10 @@ public class FreeMode extends Activity implements View.OnClickListener {
 		} else if (viewId == R.id.sub_incline_btn) {
 			final String oldString = inclineValueText.getText().toString();
 			final String newValue = getNewInclineText(oldString, false);
-			inclineValueText
-					.setText(newValue);
+			inclineValueText.setText(newValue);
 			inclineHeadText.setText(newValue);
+		} else if (viewId == R.id.unity_btn) {
+			switchToUnityView();
 		}
 
 		for (int i = 0; i < headerControlMaps.size(); i++) {
