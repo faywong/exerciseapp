@@ -13,6 +13,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 
 public class UnityFragment extends Fragment {
+	private boolean oldHasFocus = false;
 
 	private UnityPlayer mUnityPlayer;
 	private static String TAG = "UnityFragment";
@@ -33,6 +34,7 @@ public class UnityFragment extends Fragment {
 		if (mUnityPlayer != null) {
 			mUnityPlayer.windowFocusChanged(hasFocus);
 		}
+		oldHasFocus = hasFocus;
 	}
 	
 	@Override
@@ -79,6 +81,15 @@ public class UnityFragment extends Fragment {
 		LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 		Log.d(TAG, "mUnityPlayer view is " + unityView);
 		parentLayout.addView(unityView, 0, lp);
+		mUnityPlayer.post(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				mUnityPlayer.windowFocusChanged(oldHasFocus);	
+			}
+		});
+
 		return parentLayout;
 	}
 

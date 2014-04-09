@@ -371,6 +371,10 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 		unityBtn = (ImageButton) findViewById(R.id.unity_btn);
 		unityBtn.setOnClickListener(this);
 		initializeBottomTools();
+		
+		if (mUnityFragment == null) {
+			mUnityFragment = new UnityFragment();
+		}
 	}
 
 	private void initializeBottomTools() {
@@ -382,10 +386,6 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 	private void switchToUnityView() {
 		if (mFragmentManager == null) {
 			return;
-		}
-		
-		if (mUnityFragment == null) {
-			mUnityFragment = new UnityFragment();
 		}
 
 		android.support.v4.app.FragmentTransaction fragmentTransaction = mFragmentManager
