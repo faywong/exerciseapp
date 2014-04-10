@@ -43,6 +43,7 @@ import android.widget.TextView;
 import io.github.faywong.exerciseapp.R;
 import io.github.faywong.exerciseapp.interfaces.WidgetGroup;
 import io.github.faywong.exerciseapp.thirdparty.VideoPlayerActivity;
+import io.github.faywong.exerciseapp.thirdparty.musicActivity;
 
 public class FreeMode extends FragmentActivity implements View.OnClickListener {
 	private static final String TAG = "FreeMode";
@@ -100,6 +101,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 	private TextView inclineValueText;
 	private WidgetGroup<Button, TextView> inclineGroup;
 	private ImageButton startBtn;
+	private ImageButton musicBtn;
 	private TextView countDownText;
 
 	private ArrayList<RelativeLayout> panelLayouts = new ArrayList<RelativeLayout>();
@@ -291,7 +293,11 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 
 		startBtn = (ImageButton) findViewById(R.id.start_btn);
 		startBtn.setOnClickListener(this);
-
+		
+		musicBtn = (ImageButton) findViewById(R.id.music_btn);
+		musicBtn.setOnClickListener(this);
+		
+		
 		countDownText = (TextView) findViewById(R.id.count_down_text);
 
 		final GestureDetector gdt = new GestureDetector(this,
@@ -581,6 +587,10 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 			}
 		} else if (viewId == R.id.video_btn) {
 			Intent intent = new Intent(this, VideoPlayerActivity.class);
+			startActivity(intent);
+		} 
+		else if (viewId == R.id.music_btn) {
+			Intent intent = new Intent(this, musicActivity.class);
 			startActivity(intent);
 		} else if (viewId == R.id.time_control
 				|| viewId == R.id.distance_control

@@ -51,6 +51,7 @@ public class UnityFragment extends Fragment {
 	public void onDetach() {
 		// TODO Auto-generated method stub
 		super.onDetach();
+		mUnityPlayer.quit();
 		mUnityPlayer = null;
 	}
 

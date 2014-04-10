@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/time_label"
-                android:src="@drawable/icon_" >
+                android:src="@drawable/time_icon" >
             </ImageView>
 
             <TextView
@@ -70,7 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/distance_label"
-                android:src="@drawable/icon_" >
+                android:src="@drawable/distance_icon" >
             </ImageView>
 
             <TextView
@@ -106,7 +106,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/calorie_label"
-                android:src="@drawable/icon_" >
+                android:src="@drawable/calorie_icon" >
             </ImageView>
 
             <TextView
@@ -142,7 +142,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/speed_label"
-                android:src="@drawable/icon_" >
+                android:src="@drawable/speed_icon" >
             </ImageView>
 
             <TextView
@@ -177,7 +177,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/incline_label"
-                android:src="@drawable/icon_" >
+                android:src="@drawable/incline_icon" >
             </ImageView>
 
             <TextView
@@ -249,7 +249,7 @@
             android:layout_height="48dp"
             android:contentDescription="@string/free_mode_desc"
             android:scaleType="fitXY"
-            android:src="@drawable/video" >
+            android:src="@drawable/video1" >
         </ImageButton>
 
         <ImageButton
@@ -258,7 +258,7 @@
             android:layout_height="48dp"
             android:contentDescription="@string/free_mode_desc"
             android:scaleType="fitXY"
-            android:src="@drawable/iptv" >
+            android:src="@drawable/iptv1" >
         </ImageButton>
 
         <ImageButton
@@ -267,7 +267,7 @@
             android:layout_height="48dp"
             android:contentDescription="@string/exercise_start_stop_content_desc"
             android:scaleType="fitXY"
-            android:src="@drawable/internet_surf" >
+            android:src="@drawable/internet_surf1" >
         </ImageButton>
         
         <ImageButton

@@ -19,7 +19,7 @@
             android:layout_height="48dp"
             android:contentDescription="@string/mute_content_desc"
             android:scaleType="fitXY"
-            android:src="@drawable/mute" >
+            android:src="@drawable/mute1" >
         </ImageButton>
 
         <ImageButton
@@ -28,7 +28,7 @@
             android:layout_height="48dp"
             android:contentDescription="@string/settings_content_desc"
             android:scaleType="fitXY"
-            android:src="@drawable/settings" >
+            android:src="@drawable/settings1" >
         </ImageButton>
     </LinearLayout>
 
@@ -58,7 +58,7 @@
                 android:layout_height="140dp"
                 android:contentDescription="@string/free_mode_desc"
                 android:scaleType="fitXY"
-                android:src="@drawable/mute" >
+                android:src="@drawable/free_mode" >
             </ImageButton>
 
             <TextView
@@ -85,7 +85,7 @@
                 android:layout_height="140dp"
                 android:contentDescription="@string/intelli_mode_desc"
                 android:scaleType="fitXY"
-                android:src="@drawable/mute" >
+                android:src="@drawable/smart_mode" >
             </ImageButton>
 
             <TextView
@@ -112,7 +112,7 @@
                 android:layout_height="140dp"
                 android:contentDescription="@string/immersion_mode_desc"
                 android:scaleType="fitXY"
-                android:src="@drawable/mute" >
+                android:src="@drawable/real_mode" >
             </ImageButton>
 
             <TextView

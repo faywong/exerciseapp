@@ -110,6 +110,12 @@
             android:screenOrientation="landscape"
             android:theme="@style/transActivity" >
         </activity>
+        
+        <activity 
+            android:name="io.github.faywong.exerciseapp.thirdparty.musicActivity"
+            android:label=""
+            android:screenOrientation="landscape">
+        </activity>
     </application>
 
 </manifest>
