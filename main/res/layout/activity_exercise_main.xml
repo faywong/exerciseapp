@@ -15,20 +15,20 @@
 
         <ImageButton
             android:id="@+id/mute"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:contentDescription="@string/mute_content_desc"
             android:scaleType="fitXY"
-            android:src="@drawable/mute1" >
+            android:background="@drawable/mute1" >
         </ImageButton>
 
         <ImageButton
             android:id="@+id/settings"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:contentDescription="@string/settings_content_desc"
             android:scaleType="fitXY"
-            android:src="@drawable/settings1" >
+            android:background="@drawable/settings1" >
         </ImageButton>
     </LinearLayout>
 
@@ -54,11 +54,11 @@
 
             <ImageButton
                 android:id="@+id/free_mode_btn"
-                android:layout_width="140dp"
-                android:layout_height="140dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:contentDescription="@string/free_mode_desc"
                 android:scaleType="fitXY"
-                android:src="@drawable/free_mode" >
+                android:background="@drawable/free_mode" >
             </ImageButton>
 
             <TextView
@@ -81,11 +81,11 @@
 
             <ImageButton
                 android:id="@+id/intelli_mode_btn"
-                android:layout_width="140dp"
-                android:layout_height="140dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:contentDescription="@string/intelli_mode_desc"
                 android:scaleType="fitXY"
-                android:src="@drawable/smart_mode" >
+                android:background="@drawable/smart_mode" >
             </ImageButton>
 
             <TextView
@@ -108,11 +108,11 @@
 
             <ImageButton
                 android:id="@+id/immersion_mode_btn"
-                android:layout_width="140dp"
-                android:layout_height="140dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:contentDescription="@string/immersion_mode_desc"
                 android:scaleType="fitXY"
-                android:src="@drawable/real_mode" >
+                android:background="@drawable/real_mode" >
             </ImageButton>
 
             <TextView

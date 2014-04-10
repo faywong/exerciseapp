@@ -220,7 +220,7 @@
         android:layout_alignParentRight="true"
         android:contentDescription="@string/exercise_start_stop_content_desc"
         android:scaleType="fitXY"
-        android:src="@drawable/start" >
+        android:background="@drawable/start" >
     </ImageButton>
 
     <LinearLayout
@@ -240,7 +240,7 @@
             android:layout_height="48dp"
             android:contentDescription="@string/free_mode_desc"
             android:scaleType="fitXY"
-            android:src="@drawable/music" >
+            android:background="@drawable/music" >
         </ImageButton>
 
         <ImageButton
@@ -249,7 +249,7 @@
             android:layout_height="48dp"
             android:contentDescription="@string/free_mode_desc"
             android:scaleType="fitXY"
-            android:src="@drawable/video1" >
+            android:background="@drawable/video1" >
         </ImageButton>
 
         <ImageButton
@@ -258,7 +258,7 @@
             android:layout_height="48dp"
             android:contentDescription="@string/free_mode_desc"
             android:scaleType="fitXY"
-            android:src="@drawable/iptv1" >
+            android:background="@drawable/iptv1" >
         </ImageButton>
 
         <ImageButton
@@ -267,7 +267,7 @@
             android:layout_height="48dp"
             android:contentDescription="@string/exercise_start_stop_content_desc"
             android:scaleType="fitXY"
-            android:src="@drawable/internet_surf1" >
+            android:background="@drawable/internet_surf1" >
         </ImageButton>
         
         <ImageButton
@@ -276,7 +276,7 @@
             android:layout_height="48dp"
             android:contentDescription="@string/exercise_start_stop_content_desc"
             android:scaleType="fitXY"
-            android:src="@drawable/unity" >
+            android:background="@drawable/unity" >
         </ImageButton>
     </LinearLayout>
 
