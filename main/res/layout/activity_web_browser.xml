@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout_bg" android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <!-- 头部 -->
+    <RelativeLayout 
+        android:id="@+id/MyLayout_top"
+        android:orientation="horizontal" 
+        android:layout_width="fill_parent"
+        android:layout_height="25dp" 
+        android:layout_alignParentTop="true"
+        android:gravity="center">
+        <TextView
+	        android:id="@+id/WebTitle"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textColor="#0000ff" 
+	        android:text="WebBrower" />
+    </RelativeLayout>
+    <!-- 底部 -->
+    <RelativeLayout
+        android:id="@+id/MyLayout_bottom"
+        android:orientation="horizontal" 
+        android:layout_width="fill_parent"
+        android:layout_height="80dp" 
+        android:layout_alignParentBottom="true"
+        android:gravity="center">
+        <!-- 底部第一个横条 -->
+        <LinearLayout
+            android:id="@+id/MyLayout_bottom1"
+            android:orientation="horizontal" 
+            android:layout_width="fill_parent"
+            android:layout_height="40dp" 
+            android:layout_alignParentTop="true">
+            <EditText
+                   android:id="@+id/urltext"
+                   android:layout_weight="6"
+	               android:layout_width="fill_parent"
+	               android:layout_height="fill_parent"/>
+          </LinearLayout>
+          <!-- 底部第二个横条 -->
+          <LinearLayout
+             android:id="@+id/MyLayout_bottom2"
+             android:orientation="horizontal" 
+             android:layout_width="fill_parent"
+             android:layout_height="40dp"
+             android:background="#DFDFDF"
+             android:layout_alignParentBottom="true" 
+             android:gravity="center">
+
+             <Button
+                 android:id="@+id/GoBtn"
+                 android:layout_width="116dp"
+                 android:layout_height="fill_parent"
+                 android:text="Go" />
+
+             <Button
+                 android:id="@+id/BackBtn"
+                 android:layout_width="156dp"
+                 android:layout_height="fill_parent"
+                 android:text="Back" />
+
+             <Button
+                 android:id="@+id/forwardBtn"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:text="Forward" />
+
+             <Button
+                 android:id="@+id/reloadBtn"
+                 android:layout_width="fill_parent"
+                 android:layout_height="fill_parent"
+                 android:layout_weight="1"
+                 android:text="Reload" />
+
+          </LinearLayout>
+    </RelativeLayout>
+    <!-- 中部 -->
+    <RelativeLayout 
+        android:orientation="horizontal"
+        android:layout_width="fill_parent" 
+        android:layout_height="fill_parent"
+        android:layout_above="@id/MyLayout_bottom" 
+        android:layout_below="@id/MyLayout_top">
+        <WebView
+	           android:id="@+id/webshow"
+	           android:layout_width="fill_parent"
+	           android:layout_height="fill_parent" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -44,6 +44,7 @@ import io.github.faywong.exerciseapp.R;
 import io.github.faywong.exerciseapp.interfaces.WidgetGroup;
 import io.github.faywong.exerciseapp.thirdparty.VideoPlayerActivity;
 import io.github.faywong.exerciseapp.thirdparty.musicActivity;
+import io.github.faywong.exerciseapp.thirdparty.webBrowser;
 
 public class FreeMode extends FragmentActivity implements View.OnClickListener {
 	private static final String TAG = "FreeMode";
@@ -102,6 +103,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 	private WidgetGroup<Button, TextView> inclineGroup;
 	private ImageButton startBtn;
 	private ImageButton musicBtn;
+	private ImageButton webBtn;
 	private TextView countDownText;
 
 	private ArrayList<RelativeLayout> panelLayouts = new ArrayList<RelativeLayout>();
@@ -297,6 +299,8 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 		musicBtn = (ImageButton) findViewById(R.id.music_btn);
 		musicBtn.setOnClickListener(this);
 		
+		webBtn = (ImageButton) findViewById(R.id.surf_btn);
+		webBtn.setOnClickListener(this);
 		
 		countDownText = (TextView) findViewById(R.id.count_down_text);
 
@@ -591,6 +595,10 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 		} 
 		else if (viewId == R.id.music_btn) {
 			Intent intent = new Intent(this, musicActivity.class);
+			startActivity(intent);
+		} 
+		else if (viewId == R.id.surf_btn) {
+			Intent intent = new Intent(this, webBrowser.class);
 			startActivity(intent);
 		} else if (viewId == R.id.time_control
 				|| viewId == R.id.distance_control

@@ -116,6 +116,11 @@
             android:label=""
             android:screenOrientation="landscape">
         </activity>
+        <activity
+            android:name="io.github.faywong.exerciseapp.thirdparty.webBrowser"
+            android:label=""
+            android:screenOrientation="landscape" >
+        </activity>
     </application>
-
+<uses-permission android:name="android.permission.INTERNET"></uses-permission>
 </manifest>
