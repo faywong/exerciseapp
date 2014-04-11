@@ -8,6 +8,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import io.github.faywong.exerciseapp.R;
+import io.github.faywong.exerciseapp.thirdparty.WifiManagerMain;
 
 /**
  * @author faywong
@@ -18,6 +19,7 @@ public class Main extends Activity implements View.OnClickListener {
 	ImageButton freeModeBtn;
 	ImageButton intelliModeBtn;
 	ImageButton immersionModeBtn;
+	private ImageButton wifiSettingBtn;
 
 	
 	@Override
@@ -29,6 +31,8 @@ public class Main extends Activity implements View.OnClickListener {
 		freeModeBtn.setOnClickListener(this);
 		intelliModeBtn = (ImageButton)findViewById(R.id.intelli_mode_btn);
 		immersionModeBtn = (ImageButton)findViewById(R.id.immersion_mode_btn);
+		wifiSettingBtn = (ImageButton)findViewById(R.id.wifi_settings);
+		wifiSettingBtn.setOnClickListener(this);
 	}
 
 	@Override
@@ -49,6 +53,9 @@ public class Main extends Activity implements View.OnClickListener {
 			
 		} else if (v.getId() == R.id.immersion_mode_btn) {
 			
+		} else if (v.getId() == R.id.wifi_settings) {
+			Intent intent = new Intent().setClass(this, WifiManagerMain.class);
+			startActivity(intent);
 		}
 	}
 

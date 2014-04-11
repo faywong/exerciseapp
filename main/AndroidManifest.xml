@@ -8,6 +8,16 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="14" />
 
+    <uses-feature android:name="android.hardware.wifi" />
+
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_exercise"
@@ -70,19 +80,24 @@
                 android:name="unityplayer.ForwardNativeEventsToDalvik"
                 android:value="false" />
         </activity>
-        <receiver
-            android:name="io.github.faywong.exerciseapp.BootCompleteReceiver">
-            
+
+        <receiver android:name="io.github.faywong.exerciseapp.BootCompleteReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
-            
         </receiver>
         <!-- need to verify -->
         <activity
             android:name="io.github.faywong.exerciseapp.TabActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name="io.github.faywong.exerciseapp.thirdparty.WifiManagerMain"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="landscape" >
         </activity>
 
@@ -118,11 +133,10 @@
             android:screenOrientation="landscape"
             android:theme="@style/transActivity" >
         </activity>
-        
-        <activity 
+        <activity
             android:name="io.github.faywong.exerciseapp.thirdparty.musicActivity"
             android:label=""
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape" >
         </activity>
         <activity
             android:name="io.github.faywong.exerciseapp.thirdparty.webBrowser"
@@ -130,5 +144,8 @@
             android:screenOrientation="landscape" >
         </activity>
     </application>
-<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+
+    <uses-permission android:name="android.permission.INTERNET" >
+    </uses-permission>
+
 </manifest>

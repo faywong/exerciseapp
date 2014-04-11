@@ -5,5 +5,7 @@
     <color name="background">#FF000000</color>
     <color name="control_back">#AA00003D</color>
     <color name="dialog_back">#330000FF</color>
-
-</resources>
+    <color name="background_color">#FFFFFF</color>
+    <color name="text_color">#000000</color>
+    
+    </resources>

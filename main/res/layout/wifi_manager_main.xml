@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+	android:background="@color/background_color"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+	<LinearLayout  
+		android:orientation="horizontal"  
+		android:layout_width="wrap_content"  
+		android:layout_height="wrap_content" >  
+		<Button    
+			android:id="@+id/reset_view"    
+			android:layout_width="wrap_content"     
+			android:layout_height="wrap_content"     
+			android:text="Reset" />  
+		<Button    
+			android:id="@+id/scan_wifi"    
+			android:layout_width="wrap_content"     
+			android:layout_height="wrap_content"     
+			android:text="ScanWifi" />  
+		<Button    
+			android:id="@+id/list_configured_wifi"    
+			android:layout_width="wrap_content"     
+			android:layout_height="wrap_content"     
+			android:text="ListConfWifi" />  
+	</LinearLayout>
+	<LinearLayout  
+		android:orientation="horizontal"  
+		android:layout_width="wrap_content"  
+		android:layout_height="wrap_content" >  
+		<Button 
+			android:id="@+id/start_boarding_device"    
+			android:layout_width="wrap_content"     
+			android:layout_height="wrap_content"     
+			android:text="OnBoardDevice" />  
+		<Button    
+			android:id="@+id/scan_device"    
+			android:layout_width="wrap_content"     
+			android:layout_height="wrap_content"     
+			android:text="ScanDevice" />  
+	</LinearLayout>
+	<TextView
+		android:id="@+id/info"    
+		android:layout_width="wrap_content"     
+		android:layout_height="wrap_content"     
+		android:textColor="@color/text_color"
+		android:text=""/>  
+	<LinearLayout  
+		android:id="@+id/device_layout"    
+		android:orientation="horizontal"  
+		android:layout_width="wrap_content"  
+		android:layout_height="wrap_content" >  
+		<TextView
+			android:id="@+id/device_name"    
+			android:layout_width="wrap_content"     
+			android:layout_height="wrap_content"     
+			android:textColor="@color/text_color"
+			android:textSize="16sp"  
+			android:textStyle="bold|italic"  
+			android:text=""/>  
+		<Button 
+			android:id="@+id/device_on"    
+			android:layout_width="wrap_content"     
+			android:layout_height="wrap_content"     
+			android:text="     ON      " />  
+		<Button 
+			android:id="@+id/device_off"    
+			android:layout_width="wrap_content"     
+			android:layout_height="wrap_content"     
+			android:text="     OFF     " />  
+	</LinearLayout>
+	<LinearLayout  
+		android:id="@+id/on_boarding_layout"    
+		android:orientation="vertical"  
+		android:layout_width="wrap_content"  
+		android:layout_height="wrap_content" >  
+		<LinearLayout  
+			android:orientation="horizontal"  
+			android:layout_width="wrap_content"  
+			android:layout_height="wrap_content" >  
+			<TextView
+				android:layout_width="wrap_content"     
+				android:layout_height="wrap_content"     
+				android:textColor="@color/text_color"
+				android:text="Device: "/>  
+			<Spinner
+				android:id="@+id/target_device_spinner"    
+				android:layout_width="wrap_content"     
+				android:layout_height="wrap_content"
+				android:textColor="@color/text_color"
+				android:textSize="16sp"  
+				android:textStyle="bold|italic" />  
+			<TextView
+				android:id="@+id/target_device"    
+				android:layout_width="wrap_content"     
+				android:layout_height="wrap_content"     
+				android:textColor="@color/text_color"
+				android:textSize="16sp"  
+				android:textStyle="bold|italic"  
+				android:text=""/>  
+		</LinearLayout>
+		<LinearLayout  
+			android:orientation="horizontal"  
+			android:layout_width="wrap_content"  
+			android:layout_height="wrap_content" >  
+			<TextView
+				android:layout_width="wrap_content"     
+				android:layout_height="wrap_content"     
+				android:textColor="@color/text_color"
+				android:text="Pwd: "/>  
+			<EditText
+				android:id="@+id/on_boarding_pwd"
+				android:layout_width="150dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1" />
+			<Button    
+				android:id="@+id/save_on_boarding_info"    
+				android:layout_width="wrap_content"     
+				android:layout_height="wrap_content"     
+				android:text="    Save    " />  
+		</LinearLayout>
+		<LinearLayout  
+			android:orientation="horizontal"  
+			android:layout_width="wrap_content"  
+			android:layout_height="wrap_content" >  
+			<TextView
+				android:layout_width="wrap_content"     
+				android:layout_height="wrap_content"     
+				android:textColor="@color/text_color"
+				android:textSize="16sp"  
+				android:text="SSID: "/>  
+			<TextView
+				android:id="@+id/on_boarding_ssid"    
+				android:layout_width="wrap_content"     
+				android:layout_height="wrap_content"     
+				android:textColor="@color/text_color"
+				android:textSize="16sp"  
+				android:textStyle="bold|italic"  
+				android:text=""/>  
+		</LinearLayout>
+	</LinearLayout>
+	<ListView
+		android:id="@id/android:list"    
+		android:layout_width="fill_parent" 
+		android:layout_height="fill_parent"
+		android:transcriptMode="alwaysScroll"
+		android:layout_weight="1" />
+</LinearLayout>
+
