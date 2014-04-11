@@ -3,6 +3,8 @@ package io.github.faywong.exerciseapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import io.github.faywong.exerciseapp.R;
@@ -12,6 +14,7 @@ import io.github.faywong.exerciseapp.R;
  *
  */
 public class Main extends Activity implements View.OnClickListener {
+	private static final String TAG = "Main";
 	ImageButton freeModeBtn;
 	ImageButton intelliModeBtn;
 	ImageButton immersionModeBtn;
@@ -46,6 +49,18 @@ public class Main extends Activity implements View.OnClickListener {
 			
 		} else if (v.getId() == R.id.immersion_mode_btn) {
 			
+		}
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		Log.d(TAG, "onKeyDown() keyCode:" + keyCode);
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			Log.d(TAG, "onKeyDown() BACK case");
+			return true;
+		} else {
+			return super.onKeyDown(keyCode, event);
 		}
 	}
 }

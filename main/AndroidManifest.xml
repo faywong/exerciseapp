@@ -70,6 +70,14 @@
                 android:name="unityplayer.ForwardNativeEventsToDalvik"
                 android:value="false" />
         </activity>
+        <receiver
+            android:name="io.github.faywong.exerciseapp.BootCompleteReceiver">
+            
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            
+        </receiver>
         <!-- need to verify -->
         <activity
             android:name="io.github.faywong.exerciseapp.TabActivity"
