@@ -47,8 +47,8 @@ import android.widget.TextView;
 import io.github.faywong.exerciseapp.R;
 import io.github.faywong.exerciseapp.interfaces.WidgetGroup;
 import io.github.faywong.exerciseapp.thirdparty.VideoPlayerActivity;
-import io.github.faywong.exerciseapp.thirdparty.musicActivity;
-import io.github.faywong.exerciseapp.thirdparty.webBrowser;
+
+
 
 public class FreeMode extends FragmentActivity implements View.OnClickListener {
 	private static final String TAG = "FreeMode";
@@ -150,6 +150,8 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 	private FragmentManager mFragmentManager;
 	private LayoutInflater mInflater;
 	private UnityFragment mUnityFragment;
+	private SurfFragment mSurfFragment;
+	private MusicFragment mMusicFragment;
 	private ImageButton unityBtn;
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -413,6 +415,14 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 			mUnityFragment = new UnityFragment();
 		}
 		
+		if (mMusicFragment == null) {
+			mMusicFragment = new MusicFragment();
+		}
+		
+		if (mSurfFragment == null) {
+			mSurfFragment = new SurfFragment();
+		}
+		
 		Observer fakeObserver = new Observer() {
 			
 			@Override
@@ -441,6 +451,27 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 		fragmentTransaction.commit();
 	}
 
+	private void switchToMusicView() {
+		if (mFragmentManager == null) {
+			return;
+		}
+
+		android.support.v4.app.FragmentTransaction fragmentTransaction = mFragmentManager
+				.beginTransaction();
+		fragmentTransaction.replace(R.id.fragment_container, mMusicFragment);
+		fragmentTransaction.commit();
+	}
+	
+	private void switchToSurfView() {
+		if (mFragmentManager == null) {
+			return;
+		}
+
+		android.support.v4.app.FragmentTransaction fragmentTransaction = mFragmentManager
+				.beginTransaction();
+		fragmentTransaction.replace(R.id.fragment_container, mSurfFragment);
+		fragmentTransaction.commit();
+	}
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
@@ -631,12 +662,10 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 			startActivity(intent);
 		} 
 		else if (viewId == R.id.music_btn) {
-			Intent intent = new Intent(this, musicActivity.class);
-			startActivity(intent);
+			switchToMusicView();
 		} 
 		else if (viewId == R.id.surf_btn) {
-			Intent intent = new Intent(this, webBrowser.class);
-			startActivity(intent);
+			switchToSurfView();
 		} else if (viewId == R.id.time_control
 				|| viewId == R.id.distance_control
 				|| viewId == R.id.calorie_control
