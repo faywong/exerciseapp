@@ -8,6 +8,18 @@ public class SettingObservable extends Observable {
 	private static final String TAG = "SettingObservable";
 	private SettingModel mSettingModel;
 
+	static private SettingObservable mSettingObservable=null;
+	
+	static public void destory()
+	{
+		mSettingObservable=null;
+	}
+	static public SettingObservable getInstance()
+	{
+		if(mSettingObservable==null)
+			mSettingObservable = new SettingObservable();
+		return mSettingObservable;
+	}
 	public SettingModel getSettingModel() {
 		return mSettingModel;
 	}

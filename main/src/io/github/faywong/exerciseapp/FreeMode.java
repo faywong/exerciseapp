@@ -153,6 +153,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 	private SurfFragment mSurfFragment;
 	private MusicFragment mMusicFragment;
 	private ImageButton unityBtn;
+	private UnityObserver mUnityObserver;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -184,7 +185,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 
 			}
 		});
-		mSettingObservable = new SettingObservable();
+		mSettingObservable =  SettingObservable.getInstance();
 
 		final Resources resources = getResources();
 		
@@ -432,6 +433,9 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 			}
 		};
 		mSettingObservable.addObserver(fakeObserver);
+		
+		mUnityObserver = new UnityObserver();
+		mSettingObservable.addObserver(mUnityObserver);
 	}
 
 	private void initializeBottomTools() {
