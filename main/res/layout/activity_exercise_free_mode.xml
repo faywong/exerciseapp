@@ -45,7 +45,7 @@
                 android:layout_below="@id/time_label"
                 android:layout_marginLeft="4dp"
                 android:layout_toRightOf="@id/time_icon"
-                android:text="0分钟" >
+                android:text="@string/default_time_display" >
             </TextView>
         </RelativeLayout>
 
@@ -81,7 +81,7 @@
                 android:layout_below="@id/distance_label"
                 android:layout_marginLeft="4dp"
                 android:layout_toRightOf="@id/distance_icon"
-                android:text="0km" >
+                android:text="@string/default_distance_display" >
             </TextView>
         </RelativeLayout>
 
@@ -117,7 +117,7 @@
                 android:layout_below="@id/calorie_label"
                 android:layout_marginLeft="4dp"
                 android:layout_toRightOf="@id/calorie_icon"
-                android:text="0千卡" >
+                android:text="@string/default_calorie_display" >
             </TextView>
         </RelativeLayout>
 
@@ -152,7 +152,7 @@
                 android:layout_below="@id/speed_label"
                 android:layout_marginLeft="4dp"
                 android:layout_toRightOf="@id/speed_icon"
-                android:text="0km/h" >
+                android:text="@string/default_speed_display" >
             </TextView>
         </RelativeLayout>
 
@@ -187,7 +187,7 @@
                 android:layout_below="@id/incline_label"
                 android:layout_marginLeft="4dp"
                 android:layout_toRightOf="@id/incline_icon"
-                android:text="0%" >
+                android:text="@string/default_incline_display" >
             </TextView>
         </RelativeLayout>
     </LinearLayout>

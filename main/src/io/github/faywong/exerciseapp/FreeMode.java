@@ -1,6 +1,9 @@
 package io.github.faywong.exerciseapp;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,6 +16,7 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -178,7 +182,10 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 
 			}
 		});
+		mSettingObservable = new SettingObservable();
 
+		final Resources resources = getResources();
+		
 		// initialize time related views/handlers
 		timeControlLayout = (RelativeLayout) findViewById(R.id.time_control);
 		timeControlLayout.setOnClickListener(this);
@@ -197,7 +204,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 				new int[] { R.id.time_selection_10min,
 						R.id.time_selection_20min, R.id.time_selection_30min,
 						R.id.time_selection_40min, R.id.time_selection_50min },
-				R.id.time_selection, this);
+				R.id.time_selection, this, resources.getString(R.string.default_time_display), SettingModel.SETTING_TYPE_TIME, mSettingObservable);
 		headerControlMaps.append(R.id.time_control, timeGroup);
 
 		// initialize distance related views/handlers
@@ -221,7 +228,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 						R.id.distance_selection_3km,
 						R.id.distance_selection_4km,
 						R.id.distance_selection_5km }, R.id.distance_selection,
-				this);
+				this, resources.getString(R.string.default_distance_display), SettingModel.SETTING_TYPE_DISTANCE, mSettingObservable);
 		headerControlMaps.append(R.id.distance_control, distanceGroup);
 
 		// initialize calorie related views/handlers
@@ -244,7 +251,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 						R.id.calorie_selection_300kcal,
 						R.id.calorie_selection_400kcal,
 						R.id.calorie_selection_500kcal },
-				R.id.calorie_selection, this);
+				R.id.calorie_selection, this, resources.getString(R.string.default_calorie_display), SettingModel.SETTING_TYPE_CALORIE, mSettingObservable);
 		headerControlMaps.append(R.id.calorie_control, calorieGroup);
 
 		// initialize speed related views/handlers
@@ -267,7 +274,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 						R.id.speed_selection_8km_per_h,
 						R.id.speed_selection_10km_per_h,
 						R.id.speed_selection_12km_per_h },
-				R.id.speed_selection, this);
+				R.id.speed_selection, this, resources.getString(R.string.default_speed_display), SettingModel.SETTING_TYPE_SPEED, mSettingObservable);
 		headerControlMaps.append(R.id.speed_control, speedGroup);
 
 		// initialize incline related views/handlers
@@ -290,8 +297,28 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 						R.id.incline_selection_6_percent,
 						R.id.incline_selection_9_percent,
 						R.id.incline_selection_12_percent },
-				R.id.incline_selection, this);
+				R.id.incline_selection, this, resources.getString(R.string.default_incline_display), SettingModel.SETTING_TYPE_INCLINE, mSettingObservable);
 		headerControlMaps.append(R.id.incline_control, inclineGroup);
+		
+		// build the conflict relationships
+		
+		// time group
+		List<WidgetGroup<Button, TextView>> conflicts = new ArrayList<WidgetGroup<Button, TextView>>();
+		conflicts.add(distanceGroup);
+		conflicts.add(calorieGroup);
+		timeGroup.setConflictBuddys(conflicts);
+		
+		// distance group
+		conflicts = new ArrayList<WidgetGroup<Button, TextView>>();
+		conflicts.add(timeGroup);
+		conflicts.add(calorieGroup);
+		distanceGroup.setConflictBuddys(conflicts);
+		
+		// calorie group
+		conflicts = new ArrayList<WidgetGroup<Button, TextView>>();
+		conflicts.add(timeGroup);
+		conflicts.add(distanceGroup);
+		calorieGroup.setConflictBuddys(conflicts);
 
 		startBtn = (ImageButton) findViewById(R.id.start_btn);
 		startBtn.setOnClickListener(this);
@@ -385,6 +412,16 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 		if (mUnityFragment == null) {
 			mUnityFragment = new UnityFragment();
 		}
+		
+		Observer fakeObserver = new Observer() {
+			
+			@Override
+			public void update(Observable observable, Object data) {
+				// TODO Auto-generated method stub
+				Log.d(TAG, "updated, object:" + data.toString());
+			}
+		};
+		mSettingObservable.addObserver(fakeObserver);
 	}
 
 	private void initializeBottomTools() {
@@ -502,27 +539,27 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 				+ ") format is invalid!");
 	}
 
-	private static int parseTime(final String targetString)
+	public static int parseTime(final String targetString)
 			throws IllegalArgumentException {
 		return parse(TIME_PATTERN, targetString);
 	}
 
-	private static int parseDistance(final String targetString)
+	public static int parseDistance(final String targetString)
 			throws IllegalArgumentException {
 		return parse(DISTANCE_PATTERN, targetString);
 	}
 
-	private static int parseCalorie(final String targetString)
+	public static int parseCalorie(final String targetString)
 			throws IllegalArgumentException {
 		return parse(CALORIE_PATTERN, targetString);
 	}
 
-	private static int parseSpeed(final String targetString)
+	public static int parseSpeed(final String targetString)
 			throws IllegalArgumentException {
 		return parse(SPEED_PATTERN, targetString);
 	}
 
-	private static int parseIncline(final String targetString)
+	public static int parseIncline(final String targetString)
 			throws IllegalArgumentException {
 		return parse(INCLINE_PATTERN, targetString);
 	}

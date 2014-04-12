@@ -20,7 +20,6 @@ public class Main extends Activity implements View.OnClickListener {
 	ImageButton intelliModeBtn;
 	ImageButton immersionModeBtn;
 	private ImageButton wifiSettingBtn;
-
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
