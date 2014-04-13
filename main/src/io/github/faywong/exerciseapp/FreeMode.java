@@ -448,6 +448,15 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 		videoPlayBtn.setOnClickListener(this);
 	}
 
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		if (mUnityFragment != null) {
+			mUnityFragment.onParentActiviytDestroyed();
+		}
+	}
+
 	private void switchToUnityFragment() {
 		if (mFragmentManager == null) {
 			return;

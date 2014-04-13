@@ -112,9 +112,16 @@ public class UnityFragment extends Fragment {
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		// mUnityPlayer.quit();
 	}
 
+	public void onParentActiviytDestroyed() {
+		if (mUnityPlayer != null) {
+			mUnityPlayer.quit();
+			mUnityPlayer = null;
+		}
+	}
+
+	
 	@Override
 	public void onDestroyView() {
 		// TODO Auto-generated method stub
@@ -135,3 +142,4 @@ public class UnityFragment extends Fragment {
 	}
 
 }
+ 
