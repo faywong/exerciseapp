@@ -335,7 +335,7 @@ public class WifiManagerMain extends ListActivity
 	private void listConfiguredWifis()
 	{
 		List<WifiConfiguration> configuredWifis = mWifiManager.getConfiguredNetworks();
-		StringBuffer sb=new StringBuffer();  
+		StringBuffer sb = new StringBuffer();
 		for(WifiConfiguration item : configuredWifis)
 		{
 			sb=sb.append(new Integer(item.networkId).toString()).append(" ").append(item.SSID + "\n");

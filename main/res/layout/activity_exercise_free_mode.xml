@@ -276,7 +276,7 @@
             android:layout_height="48dp"
             android:contentDescription="@string/exercise_start_stop_content_desc"
             android:scaleType="fitXY"
-            android:background="@drawable/unity" >
+            android:background="@drawable/game" >
         </ImageButton>
     </LinearLayout>
 

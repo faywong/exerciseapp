@@ -53,8 +53,9 @@ public class Main extends Activity implements View.OnClickListener {
 		} else if (v.getId() == R.id.immersion_mode_btn) {
 			
 		} else if (v.getId() == R.id.wifi_settings) {
-			Intent intent = new Intent().setClass(this, WifiManagerMain.class);
-			startActivity(intent);
+			//Intent intent = new Intent().setClass(this, WifiManagerMain.class);
+			Intent intent = new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS);
+			startActivityForResult(intent, 0);
 		}
 	}
 
