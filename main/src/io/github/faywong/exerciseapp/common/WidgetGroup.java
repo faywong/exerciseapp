@@ -1,4 +1,4 @@
-package io.github.faywong.exerciseapp.interfaces;
+package io.github.faywong.exerciseapp.common;
 
 import io.github.faywong.exerciseapp.FreeMode;
 import io.github.faywong.exerciseapp.SettingObservable;

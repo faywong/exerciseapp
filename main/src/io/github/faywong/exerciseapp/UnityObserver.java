@@ -17,12 +17,15 @@ public class UnityObserver implements Observer{
 		SettingModel dataCon = obj.getSettingModel();
 		if(dataCon.isSpeedChanged())
 		{
-			UnityPlayer.UnitySendMessage("MsgRecv","SetSpeed",Integer.toString(dataCon.getSpeed())) ;
+			// TODO:
+			// fix bug reported at: https://bitbucket.org/faywong/exerciseapp/issue/1/unity-native-method-not-found
+			
+			// UnityPlayer.UnitySendMessage("MsgRecv","SetSpeed",Integer.toString(dataCon.getSpeed())) ;
 		}
 		
 		if(dataCon.isInclineChanged())
 		{
-			UnityPlayer.UnitySendMessage("MsgRecv","SetIncline",Integer.toString(dataCon.getIncline())) ;
+			// UnityPlayer.UnitySendMessage("MsgRecv","SetIncline",Integer.toString(dataCon.getIncline())) ;
 		}
 	}
 

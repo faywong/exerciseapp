@@ -1,7 +1,8 @@
 package io.github.faywong.exerciseapp.thirdparty;
 
 import java.util.LinkedList;
-import io.github.faywong.exerciseapp.thirdparty.VideoPlayerActivity.MovieInfo;
+
+import io.github.faywong.exerciseapp.VideoPlayerFragment.MovieInfo;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,8 +23,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView.OnEditorActionListener;
-
 import io.github.faywong.exerciseapp.R;
+import io.github.faywong.exerciseapp.VideoPlayerFragment;
 
 public class VideoChooseActivity extends Activity{
 
@@ -41,7 +42,7 @@ public class VideoChooseActivity extends Activity{
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.dialog);
 		
-		mLinkedList = VideoPlayerActivity.playList;
+		mLinkedList = VideoPlayerFragment.playList;
 		
 		mInflater = getLayoutInflater();
 		ImageButton iButton = (ImageButton) findViewById(R.id.cancel);

@@ -1,16 +1,15 @@
-package io.github.faywong.exerciseapp.thirdparty;
+package io.github.faywong.exerciseapp;
+
+import io.github.faywong.exerciseapp.thirdparty.SoundView;
+import io.github.faywong.exerciseapp.thirdparty.VideoChooseActivity;
+import io.github.faywong.exerciseapp.thirdparty.VideoView;
+import io.github.faywong.exerciseapp.thirdparty.SoundView.OnVolumeChangedListener;
+import io.github.faywong.exerciseapp.thirdparty.VideoView.MySizeChangeLinstener;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.LinkedList;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 
-import io.github.faywong.exerciseapp.thirdparty.SoundView.OnVolumeChangedListener;
-import io.github.faywong.exerciseapp.thirdparty.VideoView.MySizeChangeLinstener;
-import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -18,7 +17,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -32,41 +30,38 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.MessageQueue.IdleHandler;
 import android.provider.MediaStore;
-import android.text.AndroidCharacter;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Display;
+import android.view.GestureDetector;
 import android.view.Gravity;
-import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.AnalogClock;
-import android.widget.Button;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.view.GestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
 
-import io.github.faywong.exerciseapp.R;
+public class VideoPlayerFragment extends Fragment implements OnClickListener {
 
-public class VideoPlayerActivity extends Activity {
-
-	private final static String TAG = "VideoPlayerActivity";
+	private static final String TAG = "VideoPlayerFragment";
 	private boolean isOnline = false;
 	private boolean isChangedVideo = false;
 
 	public static LinkedList<MovieInfo> playList = new LinkedList<MovieInfo>();
 
 	public class MovieInfo {
-		String displayName;
-		String path;
+		public String displayName;
+		public String path;
 	}
 
 	private Uri videoListUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
@@ -111,14 +106,94 @@ public class VideoPlayerActivity extends Activity {
 	private boolean isSilent = false;
 	private boolean isSoundShow = false;
 
-	/** Called when the activity is first created. */
+	private final static int PROGRESS_CHANGED = 0;
+	private final static int HIDE_CONTROLER = 1;
+	private final static int SCREEN_FULL = 0;
+	private final static int SCREEN_DEFAULT = 1;
+
+	Handler myHandler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			// TODO Auto-generated method stub
+
+			switch (msg.what) {
+
+			case PROGRESS_CHANGED:
+
+				int i = vv.getCurrentPosition();
+				seekBar.setProgress(i);
+
+				if (isOnline) {
+					int j = vv.getBufferPercentage();
+					seekBar.setSecondaryProgress(j * seekBar.getMax() / 100);
+				} else {
+					seekBar.setSecondaryProgress(0);
+				}
+
+				i /= 1000;
+				int minute = i / 60;
+				int hour = minute / 60;
+				int second = i % 60;
+				minute %= 60;
+				playedTextView.setText(String.format("%02d:%02d:%02d", hour,
+						minute, second));
+
+				sendEmptyMessageDelayed(PROGRESS_CHANGED, 100);
+				break;
+
+			case HIDE_CONTROLER:
+				hideController();
+				break;
+			}
+
+			super.handleMessage(msg);
+		}
+	};
+
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public View getView() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.video_player_main);
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onActivityCreated(savedInstanceState);
 
-		Log.d("OnCreate", getIntent().toString());
+	}
+
+	public void windowFocusChanged(boolean hasFocus) {
+
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		// TODO Auto-generated method stub
+		super.onAttach(activity);
+
+	}
+
+	@Override
+	public void onDetach() {
+		// TODO Auto-generated method stub
+		super.onDetach();
+
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+
+		View parentLayout = inflater.inflate(R.layout.video_player_main,
+				container, false);
+
+		if (parentLayout == null) {
+			Log.e(TAG, "parentLayout is null");
+			return null;
+		}
 
 		Looper.myQueue().addIdleHandler(new IdleHandler() {
 
@@ -141,13 +216,223 @@ public class VideoPlayerActivity extends Activity {
 				return false;
 			}
 		});
+		initViews(parentLayout);
+		return parentLayout;
+	}
 
-		controlView = getLayoutInflater().inflate(R.layout.controler, null);
+	private void getScreenSize() {
+		Display display = getActivity().getWindowManager().getDefaultDisplay();
+		screenHeight = display.getHeight();
+		screenWidth = display.getWidth();
+		controlHeight = screenHeight / 4;
+	}
+
+	private void hideController() {
+		if (controler.isShowing()) {
+			controler.update(0, 0, 0, 0);
+			extralWindow.update(0, 0, screenWidth, 0);
+			isControllerShow = false;
+		}
+		if (mSoundWindow.isShowing()) {
+			mSoundWindow.dismiss();
+			isSoundShow = false;
+		}
+	}
+
+	private void hideControllerDelay() {
+		myHandler.sendEmptyMessageDelayed(HIDE_CONTROLER, TIME);
+	}
+
+	private void showController() {
+		controler.update(0, 0, screenWidth, controlHeight);
+		if (isFullScreen) {
+			extralWindow.update(0, 0, screenWidth, 60);
+		} else {
+			extralWindow.update(0, 25, screenWidth, 60);
+		}
+
+		isControllerShow = true;
+	}
+
+	@Override
+	public void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		if(!isChangedVideo){
+			vv.seekTo(playedTime);
+			vv.start();  
+		}else{
+			isChangedVideo = false;
+		}
+		
+		//if(vv.getVideoHeight()!=0){
+		if(vv.isPlaying()){
+			bn3.setImageResource(R.drawable.pause);
+			hideControllerDelay();
+		}
+
+		if (getActivity().getRequestedOrientation()!=ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
+			getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		}
+	}
+
+	@Override
+	public void onStop() {
+		// TODO Auto-generated method stub
+		if(controler.isShowing()){
+			controler.dismiss();
+			extralWindow.dismiss();
+		}
+		if(mSoundWindow.isShowing()){
+			mSoundWindow.dismiss();
+		}
+		
+		myHandler.removeMessages(PROGRESS_CHANGED);
+		myHandler.removeMessages(HIDE_CONTROLER);
+		
+		if(vv.isPlaying()){
+			vv.stopPlayback();
+		}
+		
+		playList.clear();
+		super.onStop();
+	}
+
+	private void cancelDelayHide() {
+		myHandler.removeMessages(HIDE_CONTROLER);
+	}
+
+	private void getVideoFile(final LinkedList<MovieInfo> list, File file) {
+		Log.d(TAG, "getVideoFile() file:" + file);
+		file.listFiles(new FileFilter() {
+
+			@Override
+			public boolean accept(File file) {
+				// TODO Auto-generated method stub
+				String name = file.getName();
+				int i = name.indexOf('.');
+				if (i != -1) {
+					name = name.substring(i);
+					if (name.equalsIgnoreCase(".mp4")
+							|| name.equalsIgnoreCase(".3gp")) {
+
+						MovieInfo mi = new MovieInfo();
+						mi.displayName = file.getName();
+						mi.path = file.getAbsolutePath();
+						list.add(mi);
+						Log.d(TAG, "add an MovieInfo:" + mi.displayName);
+						return true;
+					}
+				} else if (file.isDirectory()) {
+					getVideoFile(list, file);
+				}
+				return false;
+			}
+		});
+	}
+
+	
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+
+			vv.stopPlayback();
+
+			int result = data.getIntExtra("CHOOSE", -1);
+			Log.d("RESULT", "" + result);
+			if (result != -1) {
+				isOnline = false;
+				isChangedVideo = true;
+				vv.setVideoPath(playList.get(result).path);
+				position = result;
+			} else {
+				String url = data.getStringExtra("CHOOSE_URL");
+				if (url != null) {
+					vv.setVideoPath(url);
+					isOnline = true;
+					isChangedVideo = true;
+				}
+			}
+
+			return;
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	private int findAlphaFromSound() {
+		if (mAudioManager != null) {
+			// int currentVolume =
+			// mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+			int alpha = currentVolume * (0xCC - 0x55) / maxVolume + 0x55;
+			return alpha;
+		} else {
+			return 0xCC;
+		}
+	}
+
+	private void updateVolume(int index) {
+		if (mAudioManager != null) {
+			if (isSilent) {
+				mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
+			} else {
+				mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, index,
+						0);
+			}
+			currentVolume = index;
+			bn5.setAlpha(findAlphaFromSound());
+		}
+	}
+	
+    private void setVideoScale(int flag){
+    	
+    	LayoutParams lp = vv.getLayoutParams();
+    	
+    	switch(flag){
+    		case SCREEN_FULL:
+    			
+    			Log.d(TAG, "screenWidth: "+screenWidth+" screenHeight: "+screenHeight);
+    			vv.setVideoScale(screenWidth, screenHeight);
+    			getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    			
+    			break;
+    			
+    		case SCREEN_DEFAULT:
+    			
+    			int videoWidth = vv.getVideoWidth();
+    			int videoHeight = vv.getVideoHeight();
+    			int mWidth = screenWidth;
+    			int mHeight = screenHeight - 25;
+    			
+    			if (videoWidth > 0 && videoHeight > 0) {
+    	            if ( videoWidth * mHeight  > mWidth * videoHeight ) {
+    	                //Log.i("@@@", "image too tall, correcting");
+    	            	mHeight = mWidth * videoHeight / videoWidth;
+    	            } else if ( videoWidth * mHeight  < mWidth * videoHeight ) {
+    	                //Log.i("@@@", "image too wide, correcting");
+    	            	mWidth = mHeight * videoWidth / videoHeight;
+    	            } else {
+    	                
+    	            }
+    	        }
+    			
+    			vv.setVideoScale(mWidth, mHeight);
+
+    			getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    			
+    			break;
+    	}
+    }
+
+	private void initViews(final View parentView) {
+		controlView = getActivity().getLayoutInflater().inflate(
+				R.layout.controler, null);
 		controler = new PopupWindow(controlView);
 		durationTextView = (TextView) controlView.findViewById(R.id.duration);
 		playedTextView = (TextView) controlView.findViewById(R.id.has_played);
 
-		mSoundView = new SoundView(this);
+		mSoundView = new SoundView(getActivity());
 		mSoundView.setOnVolumeChangeListener(new OnVolumeChangedListener() {
 
 			@Override
@@ -161,7 +446,8 @@ public class VideoPlayerActivity extends Activity {
 
 		mSoundWindow = new PopupWindow(mSoundView);
 
-		extralView = getLayoutInflater().inflate(R.layout.extral, null);
+		extralView = getActivity().getLayoutInflater().inflate(R.layout.extral,
+				null);
 		extralWindow = new PopupWindow(extralView);
 
 		ImageButton backButton = (ImageButton) extralView
@@ -176,7 +462,7 @@ public class VideoPlayerActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				VideoPlayerActivity.this.finish();
+				finish();
 			}
 
 		});
@@ -197,18 +483,11 @@ public class VideoPlayerActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				/*
-				 * Intent intent = new Intent();
-				 * intent.setClass(VideoPlayerActivity.this,
-				 * VideoChooseActivity.class);
-				 * VideoPlayerActivity.this.startActivityForResult(intent, 0);
-				 */
 
-				dialog = new Dialog(VideoPlayerActivity.this,
-						R.style.transDialog);
+				dialog = new Dialog(getActivity(), R.style.transDialog);
 				dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-				View view = VideoPlayerActivity.this.getLayoutInflater()
-						.inflate(R.layout.about, null);
+				View view = getActivity().getLayoutInflater().inflate(
+						R.layout.about, null);
 				dialog.setContentView(view);
 				view.findViewById(R.id.cancel).setOnClickListener(
 						mClickListener);
@@ -225,7 +504,7 @@ public class VideoPlayerActivity extends Activity {
 		bn4 = (ImageButton) controlView.findViewById(R.id.button4);
 		bn5 = (ImageButton) controlView.findViewById(R.id.button5);
 
-		vv = (VideoView) findViewById(R.id.vv);
+		vv = (VideoView) parentView.findViewById(R.id.vv);
 
 		vv.setOnErrorListener(new OnErrorListener() {
 
@@ -235,10 +514,10 @@ public class VideoPlayerActivity extends Activity {
 				vv.stopPlayback();
 				isOnline = false;
 
-				new AlertDialog.Builder(VideoPlayerActivity.this)
-						.setTitle("�Բ���")
-						.setMessage("�������Ƶ��ʽ����ȷ��������ֹͣ��")
-						.setPositiveButton("֪����",
+				new AlertDialog.Builder(getActivity())
+						.setTitle("中止播放")
+						.setMessage("播放时遇到未知错误")
+						.setPositiveButton("确定",
 								new AlertDialog.OnClickListener() {
 
 									@Override
@@ -256,24 +535,29 @@ public class VideoPlayerActivity extends Activity {
 
 		});
 
-		Uri uri = getIntent().getData();
+		Uri uri = getActivity().getIntent().getData();
 		if (uri != null) {
-
 			vv.stopPlayback();
 			vv.setVideoURI(uri);
 			isOnline = true;
-
 			bn3.setImageResource(R.drawable.pause);
 		} else {
 			bn3.setImageResource(R.drawable.play);
 		}
-
-		getVideoFile(playList, new File("/sdcard/"));
+		
+		myHandler.post(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				getVideoFile(playList, new File("/sdcard/"));
+			}
+		});
 
 		if (android.os.Environment.getExternalStorageState().equals(
 				android.os.Environment.MEDIA_MOUNTED)) {
 
-			Cursor cursor = getContentResolver()
+			Cursor cursor = getActivity().getContentResolver()
 					.query(videoListUri,
 							new String[] { "_display_name", "_data" }, null,
 							null, null);
@@ -309,7 +593,7 @@ public class VideoPlayerActivity extends Activity {
 		bn3.setAlpha(0xBB);
 		bn4.setAlpha(0xBB);
 
-		mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+		mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
 		maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		currentVolume = mAudioManager
 				.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -321,9 +605,9 @@ public class VideoPlayerActivity extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent();
-				intent.setClass(VideoPlayerActivity.this,
+				intent.setClass(getActivity(),
 						VideoChooseActivity.class);
-				VideoPlayerActivity.this.startActivityForResult(intent, 0);
+				VideoPlayerFragment.this.startActivityForResult(intent, 0);
 				cancelDelayHide();
 			}
 
@@ -341,7 +625,7 @@ public class VideoPlayerActivity extends Activity {
 					cancelDelayHide();
 					hideControllerDelay();
 				} else {
-					VideoPlayerActivity.this.finish();
+					finish();
 				}
 			}
 
@@ -362,7 +646,6 @@ public class VideoPlayerActivity extends Activity {
 					bn3.setImageResource(R.drawable.play);
 				}
 				isPaused = !isPaused;
-
 			}
 
 		});
@@ -378,7 +661,7 @@ public class VideoPlayerActivity extends Activity {
 					cancelDelayHide();
 					hideControllerDelay();
 				} else {
-					VideoPlayerActivity.this.finish();
+					finish();
 				}
 			}
 
@@ -562,307 +845,49 @@ public class VideoPlayerActivity extends Activity {
 					vv.setVideoPath(playList.get(position).path);
 				} else {
 					vv.stopPlayback();
-					VideoPlayerActivity.this.finish();
+					finish();
 				}
 			}
 		});
 	}
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	protected void finish() {
 		// TODO Auto-generated method stub
-		if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
-
-			vv.stopPlayback();
-
-			int result = data.getIntExtra("CHOOSE", -1);
-			Log.d("RESULT", "" + result);
-			if (result != -1) {
-				isOnline = false;
-				isChangedVideo = true;
-				vv.setVideoPath(playList.get(result).path);
-				position = result;
-			} else {
-				String url = data.getStringExtra("CHOOSE_URL");
-				if (url != null) {
-					vv.setVideoPath(url);
-					isOnline = true;
-					isChangedVideo = true;
-				}
-			}
-
-			return;
-		}
-		super.onActivityResult(requestCode, resultCode, data);
-	}
-
-	private final static int PROGRESS_CHANGED = 0;
-	private final static int HIDE_CONTROLER = 1;
-
-	Handler myHandler = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
-
-			switch (msg.what) {
-
-			case PROGRESS_CHANGED:
-
-				int i = vv.getCurrentPosition();
-				seekBar.setProgress(i);
-
-				if (isOnline) {
-					int j = vv.getBufferPercentage();
-					seekBar.setSecondaryProgress(j * seekBar.getMax() / 100);
-				} else {
-					seekBar.setSecondaryProgress(0);
-				}
-
-				i /= 1000;
-				int minute = i / 60;
-				int hour = minute / 60;
-				int second = i % 60;
-				minute %= 60;
-				playedTextView.setText(String.format("%02d:%02d:%02d", hour,
-						minute, second));
-
-				sendEmptyMessageDelayed(PROGRESS_CHANGED, 100);
-				break;
-
-			case HIDE_CONTROLER:
-				hideController();
-				break;
-			}
-
-			super.handleMessage(msg);
-		}
-	};
-
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		// TODO Auto-generated method stub
-
-		boolean result = mGestureDetector.onTouchEvent(event);
-
-		if (!result) {
-			if (event.getAction() == MotionEvent.ACTION_UP) {
-
-				/*
-				 * if(!isControllerShow){ showController();
-				 * hideControllerDelay(); }else { cancelDelayHide();
-				 * hideController(); }
-				 */
-			}
-			result = super.onTouchEvent(event);
-		}
-
-		return result;
+		getActivity().getSupportFragmentManager().beginTransaction().remove(VideoPlayerFragment.this).commit();
 	}
 
 	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
+	public void onDestroy() {
 		// TODO Auto-generated method stub
-
-		getScreenSize();
-		if (isControllerShow) {
-
-			cancelDelayHide();
-			hideController();
-			showController();
-			hideControllerDelay();
-		}
-
-		super.onConfigurationChanged(newConfig);
-	}
-
-	@Override
-	protected void onPause() {
-		// TODO Auto-generated method stub
-		playedTime = vv.getCurrentPosition();
-		vv.pause();
-		bn3.setImageResource(R.drawable.play);
-		super.onPause();
-	}
-
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		if (!isChangedVideo) {
-			vv.seekTo(playedTime);
-			vv.start();
-		} else {
-			isChangedVideo = false;
-		}
-
-		// if(vv.getVideoHeight()!=0){
-		if (vv.isPlaying()) {
-			bn3.setImageResource(R.drawable.pause);
-			hideControllerDelay();
-		}
-
-		if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		}
-
-		super.onResume();
-	}
-
-	@Override
-	protected void onDestroy() {
-		// TODO Auto-generated method stub
-
-		if (controler.isShowing()) {
-			controler.dismiss();
-			extralWindow.dismiss();
-		}
-		if (mSoundWindow.isShowing()) {
-			mSoundWindow.dismiss();
-		}
-
-		myHandler.removeMessages(PROGRESS_CHANGED);
-		myHandler.removeMessages(HIDE_CONTROLER);
-
-		if (vv.isPlaying()) {
-			vv.stopPlayback();
-		}
-
-		playList.clear();
-
 		super.onDestroy();
 	}
 
-	private void getScreenSize() {
-		Display display = getWindowManager().getDefaultDisplay();
-		screenHeight = display.getHeight();
-		screenWidth = display.getWidth();
-		controlHeight = screenHeight / 4;
+	@Override
+	public void onDestroyView() {
+		// TODO Auto-generated method stub
+		super.onDestroyView();
 	}
 
-	private void hideController() {
-		if (controler.isShowing()) {
-			controler.update(0, 0, 0, 0);
-			extralWindow.update(0, 0, screenWidth, 0);
-			isControllerShow = false;
-		}
-		if (mSoundWindow.isShowing()) {
-			mSoundWindow.dismiss();
-			isSoundShow = false;
-		}
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+
 	}
 
-	private void hideControllerDelay() {
-		myHandler.sendEmptyMessageDelayed(HIDE_CONTROLER, TIME);
-	}
-
-	private void showController() {
-		controler.update(0, 0, screenWidth, controlHeight);
-		if (isFullScreen) {
-			extralWindow.update(0, 0, screenWidth, 60);
-		} else {
-			extralWindow.update(0, 25, screenWidth, 60);
-		}
-
-		isControllerShow = true;
-	}
-
-	private void cancelDelayHide() {
-		myHandler.removeMessages(HIDE_CONTROLER);
-	}
-
-	private final static int SCREEN_FULL = 0;
-	private final static int SCREEN_DEFAULT = 1;
-
-	private void setVideoScale(int flag) {
-
-		LayoutParams lp = vv.getLayoutParams();
-
-		switch (flag) {
-		case SCREEN_FULL:
-
-			Log.d(TAG, "screenWidth: " + screenWidth + " screenHeight: "
-					+ screenHeight);
-			vv.setVideoScale(screenWidth, screenHeight);
-			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch (v.getId()) {
+		case R.id.GoBtn:
 			break;
-
-		case SCREEN_DEFAULT:
-
-			int videoWidth = vv.getVideoWidth();
-			int videoHeight = vv.getVideoHeight();
-			int mWidth = screenWidth;
-			int mHeight = screenHeight - 25;
-
-			if (videoWidth > 0 && videoHeight > 0) {
-				if (videoWidth * mHeight > mWidth * videoHeight) {
-					// Log.i("@@@", "image too tall, correcting");
-					mHeight = mWidth * videoHeight / videoWidth;
-				} else if (videoWidth * mHeight < mWidth * videoHeight) {
-					// Log.i("@@@", "image too wide, correcting");
-					mWidth = mHeight * videoWidth / videoHeight;
-				} else {
-
-				}
-			}
-
-			vv.setVideoScale(mWidth, mHeight);
-
-			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+		case R.id.BackBtn:
+			break;
+		case R.id.forwardBtn:
+			break;
+		case R.id.reloadBtn:
 			break;
 		}
 	}
 
-	private int findAlphaFromSound() {
-		if (mAudioManager != null) {
-			// int currentVolume =
-			// mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-			int alpha = currentVolume * (0xCC - 0x55) / maxVolume + 0x55;
-			return alpha;
-		} else {
-			return 0xCC;
-		}
-	}
-
-	private void updateVolume(int index) {
-		if (mAudioManager != null) {
-			if (isSilent) {
-				mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
-			} else {
-				mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, index,
-						0);
-			}
-			currentVolume = index;
-			bn5.setAlpha(findAlphaFromSound());
-		}
-	}
-
-	private void getVideoFile(final LinkedList<MovieInfo> list, File file) {
-
-		file.listFiles(new FileFilter() {
-
-			@Override
-			public boolean accept(File file) {
-				// TODO Auto-generated method stub
-				String name = file.getName();
-				int i = name.indexOf('.');
-				if (i != -1) {
-					name = name.substring(i);
-					if (name.equalsIgnoreCase(".mp4")
-							|| name.equalsIgnoreCase(".3gp")) {
-
-						MovieInfo mi = new MovieInfo();
-						mi.displayName = file.getName();
-						mi.path = file.getAbsolutePath();
-						list.add(mi);
-						return true;
-					}
-				} else if (file.isDirectory()) {
-					getVideoFile(list, file);
-				}
-				return false;
-			}
-		});
-	}
 }

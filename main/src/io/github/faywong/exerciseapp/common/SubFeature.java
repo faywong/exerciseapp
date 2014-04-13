@@ -1,4 +1,4 @@
-package io.github.faywong.exerciseapp.interfaces;
+package io.github.faywong.exerciseapp.common;
 
 import android.content.SharedPreferences;
 

@@ -5,17 +5,19 @@ import com.unity3d.player.UnityPlayer;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewParent;
 import android.widget.FrameLayout;
 
 public class UnityFragment extends Fragment {
 	private boolean oldHasFocus = false;
 
-	private UnityPlayer mUnityPlayer;
+	public static UnityPlayer mUnityPlayer;
 	private static String TAG = "UnityFragment";
 
 	@Override
@@ -51,8 +53,15 @@ public class UnityFragment extends Fragment {
 	public void onDetach() {
 		// TODO Auto-generated method stub
 		super.onDetach();
-		mUnityPlayer.quit();
-		mUnityPlayer = null;
+		//mUnityPlayer = null;
+	}
+
+
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		mUnityPlayer.pause();
 	}
 
 	@Override
@@ -81,6 +90,11 @@ public class UnityFragment extends Fragment {
 		LayoutParams lp = new
 		LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 		Log.d(TAG, "mUnityPlayer view is " + unityView);
+		ViewParent viewParent = (unityView.getParent());
+		if (viewParent != null) {
+			Log.d(TAG, "unityview is removed from previous parent view!");
+			((ViewGroup)viewParent).removeView(unityView);
+		}
 		parentLayout.addView(unityView, 0, lp);
 		mUnityPlayer.post(new Runnable() {
 			
@@ -98,6 +112,7 @@ public class UnityFragment extends Fragment {
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
+		// mUnityPlayer.quit();
 	}
 
 	@Override

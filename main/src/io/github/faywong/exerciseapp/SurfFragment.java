@@ -1,7 +1,5 @@
 package io.github.faywong.exerciseapp;
 
-import com.unity3d.player.UnityPlayer;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,24 +8,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 
-public class SurfFragment extends Fragment implements OnClickListener{
-	
+public class SurfFragment extends Fragment implements OnClickListener {
+
 	private static String TAG = "SurfFragment";
 	EditText url;
-    //TextView mTitle;
-    WebView mWebView;
-    Button goButton;
-    Button backButton;
-    Button aboutButton;
-    
+	// TextView mTitle;
+	WebView mWebView;
+	Button goButton;
+	Button backButton;
+	Button aboutButton;
+
+	public class MyWebViewClient extends WebViewClient {
+		@Override
+		public boolean shouldOverrideUrlLoading(WebView view, String url_) {
+			view.loadUrl(url_);
+			url.setText(url_);
+			// mTitle.setText("you are browsing web: "+url_);
+			return true;
+		}
+	}
+	
 	@Override
 	public View getView() {
 		// TODO Auto-generated method stub
@@ -39,11 +44,11 @@ public class SurfFragment extends Fragment implements OnClickListener{
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 	}
-	
+
 	public void windowFocusChanged(boolean hasFocus) {
 
 	}
-	
+
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
@@ -63,14 +68,15 @@ public class SurfFragment extends Fragment implements OnClickListener{
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 
-		View parentLayout = inflater.inflate(R.layout.activity_web_browser, container, false);
+		View parentLayout = inflater.inflate(R.layout.activity_web_browser,
+				container, false);
 		if (parentLayout == null) {
 			Log.e(TAG, "parentLayout is null");
 			return null;
 		}
-		
+
 		setControl(parentLayout);
-        setWebStyle();
+		setWebStyle();
 
 		return parentLayout;
 	}
@@ -91,21 +97,22 @@ public class SurfFragment extends Fragment implements OnClickListener{
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		
+
 	}
-	
-	private void setControl( View parentView) {
-    	url=(EditText)parentView.findViewById(R.id.urltext);
-    	mWebView=(WebView)parentView.findViewById(R.id.webshow);
-    	goButton=(Button)parentView.findViewById(R.id.GoBtn);
-    	backButton=(Button)parentView.findViewById(R.id.BackBtn);
-    	aboutButton=(Button)parentView.findViewById(R.id.reloadBtn);
-    	//mTitle=(TextView)parentView.findViewById(R.id.WebTitle);
+
+	private void setControl(View parentView) {
+		url = (EditText) parentView.findViewById(R.id.urltext);
+		mWebView = (WebView) parentView.findViewById(R.id.webshow);
+		goButton = (Button) parentView.findViewById(R.id.GoBtn);
+		backButton = (Button) parentView.findViewById(R.id.BackBtn);
+		aboutButton = (Button) parentView.findViewById(R.id.reloadBtn);
+		// mTitle=(TextView)parentView.findViewById(R.id.WebTitle);
 		goButton.setOnClickListener(this);
 		backButton.setOnClickListener(this);
 		aboutButton.setOnClickListener(this);
 	}
-    private void setWebStyle() {
+
+	private void setWebStyle() {
 		mWebView.getSettings().setJavaScriptEnabled(true);
 		mWebView.getSettings().setSupportZoom(true);
 		mWebView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
@@ -113,20 +120,21 @@ public class SurfFragment extends Fragment implements OnClickListener{
 		mWebView.loadUrl("http://www.baidu.com");
 		mWebView.setWebViewClient(new MyWebViewClient());
 	}
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		switch(v.getId()){
+		switch (v.getId()) {
 		case R.id.GoBtn:
 			String url_text;
 			String url_head = "http://";
-			url_text=url.getText().toString();
-			if(!url_text.contains("http://")){
-				url_text=url_head.concat(url_text);
-				
+			url_text = url.getText().toString();
+			if (!url_text.contains("http://")) {
+				url_text = url_head.concat(url_text);
+
 			}
 			mWebView.loadUrl(url_text);
-			//mTitle.setText("you are browsing web: "+url_text);
+			// mTitle.setText("you are browsing web: "+url_text);
 			break;
 		case R.id.BackBtn:
 			mWebView.goBack();
@@ -139,13 +147,5 @@ public class SurfFragment extends Fragment implements OnClickListener{
 			break;
 		}
 	}
-	class MyWebViewClient extends WebViewClient{
-		@Override
-		public boolean shouldOverrideUrlLoading(WebView view,String url_){
-			view.loadUrl(url_);
-			url.setText(url_);
-			//mTitle.setText("you are browsing web: "+url_);
-			return true;
-		}
-	}
+
 }

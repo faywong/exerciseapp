@@ -7,13 +7,7 @@ import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.unity3d.player.UnityPlayer;
-
 import android.R.color;
-import android.R.integer;
-import android.R.string;
-import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
@@ -22,34 +16,31 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.TextureView;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
-import android.webkit.WebStorage.Origin;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import io.github.faywong.exerciseapp.R;
-import io.github.faywong.exerciseapp.interfaces.WidgetGroup;
+import io.github.faywong.exerciseapp.common.WidgetGroup;
 import io.github.faywong.exerciseapp.thirdparty.VideoPlayerActivity;
 
-
-
+/**
+ * All rights reserved.
+ * 
+ * @author faywong(philip584521@gmail.com)
+ *
+ */
 public class FreeMode extends FragmentActivity implements View.OnClickListener {
 	private static final String TAG = "FreeMode";
 	private RelativeLayout timeControlLayout;
@@ -148,10 +139,10 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 
 	private SettingObservable mSettingObservable;
 	private FragmentManager mFragmentManager;
-	private LayoutInflater mInflater;
 	private UnityFragment mUnityFragment;
 	private SurfFragment mSurfFragment;
 	private MusicFragment mMusicFragment;
+	private VideoPlayerFragment mVideoPlayerFragment;
 	private ImageButton unityBtn;
 	private UnityObserver mUnityObserver;
 
@@ -160,7 +151,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 		setContentView(R.layout.activity_exercise_free_mode);
 
 		mFragmentManager = getSupportFragmentManager();
-		mInflater = LayoutInflater.from(this);
+		LayoutInflater.from(this);
 		// initialize animations
 		countDownTextIn.setDuration(2000);
 		countDownTextOut.setDuration(2000);
@@ -185,10 +176,10 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 
 			}
 		});
-		mSettingObservable =  SettingObservable.getInstance();
+		mSettingObservable = SettingObservable.getInstance();
 
 		final Resources resources = getResources();
-		
+
 		// initialize time related views/handlers
 		timeControlLayout = (RelativeLayout) findViewById(R.id.time_control);
 		timeControlLayout.setOnClickListener(this);
@@ -207,7 +198,9 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 				new int[] { R.id.time_selection_10min,
 						R.id.time_selection_20min, R.id.time_selection_30min,
 						R.id.time_selection_40min, R.id.time_selection_50min },
-				R.id.time_selection, this, resources.getString(R.string.default_time_display), SettingModel.SETTING_TYPE_TIME, mSettingObservable);
+				R.id.time_selection, this,
+				resources.getString(R.string.default_time_display),
+				SettingModel.SETTING_TYPE_TIME, mSettingObservable);
 		headerControlMaps.append(R.id.time_control, timeGroup);
 
 		// initialize distance related views/handlers
@@ -231,7 +224,8 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 						R.id.distance_selection_3km,
 						R.id.distance_selection_4km,
 						R.id.distance_selection_5km }, R.id.distance_selection,
-				this, resources.getString(R.string.default_distance_display), SettingModel.SETTING_TYPE_DISTANCE, mSettingObservable);
+				this, resources.getString(R.string.default_distance_display),
+				SettingModel.SETTING_TYPE_DISTANCE, mSettingObservable);
 		headerControlMaps.append(R.id.distance_control, distanceGroup);
 
 		// initialize calorie related views/handlers
@@ -254,7 +248,9 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 						R.id.calorie_selection_300kcal,
 						R.id.calorie_selection_400kcal,
 						R.id.calorie_selection_500kcal },
-				R.id.calorie_selection, this, resources.getString(R.string.default_calorie_display), SettingModel.SETTING_TYPE_CALORIE, mSettingObservable);
+				R.id.calorie_selection, this,
+				resources.getString(R.string.default_calorie_display),
+				SettingModel.SETTING_TYPE_CALORIE, mSettingObservable);
 		headerControlMaps.append(R.id.calorie_control, calorieGroup);
 
 		// initialize speed related views/handlers
@@ -277,7 +273,9 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 						R.id.speed_selection_8km_per_h,
 						R.id.speed_selection_10km_per_h,
 						R.id.speed_selection_12km_per_h },
-				R.id.speed_selection, this, resources.getString(R.string.default_speed_display), SettingModel.SETTING_TYPE_SPEED, mSettingObservable);
+				R.id.speed_selection, this,
+				resources.getString(R.string.default_speed_display),
+				SettingModel.SETTING_TYPE_SPEED, mSettingObservable);
 		headerControlMaps.append(R.id.speed_control, speedGroup);
 
 		// initialize incline related views/handlers
@@ -300,23 +298,25 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 						R.id.incline_selection_6_percent,
 						R.id.incline_selection_9_percent,
 						R.id.incline_selection_12_percent },
-				R.id.incline_selection, this, resources.getString(R.string.default_incline_display), SettingModel.SETTING_TYPE_INCLINE, mSettingObservable);
+				R.id.incline_selection, this,
+				resources.getString(R.string.default_incline_display),
+				SettingModel.SETTING_TYPE_INCLINE, mSettingObservable);
 		headerControlMaps.append(R.id.incline_control, inclineGroup);
-		
+
 		// build the conflict relationships
-		
+
 		// time group
 		List<WidgetGroup<Button, TextView>> conflicts = new ArrayList<WidgetGroup<Button, TextView>>();
 		conflicts.add(distanceGroup);
 		conflicts.add(calorieGroup);
 		timeGroup.setConflictBuddys(conflicts);
-		
+
 		// distance group
 		conflicts = new ArrayList<WidgetGroup<Button, TextView>>();
 		conflicts.add(timeGroup);
 		conflicts.add(calorieGroup);
 		distanceGroup.setConflictBuddys(conflicts);
-		
+
 		// calorie group
 		conflicts = new ArrayList<WidgetGroup<Button, TextView>>();
 		conflicts.add(timeGroup);
@@ -325,13 +325,13 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 
 		startBtn = (ImageButton) findViewById(R.id.start_btn);
 		startBtn.setOnClickListener(this);
-		
+
 		musicBtn = (ImageButton) findViewById(R.id.music_btn);
 		musicBtn.setOnClickListener(this);
-		
+
 		webBtn = (ImageButton) findViewById(R.id.surf_btn);
 		webBtn.setOnClickListener(this);
-		
+
 		countDownText = (TextView) findViewById(R.id.count_down_text);
 
 		final GestureDetector gdt = new GestureDetector(this,
@@ -411,21 +411,25 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 		unityBtn = (ImageButton) findViewById(R.id.unity_btn);
 		unityBtn.setOnClickListener(this);
 		initializeBottomTools();
-		
+
 		if (mUnityFragment == null) {
 			mUnityFragment = new UnityFragment();
 		}
-		
+
 		if (mMusicFragment == null) {
 			mMusicFragment = new MusicFragment();
 		}
-		
+
 		if (mSurfFragment == null) {
 			mSurfFragment = new SurfFragment();
 		}
-		
+
+		if (mVideoPlayerFragment == null) {
+			mVideoPlayerFragment = new VideoPlayerFragment();
+		}
+
 		Observer fakeObserver = new Observer() {
-			
+
 			@Override
 			public void update(Observable observable, Object data) {
 				// TODO Auto-generated method stub
@@ -433,7 +437,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 			}
 		};
 		mSettingObservable.addObserver(fakeObserver);
-		
+
 		mUnityObserver = new UnityObserver();
 		mSettingObservable.addObserver(mUnityObserver);
 	}
@@ -444,7 +448,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 		videoPlayBtn.setOnClickListener(this);
 	}
 
-	private void switchToUnityView() {
+	private void switchToUnityFragment() {
 		if (mFragmentManager == null) {
 			return;
 		}
@@ -455,7 +459,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 		fragmentTransaction.commit();
 	}
 
-	private void switchToMusicView() {
+	private void switchToMusicFragment() {
 		if (mFragmentManager == null) {
 			return;
 		}
@@ -465,8 +469,20 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 		fragmentTransaction.replace(R.id.fragment_container, mMusicFragment);
 		fragmentTransaction.commit();
 	}
-	
-	private void switchToSurfView() {
+
+	private void switchToVideoPlayerFragment() {
+		if (mFragmentManager == null) {
+			return;
+		}
+
+		android.support.v4.app.FragmentTransaction fragmentTransaction = mFragmentManager
+				.beginTransaction();
+		fragmentTransaction.replace(R.id.fragment_container,
+				mVideoPlayerFragment);
+		fragmentTransaction.commit();
+	}
+
+	private void switchToSurfFragment() {
 		if (mFragmentManager == null) {
 			return;
 		}
@@ -476,11 +492,11 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 		fragmentTransaction.replace(R.id.fragment_container, mSurfFragment);
 		fragmentTransaction.commit();
 	}
+
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-
 	}
 
 	@Override
@@ -661,15 +677,12 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 				countDownText.setVisibility(View.GONE);
 				// TODO: stop the current exercise session
 			}
+		} else if (viewId == R.id.music_btn) {
+			switchToMusicFragment();
+		} else if (viewId == R.id.surf_btn) {
+			switchToSurfFragment();
 		} else if (viewId == R.id.video_btn) {
-			Intent intent = new Intent(this, VideoPlayerActivity.class);
-			startActivity(intent);
-		} 
-		else if (viewId == R.id.music_btn) {
-			switchToMusicView();
-		} 
-		else if (viewId == R.id.surf_btn) {
-			switchToSurfView();
+			switchToVideoPlayerFragment();
 		} else if (viewId == R.id.time_control
 				|| viewId == R.id.distance_control
 				|| viewId == R.id.calorie_control
@@ -752,7 +765,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 			inclineValueText.setText(newValue);
 			inclineHeadText.setText(newValue);
 		} else if (viewId == R.id.unity_btn) {
-			switchToUnityView();
+			switchToUnityFragment();
 		}
 
 		for (int i = 0; i < headerControlMaps.size(); i++) {
