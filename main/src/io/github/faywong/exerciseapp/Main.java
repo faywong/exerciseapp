@@ -1,5 +1,6 @@
 package io.github.faywong.exerciseapp;
 
+import sportsSDK.PinSDK;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,6 +33,8 @@ public class Main extends Activity implements View.OnClickListener {
 		immersionModeBtn = (ImageButton)findViewById(R.id.immersion_mode_btn);
 		wifiSettingBtn = (ImageButton)findViewById(R.id.wifi_settings);
 		wifiSettingBtn.setOnClickListener(this);
+		
+		PinSDK.getInstance();
 	}
 
 	@Override

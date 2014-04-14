@@ -2,6 +2,8 @@ package io.github.faywong.exerciseapp;
 
 import java.util.Observable;
 import java.util.Observer;
+
+import com.unity3d.player.UnityPlayer;
 public class UnityObserver implements Observer{
 
 	
@@ -13,18 +15,19 @@ public class UnityObserver implements Observer{
 		// TODO Auto-generated method stub
 		SettingObservable obj= (SettingObservable)observable;
 		SettingModel dataCon = obj.getSettingModel();
-		if(dataCon.isSpeedChanged())
+		if(UnityFragment.mUnityPlayer!=null)
 		{
-			// TODO:
-			// fix bug reported at: https://bitbucket.org/faywong/exerciseapp/issue/1/unity-native-method-not-found
+			if(dataCon.isSpeedChanged())
+			{
+				 UnityPlayer.UnitySendMessage("MsgRecv","SetSpeed",Integer.toString(dataCon.getSpeed())) ;
+			}
 			
-			// UnityPlayer.UnitySendMessage("MsgRecv","SetSpeed",Integer.toString(dataCon.getSpeed())) ;
+			if(dataCon.isInclineChanged())
+			{
+				 UnityPlayer.UnitySendMessage("MsgRecv","SetIncline",Integer.toString(dataCon.getIncline())) ;
+			}
 		}
 		
-		if(dataCon.isInclineChanged())
-		{
-			// UnityPlayer.UnitySendMessage("MsgRecv","SetIncline",Integer.toString(dataCon.getIncline())) ;
-		}
 	}
 
 }

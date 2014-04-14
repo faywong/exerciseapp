@@ -1,26 +1,196 @@
 package sportsSDK;
 
+import io.github.faywong.exerciseapp.IHWStatusListener;
+import io.github.faywong.exerciseapp.SettingModel;
+import io.github.faywong.exerciseapp.SettingObservable;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
-import sportsSDK.TreadmillComm;
+import android.util.Log;
+
+import com.hardware.comm.TreadmillComm;
 
 import sportsSDK.Pins;
 
 public class PinSDK {
 	
 	static PinSDK msdk=null;
+	
+	
+	IHWStatusListener mListener=null;
+	
+	final int keyDelay=20;
+	final int sdkDelay=250;
+	final List<Pins> pins = new ArrayList<Pins>();
+	final List<Pins> pins_out = new ArrayList<Pins>();
+	final List<Pins> pins_bak = new ArrayList<Pins>();
+	
+	boolean isInit=false;
+	
+	int speed = 0;
+	int gradient = 0;
+	int  gradient_state = 0;
+	int run_state = 0;
+	int resistance_flag = 0;
+	int resistance = 0;
+	int playvoice = 0;
+	
+	
+	byte[] in_buffer = new byte[11];
+	
+	int error_code = 0;
+	int motor_current = 0;
+	int bus_voltage = 0;
+	int motor_voltage = 0;
+	float curent_resistance = 0f;
+	int calories = 0;
+	int pulse = 0;
+	
+	final boolean[] keyState = new boolean[7];
+	
+	public void setHWStatusListener(IHWStatusListener  listener)
+	{
+		mListener = listener;
+	}
+	
 	public PinSDK()
 	{
 		
+		new Thread(new Runnable() {  
+	        public void run() {  
+	        	//init();
+	        	while(true)
+	        	{
+	        		try {
+						Thread.sleep(sdkDelay);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	        		write();
+	        		read();
+	        		if(mListener!=null)
+	        			mListener.onHWStatusChanged(error_code, calories, pulse);
+	        	}
+	        }  
+	    }).start();  
 		
+		// 开启线程侦测按键的状态
+		
+			
+			new Thread(new Runnable()
+			{
+				@Override
+				public void run() 
+				{				
+					while (true) 
+					{	
+						for (int i = 0; i < pins.size(); i++) 
+						{
+							final Pins temp_pin = pins.get(i);
+							final Pins temp_pin_out = pins_out.get(i);
+
+						if (temp_pin.getStatus() == 0)
+						{
+							keyState[i]=true;
+						}
+						else
+						{
+							checkKeyS(i);
+						}
+					}
+				}						
+			}
+		}).start();	
 	}
 	
+	private void checkKeyS(final int pos)
+	{
+
+		if(mListener!=null&keyState[pos])
+		{
+			switch(pos)
+			{
+			case 0:
+				mListener.onStartOrStop();
+				break;
+			case 1:
+				mListener.onSpeedPlus();
+				break;
+			case 2:
+				mListener.onSpeedReduce();
+				break;
+			case 3:
+				mListener.onInclinePlus();
+				break;
+			case 4:
+				mListener.onInclineReduce();
+				break;
+			default:
+				break;
+			}
+		}
+		keyState[pos]=false;
+	}
+	
+	private void read()
+	{
+		if(!isInit)
+			return;
+		
+		// test
+		if (TreadmillComm.read(in_buffer, in_buffer.length) < 0) {
+			//Fail!
+			//return;
+			Log.e("PinSDK", "fatal error ,read TreadmillComm   failed  !");
+		}
+		else {
+			error_code = (int)in_buffer[0];
+			//motor_current = in_buffer[1] << 8 + (int)in_buffer[2];	//(暂时无用)
+			//bus_voltage = in_buffer[3] << 8 + (int)in_buffer[4];		//(暂时无用)
+			//motor_voltage = in_buffer[5] << 8 + (int)in_buffer[6];	//(暂时无用)
+			curent_resistance = ((float)(in_buffer[7])) / 16f;
+			calories = (in_buffer[8] << 8 + (int)in_buffer[9]);
+			pulse = (int)in_buffer[10];		
+		}
+	}
+	private void write()
+	{
+		
+		if(!isInit)
+			return;
+		
+		//-------------------------------------------------------------------------------------------------------------//				
+		//1、设定速度，单位0.1km/h，1字节。范围是0.0-25.5
+		//2、设定坡度，单位0.1度，1字节。范围是0.0-15.0
+		//3、坡度升降控制，0停止，1上升，2下降，1字节。
+		//4、运行控制，0停止，1运行，1字节。
+		//5、设定电机电阻，每16表示1欧姆，2字节，第一字节为标志，第二字节为数据。  app显示设定范围为0.0--15.9，确认后乘以16发送到接口库
+		//6、提示语音播放状态，0没有播放，1正在播放
+		final byte[] out_buffer = new byte[7];
+		
+		
+		
+		out_buffer[0] = (byte)(speed * 10f);
+		out_buffer[1] = (byte)(gradient * 10f);
+		out_buffer[2] = (byte)(gradient_state);
+		out_buffer[3] = (byte)(run_state);
+		out_buffer[4] = (byte)(resistance_flag);
+		out_buffer[5] = (byte)(resistance * 16f);
+		out_buffer[6] = (byte)(playvoice);
+		
+		if(TreadmillComm.write(out_buffer, out_buffer.length)<0)
+		{
+			Log.e("PinSDK", "fatal error ,write TreadmillComm   failed  !");
+		}
+	}
 	private void init()
 	{
-		final List<Pins> pins = new ArrayList<Pins>();
-		final List<Pins> pins_out = new ArrayList<Pins>();
-		final List<Pins> pins_bak = new ArrayList<Pins>();
+		isInit = true;
+		
 		
 		try {
             Thread.sleep(1000);
@@ -115,30 +285,6 @@ public class PinSDK {
 		//---------------------------------------------------
 		
 		
-		//-------------------------------------------------------------------------------------------------------------//				
-		//1、设定速度，单位0.1km/h，1字节。范围是0.0-25.5
-		//2、设定坡度，单位0.1度，1字节。范围是0.0-15.0
-		//3、坡度升降控制，0停止，1上升，2下降，1字节。
-		//4、运行控制，0停止，1运行，1字节。
-		//5、设定电机电阻，每16表示1欧姆，2字节，第一字节为标志，第二字节为数据。  app显示设定范围为0.0--15.9，确认后乘以16发送到接口库
-		//6、提示语音播放状态，0没有播放，1正在播放
-		final byte[] out_buffer = new byte[7];
-		
-		float speed = 0f;
-		float gradient = 0f;
-		int  gradient_state = 0;
-		int run_state = 0;
-		int resistance_flag = 0;
-		float resistance = 0f;
-		int playvoice = 0;
-		
-		out_buffer[0] = (byte)(speed * 10f);
-		out_buffer[1] = (byte)(gradient * 10f);
-		out_buffer[2] = (byte)(gradient_state);
-		out_buffer[3] = (byte)(run_state);
-		out_buffer[4] = (byte)(resistance_flag);
-		out_buffer[5] = (byte)(resistance * 16f);
-		out_buffer[6] = (byte)(playvoice);
 		
 		/*
 		1、错误代码,1字节。
@@ -158,15 +304,7 @@ public class PinSDK {
 		6、消耗卡路里，单位0.1Cal，2字节。
 		7、脉搏数，单位次每分钟，1字节。		
 		*/			
-		byte[] in_buffer = new byte[11];
 		
-		int error_code = 0;
-		int motor_current = 0;
-		int bus_voltage = 0;
-		int motor_voltage = 0;
-		float curent_resistance = 0f;
-		float calories = 0f;
-		int pulse = 0;
 				
 		// 初始化通讯
 		try {
@@ -179,42 +317,9 @@ public class PinSDK {
 		if (TreadmillComm.init() < 0) {
 			//Fail!
 			//return;
+			Log.e("PinSDK", "fatal error ,TreadmillComm init  failed  !");
 		}
 		
-		
-		
-		// test
-		if (TreadmillComm.read(in_buffer, in_buffer.length) < 0) {
-			//Fail!
-			//return;
-		}
-		else {
-			error_code = (int)in_buffer[0];
-			//motor_current = in_buffer[1] << 8 + (int)in_buffer[2];	//(暂时无用)
-			//bus_voltage = in_buffer[3] << 8 + (int)in_buffer[4];		//(暂时无用)
-			//motor_voltage = in_buffer[5] << 8 + (int)in_buffer[6];	//(暂时无用)
-			curent_resistance = ((float)(in_buffer[7])) / 16f;
-			calories = ((float)(in_buffer[8] << 8 + (int)in_buffer[9])) / 10f;
-			pulse = (int)in_buffer[10];		
-		}
-		
-		// test
-		out_buffer[0] = 33;
-		out_buffer[1] = 44;
-		out_buffer[2] = 55;
-		out_buffer[3] = 66;
-		out_buffer[4] = 22;
-		out_buffer[5] = 11;
-		out_buffer[6] = 00;
-		 
-		for (int i = 0; i < 100; i++) {
-			try {
-				Thread.sleep(1000);
-				TreadmillComm.write(out_buffer, out_buffer.length);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}			
-		}
 		
 	}
 	
@@ -224,4 +329,6 @@ public class PinSDK {
 			msdk = new PinSDK();
 		return msdk;
 	}
+
+
 }
