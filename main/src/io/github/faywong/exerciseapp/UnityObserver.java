@@ -2,8 +2,6 @@ package io.github.faywong.exerciseapp;
 
 import java.util.Observable;
 import java.util.Observer;
-
-import com.unity3d.player.UnityPlayer;
 public class UnityObserver implements Observer{
 
 	
