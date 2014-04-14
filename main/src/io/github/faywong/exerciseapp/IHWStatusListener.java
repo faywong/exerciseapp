@@ -4,7 +4,8 @@ public interface IHWStatusListener {
 	
 	
 	// key state
-	void onStartOrStop();
+	void onStart();
+	void onStop();
 	void onSpeedPlus();
 	void onSpeedReduce();	
 	void onInclinePlus();

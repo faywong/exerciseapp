@@ -1,14 +1,9 @@
+
 package sportsSDK;
 
 import io.github.faywong.exerciseapp.IHWStatusListener;
-import io.github.faywong.exerciseapp.SettingModel;
-import io.github.faywong.exerciseapp.SettingObservable;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-
 import android.util.Log;
 
 import com.hardware.comm.TreadmillComm;
@@ -16,319 +11,289 @@ import com.hardware.comm.TreadmillComm;
 import sportsSDK.Pins;
 
 public class PinSDK {
-	
-	static PinSDK msdk=null;
-	
-	
-	IHWStatusListener mListener=null;
-	
-	final int keyDelay=20;
-	final int sdkDelay=250;
-	final List<Pins> pins = new ArrayList<Pins>();
-	final List<Pins> pins_out = new ArrayList<Pins>();
-	final List<Pins> pins_bak = new ArrayList<Pins>();
-	
-	boolean isInit=false;
-	
-	int speed = 0;
-	int gradient = 0;
-	int  gradient_state = 0;
-	int run_state = 0;
-	int resistance_flag = 0;
-	int resistance = 0;
-	int playvoice = 0;
-	
-	
-	byte[] in_buffer = new byte[11];
-	
-	int error_code = 0;
-	int motor_current = 0;
-	int bus_voltage = 0;
-	int motor_voltage = 0;
-	float curent_resistance = 0f;
-	int calories = 0;
-	int pulse = 0;
-	
-	final boolean[] keyState = new boolean[7];
-	
-	public void setHWStatusListener(IHWStatusListener  listener)
-	{
-		mListener = listener;
-	}
-	
-	public PinSDK()
-	{
-		
-		new Thread(new Runnable() {  
-	        public void run() {  
-	        	//init();
-	        	while(true)
-	        	{
-	        		try {
-						Thread.sleep(sdkDelay);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-	        		write();
-	        		read();
-	        		if(mListener!=null)
-	        			mListener.onHWStatusChanged(error_code, calories, pulse);
-	        	}
-	        }  
-	    }).start();  
-		
-		// ¿ªÆôÏß³ÌÕì²â°´¼üµÄ×´Ì¬
-		
-			
-			new Thread(new Runnable()
-			{
-				@Override
-				public void run() 
-				{				
-					while (true) 
-					{	
-						for (int i = 0; i < pins.size(); i++) 
-						{
-							final Pins temp_pin = pins.get(i);
-							final Pins temp_pin_out = pins_out.get(i);
 
-						if (temp_pin.getStatus() == 0)
-						{
-							keyState[i]=true;
-						}
-						else
-						{
-							checkKeyS(i);
-						}
-					}
-				}						
-			}
-		}).start();	
-	}
-	
-	private void checkKeyS(final int pos)
-	{
+    static PinSDK msdk = null;
 
-		if(mListener!=null&keyState[pos])
-		{
-			switch(pos)
-			{
-			case 0:
-				mListener.onStartOrStop();
-				break;
-			case 1:
-				mListener.onSpeedPlus();
-				break;
-			case 2:
-				mListener.onSpeedReduce();
-				break;
-			case 3:
-				mListener.onInclinePlus();
-				break;
-			case 4:
-				mListener.onInclineReduce();
-				break;
-			default:
-				break;
-			}
-		}
-		keyState[pos]=false;
-	}
-	
-	private void read()
-	{
-		if(!isInit)
-			return;
-		
-		// test
-		if (TreadmillComm.read(in_buffer, in_buffer.length) < 0) {
-			//Fail!
-			//return;
-			Log.e("PinSDK", "fatal error ,read TreadmillComm   failed  !");
-		}
-		else {
-			error_code = (int)in_buffer[0];
-			//motor_current = in_buffer[1] << 8 + (int)in_buffer[2];	//(ÔÝÊ±ÎÞÓÃ)
-			//bus_voltage = in_buffer[3] << 8 + (int)in_buffer[4];		//(ÔÝÊ±ÎÞÓÃ)
-			//motor_voltage = in_buffer[5] << 8 + (int)in_buffer[6];	//(ÔÝÊ±ÎÞÓÃ)
-			curent_resistance = ((float)(in_buffer[7])) / 16f;
-			calories = (in_buffer[8] << 8 + (int)in_buffer[9]);
-			pulse = (int)in_buffer[10];		
-		}
-	}
-	private void write()
-	{
-		
-		if(!isInit)
-			return;
-		
-		//-------------------------------------------------------------------------------------------------------------//				
-		//1¡¢Éè¶¨ËÙ¶È£¬µ¥Î»0.1km/h£¬1×Ö½Ú¡£·¶Î§ÊÇ0.0-25.5
-		//2¡¢Éè¶¨ÆÂ¶È£¬µ¥Î»0.1¶È£¬1×Ö½Ú¡£·¶Î§ÊÇ0.0-15.0
-		//3¡¢ÆÂ¶ÈÉý½µ¿ØÖÆ£¬0Í£Ö¹£¬1ÉÏÉý£¬2ÏÂ½µ£¬1×Ö½Ú¡£
-		//4¡¢ÔËÐÐ¿ØÖÆ£¬0Í£Ö¹£¬1ÔËÐÐ£¬1×Ö½Ú¡£
-		//5¡¢Éè¶¨µç»úµç×è£¬Ã¿16±íÊ¾1Å·Ä·£¬2×Ö½Ú£¬µÚÒ»×Ö½ÚÎª±êÖ¾£¬µÚ¶þ×Ö½ÚÎªÊý¾Ý¡£  appÏÔÊ¾Éè¶¨·¶Î§Îª0.0--15.9£¬È·ÈÏºó³ËÒÔ16·¢ËÍµ½½Ó¿Ú¿â
-		//6¡¢ÌáÊ¾ÓïÒô²¥·Å×´Ì¬£¬0Ã»ÓÐ²¥·Å£¬1ÕýÔÚ²¥·Å
-		final byte[] out_buffer = new byte[7];
-		
-		
-		
-		out_buffer[0] = (byte)(speed * 10f);
-		out_buffer[1] = (byte)(gradient * 10f);
-		out_buffer[2] = (byte)(gradient_state);
-		out_buffer[3] = (byte)(run_state);
-		out_buffer[4] = (byte)(resistance_flag);
-		out_buffer[5] = (byte)(resistance * 16f);
-		out_buffer[6] = (byte)(playvoice);
-		
-		if(TreadmillComm.write(out_buffer, out_buffer.length)<0)
-		{
-			Log.e("PinSDK", "fatal error ,write TreadmillComm   failed  !");
-		}
-	}
-	private void init()
-	{
-		isInit = true;
-		
-		
-		try {
+    IHWStatusListener mListener = null;
+
+    final int keyDelay = 20;
+    final int sdkDelay = 250;
+    final List<Pins> pins = new ArrayList<Pins>();
+    final List<Pins> pins_out = new ArrayList<Pins>();
+    final List<Pins> pins_bak = new ArrayList<Pins>();
+
+    boolean isInit = false;
+
+    int speed = 0;
+    int gradient = 0;
+    int gradient_state = 0;
+    int run_state = 0;
+    int resistance_flag = 0;
+    int resistance = 0;
+    int playvoice = 0;
+
+    byte[] in_buffer = new byte[11];
+
+    int error_code = 0;
+    int motor_current = 0;
+    int bus_voltage = 0;
+    int motor_voltage = 0;
+    float curent_resistance = 0f;
+    int calories = 0;
+    int pulse = 0;
+
+    final boolean[] keyState = new boolean[7];
+
+    public void setHWStatusListener(IHWStatusListener listener)
+    {
+        mListener = listener;
+    }
+
+    public PinSDK()
+    {
+
+        new Thread(new Runnable() {
+            public void run() {
+                // init();
+                while (true)
+                {
+                    try {
+                        Thread.sleep(sdkDelay);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    write();
+                    read();
+                    if (mListener != null)
+                        mListener.onHWStatusChanged(error_code, calories, pulse);
+                }
+            }
+        }).start();
+
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½ï¿½ï¿½â°´ï¿½ï¿½ï¿½×´Ì¬
+
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                while (true)
+                {
+                    for (int i = 0; i < pins.size(); i++)
+                    {
+                        final Pins temp_pin = pins.get(i);
+                        final Pins temp_pin_out = pins_out.get(i);
+
+                        if (temp_pin.getStatus() == 0)
+                        {
+                            keyState[i] = true;
+                        }
+                        else
+                        {
+                            checkKeyS(i);
+                        }
+                    }
+                }
+            }
+        }).start();
+    }
+
+    private void checkKeyS(final int pos)
+    {
+
+        if (mListener != null & keyState[pos])
+        {
+            switch (pos)
+            {
+                case 0:
+                    mListener.onStartOrStop();
+                    break;
+                case 1:
+                    mListener.onSpeedPlus();
+                    break;
+                case 2:
+                    mListener.onSpeedReduce();
+                    break;
+                case 3:
+                    mListener.onInclinePlus();
+                    break;
+                case 4:
+                    mListener.onInclineReduce();
+                    break;
+                default:
+                    break;
+            }
+        }
+        keyState[pos] = false;
+    }
+
+    private void read()
+    {
+        if (!isInit)
+            return;
+
+        // test
+        if (TreadmillComm.read(in_buffer, in_buffer.length) < 0) {
+            // Fail!
+            // return;
+            Log.e("PinSDK", "fatal error ,read TreadmillComm   failed  !");
+        }
+        else {
+            error_code = (int) in_buffer[0];
+            // motor_current = in_buffer[1] << 8 + (int)in_buffer[2];
+            // //(ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½)
+            // bus_voltage = in_buffer[3] << 8 + (int)in_buffer[4]; //(ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½)
+            // motor_voltage = in_buffer[5] << 8 + (int)in_buffer[6];
+            // //(ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½)
+            curent_resistance = ((float) (in_buffer[7])) / 16f;
+            calories = (in_buffer[8] << 8 + (int) in_buffer[9]);
+            pulse = (int) in_buffer[10];
+        }
+    }
+
+    private void write()
+    {
+
+        if (!isInit)
+            return;
+
+        // -------------------------------------------------------------------------------------------------------------//
+        // 1ï¿½ï¿½ï¿½è¶¨ï¿½Ù¶È£ï¿½ï¿½ï¿½Î»0.1km/hï¿½ï¿½1ï¿½Ö½Ú¡ï¿½ï¿½ï¿½Î§ï¿½ï¿½0.0-25.5
+        // 2ï¿½ï¿½ï¿½è¶¨ï¿½Â¶È£ï¿½ï¿½ï¿½Î»0.1ï¿½È£ï¿½1ï¿½Ö½Ú¡ï¿½ï¿½ï¿½Î§ï¿½ï¿½0.0-15.0
+        // 3ï¿½ï¿½ï¿½Â¶ï¿½ï¿½ï¿½ï¿½ï¿½Æ£ï¿½0Í£Ö¹ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½2ï¿½Â½ï¿½ï¿½ï¿½1ï¿½Ö½Ú¡ï¿½
+        // 4ï¿½ï¿½ï¿½ï¿½ï¿½Ð¿ï¿½ï¿½Æ£ï¿½0Í£Ö¹ï¿½ï¿½1ï¿½ï¿½ï¿½Ð£ï¿½1ï¿½Ö½Ú¡ï¿½
+        // 5ï¿½ï¿½ï¿½è¶¨ï¿½ï¿½ï¿½ï¿½ï¿½è£¬Ã¿16ï¿½ï¿½Ê¾1Å·Ä·ï¿½ï¿½2ï¿½Ö½Ú£ï¿½ï¿½ï¿½Ò»ï¿½Ö½ï¿½Îªï¿½ï¿½Ö¾ï¿½ï¿½ï¿½Ú¶ï¿½ï¿½Ö½ï¿½Îªï¿½ï¿½Ý¡ï¿½
+        // appï¿½ï¿½Ê¾ï¿½è¶¨ï¿½ï¿½Î§Îª0.0--15.9ï¿½ï¿½È·ï¿½Ïºï¿½ï¿½ï¿½ï¿½16ï¿½ï¿½ï¿½Íµï¿½ï¿½Ó¿Ú¿ï¿½
+        // 6ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½0Ã»ï¿½Ð²ï¿½ï¿½Å£ï¿½1ï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½
+        final byte[] out_buffer = new byte[7];
+
+        out_buffer[0] = (byte) (speed * 10f);
+        out_buffer[1] = (byte) (gradient * 10f);
+        out_buffer[2] = (byte) (gradient_state);
+        out_buffer[3] = (byte) (run_state);
+        out_buffer[4] = (byte) (resistance_flag);
+        out_buffer[5] = (byte) (resistance * 16f);
+        out_buffer[6] = (byte) (playvoice);
+
+        if (TreadmillComm.write(out_buffer, out_buffer.length) < 0)
+        {
+            Log.e("PinSDK", "fatal error ,write TreadmillComm   failed  !");
+        }
+    }
+
+    private void init()
+    {
+        isInit = true;
+
+        try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }	
+        }
 
-		// input-------key1,key2,key3,key4,key5,key6,key7
-		pins.add(new Pins("GPIO-3:5", 167));
-		pins.add(new Pins("GPIO-3:6", 27));
-		pins.add(new Pins("GPIO-3:7", 169));
-		pins.add(new Pins("GPIO-3:8", 28));
-		pins.add(new Pins("GPIO-3:9", 174));
-		pins.add(new Pins("GPIO-3:10", 29));
-		pins.add(new Pins("GPIO-3:11", 176));
-		
-		// ³õÊ¼»¯7¸öGPIOÎªÊäÈë°´¼ü
-		for (int i = 0; i < pins.size(); i++) {
-			final Pins temp_pin = pins.get(i);
-			temp_pin.exportPin();
-			String dir = temp_pin.getDirection();
-			temp_pin.setDirection("in");
-		}
-		
-		// output-------key1,key2,key3,key4,key5,key6,key7
-		// Êµ¼Ê¿ÉÄÜÓÃ²»µ½
-		pins_out.add(new Pins("GPIO-3:12", 30));
-		pins_out.add(new Pins("GPIO-3:13", 177));
-		pins_out.add(new Pins("GPIO-3:14", 31));
-		pins_out.add(new Pins("GPIO-3:15", 178));
-		pins_out.add(new Pins("GPIO-3:16", 32));
-		pins_out.add(new Pins("GPIO-3:17", 179));
-		pins_out.add(new Pins("GPIO-3:18", 34));
+        // input-------key1,key2,key3,key4,key5,key6,key7
+        pins.add(new Pins("GPIO-3:5", 167));
+        pins.add(new Pins("GPIO-3:6", 27));
+        pins.add(new Pins("GPIO-3:7", 169));
+        pins.add(new Pins("GPIO-3:8", 28));
+        pins.add(new Pins("GPIO-3:9", 174));
+        pins.add(new Pins("GPIO-3:10", 29));
+        pins.add(new Pins("GPIO-3:11", 176));
 
-		// ³õÊ¼»¯7¸öGPIOÎªÊä³ö
-		for (int i = 0; i < pins_out.size(); i++) {
-			final Pins temp_pin_out = pins_out.get(i);
-			temp_pin_out.exportPin();
-			String dir = temp_pin_out.getDirection();
-			temp_pin_out.setDirection("out");
-		}
-		/*
-		// ¿ªÆôÏß³ÌÕì²â°´¼üµÄ×´Ì¬
-		for (int i = 0; i < pins.size(); i++) {
-			final Pins temp_pin = pins.get(i);
-			final Pins temp_pin_out = pins_out.get(i);
-			
-			new Thread(new Runnable() {							
-				@Override
-				public void run() {				
-					while (true) {	
-						// °´¼üËÉ¿ªÊ±Ä¬ÈÏ¸ßµçÆ½,temp_pin.getStatus() = 1
-						// °´¼ü°´ÏÂÊ±£¬±ä³ÉµÍµçÆ½£¬temp_pin.getStatus() = 0
-						if (temp_pin.getStatus() == 0) {							
-							// °´¼üdown(°´ÏÂÊäÈë¼üÊ±£¬¶ÔÓ¦µÄÊä³öIO±ä High£¬½ö¹©²âÊÔÊ¹ÓÃ£¬ÐèÒªÆÁ±Î´Ë¶Î´úÂë)
-							temp_pin_out.setLevel(1);								
-						}
-						else
-						{
-							// °´¼üup(ËÉ¿ªÊäÈë¼üÊ±£¬¶ÔÓ¦µÄÊä³öIO±ä Low£¬½ö¹©²âÊÔÊ¹ÓÃ£¬ÐèÒªÆÁ±Î´Ë¶Î´úÂë)
-							temp_pin_out.setLevel(0);						
-						}
-					}
-				}						
-			}).start();	
-		}
-		*/
-		//---------------------------------------------------
-		// Ô¤Áô10¸öIO£¬Êµ¼Ê¿ÉÄÜÓÃ²»µ½ PH14,PH15,PH17,PH20-PH26
-		pins_bak.add(new Pins("GPIO-3:21", 181));		
-		pins_bak.add(new Pins("GPIO-3:23", 182));	
-		//pins_bak.add(new Pins("GPIO-3:25", 183));
-		pins_bak.add(new Pins("GPIO-3:27", 184));
-		//pins_bak.add(new Pins("GPIO-3:29", 185));
-		//pins_bak.add(new Pins("GPIO-3:31", 186));
-		pins_bak.add(new Pins("GPIO-3:33", 187));
-		pins_bak.add(new Pins("GPIO-3:35", 188));
-		pins_bak.add(new Pins("GPIO-3:37", 189));
-		pins_bak.add(new Pins("GPIO-3:39", 190));
-		pins_bak.add(new Pins("GPIO-3:34", 191));
-		pins_bak.add(new Pins("GPIO-3:36", 192));
-		pins_bak.add(new Pins("GPIO-3:38", 193));
+        // ï¿½ï¿½Ê¼ï¿½ï¿½7ï¿½ï¿½GPIOÎªï¿½ï¿½ï¿½ë°´ï¿½ï¿½
+        for (int i = 0; i < pins.size(); i++) {
+            final Pins temp_pin = pins.get(i);
+            temp_pin.exportPin();
+            String dir = temp_pin.getDirection();
+            temp_pin.setDirection("in");
+        }
 
-		// ³õÊ¼»¯10¸öGPIOÎªÊä³ö£¬ÖÃ¸ßÎ»
-		for (int i = 0; i < pins_bak.size(); i++) {
-			final Pins temp_pin_bak = pins_bak.get(i);
-			temp_pin_bak.exportPin();
-			String dir = temp_pin_bak.getDirection();
-			temp_pin_bak.setDirection("out");
-			temp_pin_bak.setLevel(1);
-		}		
-		//---------------------------------------------------
-		
-		
-		
-		/*
-		1¡¢´íÎó´úÂë,1×Ö½Ú¡£
-			0: ±íÊ¾Ã»ÓÐ¹ÊÕÏ
-	        2£ºµçÑ¹µÍ
-	        3£ºµç»úÃ»ÓÐ²å»òµç»úµçÑ¹²âÁ¿¹ÊÕÏ
-	        4£ºµçÑ¹¸ß
-	        5£º¹ýÁ÷
-	        6£ºÊä³ö¶ÌÂ·
-	        7£ºIBGT¶ÌÂ·
-	        10£ºÏµÍ³¹ÊÕÏ
-	        11£º°²È«¿ª¹ØÍÑÂä
-		2¡¢µç»úµçÁ÷£¬Ã¿32±íÊ¾1AµçÁ÷£¬2×Ö½Ú¡£ (ÔÝÊ±ÎÞÓÃ)
-		3¡¢Ä¸ÏßµçÑ¹£¬µ¥Î»1V£¬2×Ö½Ú¡£	     (ÔÝÊ±ÎÞÓÃ)	
-		4¡¢µç»úµçÑ¹£¬µ¥Î»1V£¬2×Ö½Ú¡£         (ÔÝÊ±ÎÞÓÃ)
-		5¡¢µ±Ç°µç»úµç×è£¬Ã¿16±íÊ¾1Å·Ä·£¬1×Ö½Ú¡£ (ÔÚappµÄµç»úµç×èÉè¶¨½çÃæÏÔÊ¾)
-		6¡¢ÏûºÄ¿¨Â·Àï£¬µ¥Î»0.1Cal£¬2×Ö½Ú¡£
-		7¡¢Âö²«Êý£¬µ¥Î»´ÎÃ¿·ÖÖÓ£¬1×Ö½Ú¡£		
-		*/			
-		
-				
-		// ³õÊ¼»¯Í¨Ñ¶
-		try {
-			TreadmillComm.getPermission();
-			Thread.sleep(2000);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		if (TreadmillComm.init() < 0) {
-			//Fail!
-			//return;
-			Log.e("PinSDK", "fatal error ,TreadmillComm init  failed  !");
-		}
-		
-		
-	}
-	
-	static public PinSDK getInstance()
-	{
-		if(msdk==null)
-			msdk = new PinSDK();
-		return msdk;
-	}
+        // output-------key1,key2,key3,key4,key5,key6,key7
+        // Êµï¿½Ê¿ï¿½ï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½
+        pins_out.add(new Pins("GPIO-3:12", 30));
+        pins_out.add(new Pins("GPIO-3:13", 177));
+        pins_out.add(new Pins("GPIO-3:14", 31));
+        pins_out.add(new Pins("GPIO-3:15", 178));
+        pins_out.add(new Pins("GPIO-3:16", 32));
+        pins_out.add(new Pins("GPIO-3:17", 179));
+        pins_out.add(new Pins("GPIO-3:18", 34));
 
+        // ï¿½ï¿½Ê¼ï¿½ï¿½7ï¿½ï¿½GPIOÎªï¿½ï¿½ï¿½
+        for (int i = 0; i < pins_out.size(); i++) {
+            final Pins temp_pin_out = pins_out.get(i);
+            temp_pin_out.exportPin();
+            String dir = temp_pin_out.getDirection();
+            temp_pin_out.setDirection("out");
+        }
+        /*
+         * // ï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½ï¿½ï¿½â°´ï¿½ï¿½ï¿½×´Ì¬ for (int i = 0; i < pins.size(); i++) { final Pins
+         * temp_pin = pins.get(i); final Pins temp_pin_out = pins_out.get(i);
+         * new Thread(new Runnable() {
+         * @Override public void run() { while (true) { //
+         * ï¿½ï¿½ï¿½ï¿½ï¿½É¿ï¿½Ê±Ä¬ï¿½Ï¸ßµï¿½Æ½,temp_pin.getStatus() = 1 //
+         * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ÉµÍµï¿½Æ½ï¿½ï¿½temp_pin.getStatus() = 0 if (temp_pin.getStatus() ==
+         * 0) { // ï¿½ï¿½ï¿½ï¿½down(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½IOï¿½ï¿½
+         * Highï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã£ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½Î´Ë¶Î´ï¿½ï¿½ï¿½) temp_pin_out.setLevel(1); } else { //
+         * ï¿½ï¿½ï¿½ï¿½up(ï¿½É¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½IOï¿½ï¿½ Lowï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã£ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½Î´Ë¶Î´ï¿½ï¿½ï¿½)
+         * temp_pin_out.setLevel(0); } } } }).start(); }
+         */
+        // ---------------------------------------------------
+        // Ô¤ï¿½ï¿½10ï¿½ï¿½IOï¿½ï¿½Êµï¿½Ê¿ï¿½ï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½ PH14,PH15,PH17,PH20-PH26
+        pins_bak.add(new Pins("GPIO-3:21", 181));
+        pins_bak.add(new Pins("GPIO-3:23", 182));
+        // pins_bak.add(new Pins("GPIO-3:25", 183));
+        pins_bak.add(new Pins("GPIO-3:27", 184));
+        // pins_bak.add(new Pins("GPIO-3:29", 185));
+        // pins_bak.add(new Pins("GPIO-3:31", 186));
+        pins_bak.add(new Pins("GPIO-3:33", 187));
+        pins_bak.add(new Pins("GPIO-3:35", 188));
+        pins_bak.add(new Pins("GPIO-3:37", 189));
+        pins_bak.add(new Pins("GPIO-3:39", 190));
+        pins_bak.add(new Pins("GPIO-3:34", 191));
+        pins_bak.add(new Pins("GPIO-3:36", 192));
+        pins_bak.add(new Pins("GPIO-3:38", 193));
+
+        // ï¿½ï¿½Ê¼ï¿½ï¿½10ï¿½ï¿½GPIOÎªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¸ï¿½Î»
+        for (int i = 0; i < pins_bak.size(); i++) {
+            final Pins temp_pin_bak = pins_bak.get(i);
+            temp_pin_bak.exportPin();
+            String dir = temp_pin_bak.getDirection();
+            temp_pin_bak.setDirection("out");
+            temp_pin_bak.setLevel(1);
+        }
+        // ---------------------------------------------------
+
+        /*
+         * 1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,1ï¿½Ö½Ú¡ï¿½ 0: ï¿½ï¿½Ê¾Ã»ï¿½Ð¹ï¿½ï¿½ï¿½ 2ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ 3ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½Ð²ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+         * 4ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ 5ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 6ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â· 7ï¿½ï¿½IBGTï¿½ï¿½Â· 10ï¿½ï¿½ÏµÍ³ï¿½ï¿½ï¿½ï¿½ 11ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+         * 2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¿32ï¿½ï¿½Ê¾1Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½2ï¿½Ö½Ú¡ï¿½ (ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½) 3ï¿½ï¿½Ä¸ï¿½ßµï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½Î»1Vï¿½ï¿½2ï¿½Ö½Ú¡ï¿½
+         * (ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½) 4ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½Î»1Vï¿½ï¿½2ï¿½Ö½Ú¡ï¿½ (ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½)
+         * 5ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½è£¬Ã¿16ï¿½ï¿½Ê¾1Å·Ä·ï¿½ï¿½1ï¿½Ö½Ú¡ï¿½ (ï¿½ï¿½appï¿½Äµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è¶¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾)
+         * 6ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½Â·ï¿½ï£¬ï¿½ï¿½Î»0.1Calï¿½ï¿½2ï¿½Ö½Ú¡ï¿½ 7ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½Ó£ï¿½1ï¿½Ö½Ú¡ï¿½
+         */
+
+        // ï¿½ï¿½Ê¼ï¿½ï¿½Í¨Ñ¶
+        try {
+            TreadmillComm.getPermission();
+            Thread.sleep(2000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (TreadmillComm.init() < 0) {
+            // Fail!
+            // return;
+            Log.e("PinSDK", "fatal error ,TreadmillComm init  failed  !");
+        }
+
+    }
+
+    static public PinSDK getInstance()
+    {
+        if (msdk == null)
+            msdk = new PinSDK();
+        return msdk;
+    }
 
 }
