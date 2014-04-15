@@ -1,0 +1,90 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <include layout="@layout/header_sharing" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <RadioGroup
+            android:id="@+id/radioGroup1"
+            android:layout_width="127dp"
+            android:layout_height="210dp"
+            android:orientation="vertical" >
+
+            <RadioButton
+                android:id="@+id/main_tab1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radiobutton"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center"
+                android:padding="5dp"
+                android:layout_marginTop="8dp"
+                android:text="MP3"
+                android:textColor="@drawable/text_check_sel" />
+
+            <RadioButton
+                android:id="@+id/main_tab2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radiobutton"
+                android:button="@null"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="选择语言"
+                 android:layout_marginTop="8dp"
+                android:textColor="@drawable/text_check_sel" />
+
+            
+            <!-- android:drawableTop="@drawable/select_sel-->"
+            
+            <RadioButton
+                android:id="@+id/main_tab3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radiobutton"
+                android:button="@null"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="屏幕亮度"
+                android:layout_marginTop="8dp"
+                android:textColor="@drawable/text_check_sel" />
+
+            <RadioButton
+                android:id="@+id/main_tab4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radiobutton"
+                android:button="@null"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="桌面背景"
+                android:layout_marginTop="8dp"
+                android:textColor="@drawable/text_check_sel" />
+
+        </RadioGroup>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp" >
+        </android.support.v4.view.ViewPager>
+
+    </LinearLayout>
+
+</LinearLayout>

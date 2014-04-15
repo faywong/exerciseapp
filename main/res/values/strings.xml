@@ -51,6 +51,10 @@
     
     
     <string name="back">返回</string> 
+    <string name="user_manager">用户管理</string> 
+    <string name="system_setting">系统设置</string> 
+    <string name="about">关于软件</string> 
+    <string name="factory">出厂设置</string> 
     
 	<!--     SeeJoPlayer -->
     <string name="path">/sdcard/test0.mp4</string>

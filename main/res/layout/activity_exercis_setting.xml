@@ -36,10 +36,10 @@
             android:paddingRight="16dp" >
 
             <ImageButton
-                android:id="@+id/free_mode_btn"
+                android:id="@+id/user_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="96dp"
-                android:background="@drawable/free_mode"
+                android:background="@drawable/user_manager"
                 android:contentDescription="@string/free_mode_desc"
                 android:scaleType="fitXY" >
 
@@ -49,7 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/free_mode"
+                android:text="@string/user_manager"
                 android:textSize="20sp" >
 
             </TextView>
@@ -65,10 +65,10 @@
             android:paddingRight="16dp" >
 
             <ImageButton
-                android:id="@+id/intelli_mode_btn"
+                android:id="@+id/system_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="96dp"
-                android:background="@drawable/smart_mode"
+                android:background="@drawable/system_setting"
                 android:contentDescription="@string/intelli_mode_desc"
                 android:scaleType="fitXY" >
 
@@ -78,7 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/intelli_mode"
+                android:text="@string/system_setting"
                 android:textSize="20sp" >
 
             </TextView>
@@ -94,10 +94,10 @@
             android:paddingRight="16dp" >
 
             <ImageButton
-                android:id="@+id/immersion_mode_btn"
+                android:id="@+id/about_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="96dp"
-                android:background="@drawable/real_mode"
+                android:background="@drawable/about"
                 android:contentDescription="@string/immersion_mode_desc"
                 android:scaleType="fitXY" >
 
@@ -107,7 +107,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/immersion_mode"
+                android:text="@string/about"
                 android:textSize="20sp" >
 
             </TextView>
@@ -123,18 +123,18 @@
             android:paddingRight="16dp" >
 
             <ImageButton
-                android:id="@+id/ImageButton01"
+                android:id="@+id/factory_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="96dp"
-                android:background="@drawable/real_mode"
+                android:background="@drawable/factory"
                 android:contentDescription="@string/immersion_mode_desc"
-                 android:scaleType="fitXY" />
+                android:scaleType="fitXY" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/immersion_mode"
+                android:text="@string/factory"
                 android:textSize="20sp" />
         </LinearLayout>
 

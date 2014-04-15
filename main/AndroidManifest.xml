@@ -23,7 +23,7 @@
         android:icon="@drawable/ic_exercise"
         android:label="@string/app_name"
         android:persistent="true"
-        android:theme="@android:style/Theme.NoTitleBar" >
+        android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         <activity
             android:name="io.github.faywong.exerciseapp.Main"
             android:clearTaskOnLaunch="true"
@@ -93,6 +93,28 @@
             android:label="@string/app_name"
             android:screenOrientation="landscape" >
         </activity>
+        
+        <activity
+            android:name="io.github.faywong.exerciseapp.exercissetting"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" >
+        </activity>
+        
+         <activity
+            android:name="io.github.faywong.exerciseapp.systemSetting"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" >
+        </activity>
+        
+          <activity
+            android:name="io.github.faywong.exerciseapp.userManage"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" >
+        </activity>
+        
         <activity
             android:name="io.github.faywong.exerciseapp.thirdparty.WifiManagerMain"
             android:label="@string/app_name"

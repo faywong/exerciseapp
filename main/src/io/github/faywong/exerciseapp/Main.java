@@ -35,6 +35,7 @@ public class Main extends Activity implements View.OnClickListener {
 		wifiSettingBtn.setOnClickListener(this);
 		
 		PinSDK.getInstance();
+		
 	}
 
 	@Override
@@ -57,7 +58,9 @@ public class Main extends Activity implements View.OnClickListener {
 			
 		} else if (v.getId() == R.id.wifi_settings) {
 			//Intent intent = new Intent().setClass(this, WifiManagerMain.class);
-			Intent intent = new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS);
+			//Intent intent = new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS);
+			
+			Intent intent = new Intent().setClass(this, exercissetting.class);
 			startActivityForResult(intent, 0);
 		}
 	}

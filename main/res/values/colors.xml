@@ -8,7 +8,9 @@
     <color name="background_color">#FFFFFF</color>
     <color name="text_color">#000000</color>
     <color name="black">#a0000000</color>
-    <color name="white">#a0ffffff</color>
+    <color name="white">#ffffffff</color>
     <color name="black_light">#222222</color>
+    <color name="blue_light">#d50000ff</color>
+    <color name="gray">#a0ffffff</color>
     
     </resources>
