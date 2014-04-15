@@ -26,6 +26,12 @@
 
             <!-- 时间控件 -->
 
+            <Button
+                android:id="@+id/freeback_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="&lt;返回" />
+
             <RelativeLayout
                 android:id="@+id/time_control"
                 android:layout_width="wrap_content"
@@ -200,6 +206,7 @@
                     android:text="@string/default_incline_display" >
                 </TextView>
             </RelativeLayout>
+
         </LinearLayout>
 
         <include

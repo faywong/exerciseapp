@@ -9,6 +9,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import sportsSDK.PinSDK;
+
 import android.R.color;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -22,6 +24,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -71,6 +74,8 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
     final static private int SPEED_ADJUST_STEP = 1;
     final static private int INCLINE_ADJUST_STEP = 1;
 
+    
+    static boolean firstStart = false;
     private WidgetGroup<Button, TextView> timeGroup;
     // id of parent layout of header button control --> associated panel
     // WidgetGroup
@@ -102,6 +107,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
     private ImageButton musicBtn;
     private ImageButton webBtn;
     private TextView countDownText;
+    private Button backBtn;
 
     private ArrayList<RelativeLayout> panelLayouts = new ArrayList<RelativeLayout>();
     private Handler hander = new Handler();
@@ -236,6 +242,8 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
         final Resources resources = getResources();
 
         // initialize time related views/handlers
+        backBtn =  (Button) findViewById(R.id.freeback_btn);
+        backBtn.setOnClickListener(this);
         timeControlLayout = (RelativeLayout) findViewById(R.id.time_control);
         timeControlLayout.setOnClickListener(this);
         timeControlPanel = (RelativeLayout) findViewById(R.id.time_selection);
@@ -505,6 +513,19 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 
         mUnityObserver = new UnityObserver();
         mSettingObservable.addObserver(mUnityObserver);
+        
+        
+        
+        
+        PinSDK.getInstance();
+        
+        if(!firstStart)
+        {
+        	Intent intent = new Intent();
+			intent.setClass(this, Main.class);
+			startActivity(intent);
+			firstStart=true;
+        }
     }
 
     private void enableTargetSettingControls(final boolean enable) {
@@ -779,9 +800,15 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
         Log.d(TAG, "onClick_() viewId:" + viewId);
         boolean containerBecomeVisible = false;
         int containerIdBecameVisible = 0;
+        
         if (viewId == R.id.start_btn) {
             swapSessionState();
-        } else if (viewId == R.id.music_btn) {
+        } 
+        else if (viewId == R.id.freeback_btn) {
+        	Intent intent = new Intent();
+			intent.setClass(this, Main.class);
+			startActivity(intent);
+        }else if (viewId == R.id.music_btn) {
             switchToMusicFragment();
         } else if (viewId == R.id.surf_btn) {
             switchToSurfFragment();
@@ -903,4 +930,15 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
             panel.setVisibility(View.GONE);
         }
     }
+    @Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		Log.d(TAG, "onKeyDown() keyCode:" + keyCode);
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			Log.d(TAG, "onKeyDown() BACK case");
+			return true;
+		} else {
+			return super.onKeyDown(keyCode, event);
+		}
+	}
 }

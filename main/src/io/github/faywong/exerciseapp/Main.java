@@ -49,9 +49,10 @@ public class Main extends Activity implements View.OnClickListener {
 		if (v == null) {
 			return;
 		} else if (v.getId() == R.id.free_mode_btn) {
-			Intent intent = new Intent();
+			/*Intent intent = new Intent();
 			intent.setClass(this, FreeMode.class);
-			startActivity(intent);
+			startActivity(intent);*/
+			finish();
 		} else if (v.getId() == R.id.intelli_mode_btn) {
 			
 		} else if (v.getId() == R.id.immersion_mode_btn) {

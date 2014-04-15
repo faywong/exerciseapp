@@ -16,7 +16,7 @@ public class BootCompleteReceiver extends BroadcastReceiver {
 		}
 		final String action = intent.getAction();
 		if (action.equals(Intent.ACTION_BOOT_COMPLETED)) {
-			context.startActivity(new Intent().setClass(context, Main.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+			context.startActivity(new Intent().setClass(context, FreeMode.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 			Log.d(TAG, "Boot complete!");
 		}
 	}
