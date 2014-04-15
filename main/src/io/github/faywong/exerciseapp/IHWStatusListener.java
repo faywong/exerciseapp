@@ -4,8 +4,7 @@ public interface IHWStatusListener {
 	
 	
 	// key state
-	void onStart();
-	void onStop();
+	void onStartOrStop();
 	void onSpeedPlus();
 	void onSpeedReduce();	
 	void onInclinePlus();
@@ -13,6 +12,7 @@ public interface IHWStatusListener {
 	
 	//data 
 	void onHWStatusChanged(int errorCode,int calory,int pulse);
+
 	
 }
 

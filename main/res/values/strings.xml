@@ -49,6 +49,9 @@
     <string name="incline_selection_12_percent">12%</string>
     <string name="default_incline_display">0%</string> 
     
+    
+    <string name="back">返回</string> 
+    
 	<!--     SeeJoPlayer -->
     <string name="path">/sdcard/test0.mp4</string>
 </resources>

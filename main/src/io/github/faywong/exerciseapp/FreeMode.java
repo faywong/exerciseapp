@@ -150,17 +150,17 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
     private UnityObserver mUnityObserver;
     private IHWStatusListener mHWStatusListener = new IHWStatusListener() {
 
-        @Override
-        public void onStart() {
-            // TODO Auto-generated method stub
-            setSessionState(true);
-        }
-
-        @Override
-        public void onStop() {
-            // TODO Auto-generated method stub
-            setSessionState(false);
-        }
+//        @Override
+//        public void onStart() {
+//            // TODO Auto-generated method stub
+//            setSessionState(true);
+//        }
+//
+//        @Override
+//        public void onStop() {
+//            // TODO Auto-generated method stub
+//            setSessionState(false);
+//        }
 
         @Override
         public void onSpeedPlus() {
@@ -192,6 +192,12 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
             Toast.makeText(FreeMode.this, "HW status changed[errorCode:" + errorCode + " calorie:"
                     + calory + " pulse:" + pulse + "]", Toast.LENGTH_SHORT).show();
         }
+
+		@Override
+		public void onStartOrStop() {
+			// TODO Auto-generated method stub 
+			
+		}
 
     };
 
