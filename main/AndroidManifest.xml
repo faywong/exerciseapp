@@ -115,6 +115,18 @@
             android:screenOrientation="landscape" >
         </activity>
         <activity
+            android:name="io.github.faywong.exerciseapp.exerciseSmart"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name="io.github.faywong.exerciseapp.exerciseReal"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
             android:name="io.github.faywong.exerciseapp.thirdparty.WifiManagerMain"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"

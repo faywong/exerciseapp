@@ -21,17 +21,21 @@ public class exerciseSmart extends Activity implements View.OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_exercis_setting);
-		userBtn = (ImageButton)findViewById(R.id.user_btn);
+		setContentView(R.layout.activity_exercis_smart);
+		
+		backBtn = (Button)findViewById(R.id.header_leftbtn);
+		backBtn.setOnClickListener(this); 
+		
+		
+		/*userBtn = (ImageButton)findViewById(R.id.user_btn);
 		userBtn.setOnClickListener(this);
 		systemBtn = (ImageButton)findViewById(R.id.system_btn);
 		systemBtn.setOnClickListener(this);
 		aboutBtn = (ImageButton)findViewById(R.id.about_btn);
 		aboutBtn.setOnClickListener(this);
-		backBtn = (Button)findViewById(R.id.header_leftbtn);
-		backBtn.setOnClickListener(this); 
+		
 		factoryBtn = (ImageButton)findViewById(R.id.factory_btn);
-		factoryBtn.setOnClickListener(this); 
+		factoryBtn.setOnClickListener(this); */
 	}
 	
 	@Override

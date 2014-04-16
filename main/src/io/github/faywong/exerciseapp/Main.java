@@ -30,7 +30,9 @@ public class Main extends Activity implements View.OnClickListener {
 		freeModeBtn = (ImageButton)findViewById(R.id.free_mode_btn);
 		freeModeBtn.setOnClickListener(this);
 		intelliModeBtn = (ImageButton)findViewById(R.id.intelli_mode_btn);
+		intelliModeBtn.setOnClickListener(this);
 		immersionModeBtn = (ImageButton)findViewById(R.id.immersion_mode_btn);
+		immersionModeBtn.setOnClickListener(this);
 		wifiSettingBtn = (ImageButton)findViewById(R.id.wifi_settings);
 		wifiSettingBtn.setOnClickListener(this);
 		
@@ -55,8 +57,11 @@ public class Main extends Activity implements View.OnClickListener {
 			finish();
 		} else if (v.getId() == R.id.intelli_mode_btn) {
 			
+			Intent intent = new Intent().setClass(this, exerciseSmart.class);
+			startActivityForResult(intent, 0);
 		} else if (v.getId() == R.id.immersion_mode_btn) {
-			
+			Intent intent = new Intent().setClass(this, exerciseReal.class);
+			startActivityForResult(intent, 0);
 		} else if (v.getId() == R.id.wifi_settings) {
 			//Intent intent = new Intent().setClass(this, WifiManagerMain.class);
 			//Intent intent = new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS);
