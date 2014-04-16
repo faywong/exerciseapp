@@ -4,30 +4,20 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.faywong.exerciseapp.SurfFragment.MyWebViewClient;
 import io.github.faywong.exerciseapp.thirdparty.MusicFilter;
-import io.github.faywong.exerciseapp.thirdparty.musicActivity;
 import io.github.faywong.exerciseapp.thirdparty.viewHolder;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 
 public class MusicFragment extends ListFragment{
@@ -45,13 +35,13 @@ public class MusicFragment extends ListFragment{
 	        "George W. Bush",     
 	        "Barack Obama"
 	    };    
-	//²¥·Å¶ÔÏó
+	//ï¿½ï¿½ï¿½Å¶ï¿½ï¿½ï¿½
 		private MediaPlayer myMediaPlayer;
-		//²¥·ÅÁÐ±í
+		//ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
 		private List<String> myMusicList=new ArrayList<String>();
-		//µ±Ç°²¥·Å¸èÇúµÄË÷Òý
+		//ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		private int currentListItem=0;
-		//ÒôÀÖµÄÂ·¾¶
+		//ï¿½ï¿½ï¿½Öµï¿½Â·ï¿½ï¿½
 		private static final String MUSIC_PATH=new String("/sdcard/");
 		
 	private static String TAG = "MusicFragment";
@@ -123,7 +113,7 @@ public class MusicFragment extends ListFragment{
 		
 	}
 	
-	  //°ó¶¨ÒôÀÖ
+	  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     void musicList(){
     	File home=new File(MUSIC_PATH);
     	if(home.listFiles(new MusicFilter()).length>0){
@@ -135,7 +125,7 @@ public class MusicFragment extends ListFragment{
     	}
     }
     
-    //»ñÈ¡°´Å¥
+    //ï¿½ï¿½È¡ï¿½ï¿½Å¥
    void findView(View parentView){
 	   viewHolder.start=(Button)parentView.findViewById(R.id.start);
 	   viewHolder.stop=(Button)parentView.findViewById(R.id.stop);
@@ -145,7 +135,7 @@ public class MusicFragment extends ListFragment{
    }
    
    
-   //¼àÌýÊÂ¼þ
+   //ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½
    void listener(){
 	   //Í£Ö¹
 	   viewHolder.stop.setOnClickListener(new OnClickListener() {
@@ -158,7 +148,7 @@ public class MusicFragment extends ListFragment{
 			}
 		}
 	});
-	   //¿ªÊ¼
+	   //ï¿½ï¿½Ê¼
 	   viewHolder.start.setOnClickListener(new OnClickListener() {
 		
 		@Override
@@ -167,7 +157,7 @@ public class MusicFragment extends ListFragment{
 			playMusic(MUSIC_PATH+myMusicList.get(currentListItem));
 		}
 	});
-	   //ÏÂÒ»Ê×
+	   //ï¿½ï¿½Ò»ï¿½ï¿½
 	   viewHolder.next.setOnClickListener(new OnClickListener() {
 		
 		@Override
@@ -176,7 +166,7 @@ public class MusicFragment extends ListFragment{
 			nextMusic();
 		}
 	});
-	   //ÔÝÍ£
+	   //ï¿½ï¿½Í£
 	   viewHolder.pause.setOnClickListener(new OnClickListener() {
 		
 		@Override
@@ -189,7 +179,7 @@ public class MusicFragment extends ListFragment{
 			}
 		}
 	});
-	   //ÉÏÒ»Ê×
+	   //ï¿½ï¿½Ò»ï¿½ï¿½
 	   viewHolder.last.setOnClickListener(new OnClickListener() {
 		
 		@Override
@@ -202,7 +192,7 @@ public class MusicFragment extends ListFragment{
 	   
    }
    
-   //²¥·ÅÒôÀÖ 
+   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
    void playMusic(String path){
 	   try { 
 		myMediaPlayer.reset();
@@ -223,7 +213,7 @@ public class MusicFragment extends ListFragment{
 	}
    }
    
-   //ÏÂÒ»Ê×
+   //ï¿½ï¿½Ò»ï¿½ï¿½
    void nextMusic(){
 	   if(++currentListItem>=myMusicList.size()){
 		   currentListItem=0;
@@ -233,7 +223,7 @@ public class MusicFragment extends ListFragment{
 	   }
    }
    
-   //ÉÏÒ»Ê×
+   //ï¿½ï¿½Ò»ï¿½ï¿½
    void lastMusic(){
 	   if(currentListItem!=0)
 		   {

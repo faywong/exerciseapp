@@ -23,6 +23,7 @@
         android:icon="@drawable/ic_exercise"
         android:label="@string/app_name"
         android:persistent="true"
+        android:name="io.github.faywong.exerciseapp.ExerciseApp"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         <activity
             android:name="io.github.faywong.exerciseapp.Main"
@@ -87,13 +88,6 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <!-- need to verify -->
-        <activity
-            android:name="io.github.faywong.exerciseapp.TabActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="landscape" >
-        </activity>
         
         <activity
             android:name="io.github.faywong.exerciseapp.exercissetting"
