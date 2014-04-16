@@ -72,6 +72,8 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
     final static private int CALORIE_ADJUST_STEP = 100;
     final static private int SPEED_ADJUST_STEP = 1;
     final static private int INCLINE_ADJUST_STEP = 1;
+    final static private int INCLINE_MAX = 12;
+    final static private int SPEED_MAX = 15;
     
     final static public int free_mode = 1;
     final static public int aerobics_mode = 2;
@@ -829,7 +831,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
     private static String getNewSpeedText(final String origin, boolean incr) {
         final float oldSpeed = parseSpeed(origin);
         final String newValue = String.format(SPEED_DISPLAY_FORMAT, String
-                .valueOf(incr ? (oldSpeed + SPEED_ADJUST_STEP) : (Math.max(
+                .valueOf(incr ? Math.min((oldSpeed + SPEED_ADJUST_STEP), SPEED_MAX) : (Math.max(
                         oldSpeed - SPEED_ADJUST_STEP, 0))));
         return newValue;
     }
@@ -837,7 +839,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
     private static String getNewInclineText(final String origin, boolean incr) {
         final int oldIncline = parseIncline(origin);
         final String newValue = String.format(INCLINE_DISPLAY_FORMAT, String
-                .valueOf(incr ? (oldIncline + INCLINE_ADJUST_STEP) : (Math.max(
+                .valueOf(incr ? Math.min((oldIncline + INCLINE_ADJUST_STEP), INCLINE_MAX) : (Math.max(
                         oldIncline - INCLINE_ADJUST_STEP, 0))));
         return newValue;
     }
