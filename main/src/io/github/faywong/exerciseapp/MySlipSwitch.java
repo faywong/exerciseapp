@@ -138,7 +138,7 @@ public class MySlipSwitch extends View implements OnTouchListener {
 		switch(event.getAction()) {
 		//滑动
 		case MotionEvent.ACTION_MOVE:
-			currentX = event.getX();
+			//currentX = event.getX();
 			break;
 			
 		//按下
