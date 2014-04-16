@@ -21,11 +21,11 @@
     <string name="sub">-</string>
     <string name="add">+</string>
     
-    <string name="distance_selection_1km">1km</string>
-    <string name="distance_selection_2km">2km</string>
-    <string name="distance_selection_3km">3km</string>
-    <string name="distance_selection_4km">4km</string>
-    <string name="distance_selection_5km">5km</string>
+    <string name="distance_selection_1km">1.0km</string>
+    <string name="distance_selection_2km">2.0km</string>
+    <string name="distance_selection_3km">3.0km</string>
+    <string name="distance_selection_4km">4.0km</string>
+    <string name="distance_selection_5km">5.0km</string>
     <string name="default_distance_display">0km</string>
     
     <string name="calorie_selection_100kcal">100千卡</string>
@@ -35,11 +35,11 @@
     <string name="calorie_selection_500kcal">500千卡</string>
     <string name="default_calorie_display">0千卡</string>
     
-    <string name="speed_selection_4km_per_h">4km/h</string>
-    <string name="speed_selection_6km_per_h">6km/h</string>
-    <string name="speed_selection_8km_per_h">8km/h</string>
-    <string name="speed_selection_10km_per_h">10km/h</string>
-    <string name="speed_selection_12km_per_h">12km/h</string>
+    <string name="speed_selection_4km_per_h">4.0km/h</string>
+    <string name="speed_selection_6km_per_h">6.0km/h</string>
+    <string name="speed_selection_8km_per_h">8.0km/h</string>
+    <string name="speed_selection_10km_per_h">10.0km/h</string>
+    <string name="speed_selection_12km_per_h">12.0km/h</string>
     <string name="default_speed_display">0km/h</string>
     
     <string name="incline_selection_0_percent">0%</string>

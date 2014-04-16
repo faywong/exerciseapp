@@ -62,9 +62,9 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
     final static private String INCLINE_DISPLAY_FORMAT = "%s%%";
 
     final static private Pattern TIME_PATTERN = Pattern.compile("(\\d+)分钟");
-    final static private Pattern DISTANCE_PATTERN = Pattern.compile("(\\d+)km");
+    final static private Pattern DISTANCE_PATTERN = Pattern.compile("([0-9]*\\.?[0-9]+)km");
     final static private Pattern CALORIE_PATTERN = Pattern.compile("(\\d+)千卡");
-    final static private Pattern SPEED_PATTERN = Pattern.compile("(\\d+)km/h");
+    final static private Pattern SPEED_PATTERN = Pattern.compile("([0-9]*\\.?[0-9]+)km/h");
     final static private Pattern INCLINE_PATTERN = Pattern.compile("(\\d+)%");
 
     final static private int TIME_ADJUST_STEP = 10;
@@ -591,6 +591,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
             startActivity(intent);
             firstStart = true;
         }
+
     }
 
     private void enableTargetSettingControls(final boolean enable) {
@@ -762,14 +763,25 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
                 + ") format is invalid!");
     }
 
+    private static float parseFloat(final Pattern pattern, final String targetString)
+            throws IllegalArgumentException {
+        Matcher m = pattern.matcher(targetString);
+        while (m.find()) { // Find each match in turn; String can't do this.
+            String value = m.group(1);
+            return Float.parseFloat(value);
+        }
+        throw new IllegalArgumentException("The string(" + targetString
+                + ") format is invalid!");
+    }
+    
     public static int parseTime(final String targetString)
             throws IllegalArgumentException {
         return parse(TIME_PATTERN, targetString);
     }
 
-    public static int parseDistance(final String targetString)
+    public static float parseDistance(final String targetString)
             throws IllegalArgumentException {
-        return parse(DISTANCE_PATTERN, targetString);
+        return parseFloat(DISTANCE_PATTERN, targetString);
     }
 
     public static int parseCalorie(final String targetString)
@@ -777,9 +789,9 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
         return parse(CALORIE_PATTERN, targetString);
     }
 
-    public static int parseSpeed(final String targetString)
+    public static float parseSpeed(final String targetString)
             throws IllegalArgumentException {
-        return parse(SPEED_PATTERN, targetString);
+        return parseFloat(SPEED_PATTERN, targetString);
     }
 
     public static int parseIncline(final String targetString)
@@ -815,7 +827,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
     }
 
     private static String getNewSpeedText(final String origin, boolean incr) {
-        final int oldSpeed = parseSpeed(origin);
+        final float oldSpeed = parseSpeed(origin);
         final String newValue = String.format(SPEED_DISPLAY_FORMAT, String
                 .valueOf(incr ? (oldSpeed + SPEED_ADJUST_STEP) : (Math.max(
                         oldSpeed - SPEED_ADJUST_STEP, 0))));
@@ -931,14 +943,14 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
             timeHeadText.setText(newValue);
         } else if (viewId == R.id.add_distance_btn) {
             final String oldString = distanceValueText.getText().toString();
-            final int oldTime = parseDistance(oldString);
+            final float oldTime = parseDistance(oldString);
             final String newValue = String.format(DISTANCE_DISPLAY_FORMAT,
                     String.valueOf(oldTime + DISTANCE_ADJUST_STEP));
             distanceValueText.setText(newValue);
             distanceHeadText.setText(newValue);
         } else if (viewId == R.id.sub_distance_btn) {
             final String oldString = distanceValueText.getText().toString();
-            final int oldTime = parseDistance(oldString);
+            final float oldTime = parseDistance(oldString);
             final String newValue = String.format(DISTANCE_DISPLAY_FORMAT,
                     String.valueOf(Math.max(oldTime - DISTANCE_ADJUST_STEP,
                             DISTANCE_ADJUST_STEP)));

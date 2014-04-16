@@ -22,10 +22,10 @@ public class SettingModel {
     public final static int SETTING_TYPE_SPEED = 4;
 
     private int time = 0;
-    private int distance = 0;
+    private float distance = 0;
     private int calorie = 0;
     private int incline = 0;
-    private int speed = 0;
+    private float speed = 0;
     private boolean hasSpeedChanged = false;
     private boolean hasInclineChanged = false;
     private boolean sessionStarted = false;
@@ -79,10 +79,10 @@ public class SettingModel {
                 SETTING_FILE, Context.MODE_PRIVATE);
         Editor editor = preferences.edit();
         editor.putInt(SETTING_KEY_TIME, this.time);
-        editor.putInt(SETTING_KEY_DISTANCE, this.distance);
+        editor.putFloat(SETTING_KEY_DISTANCE, this.distance);
         editor.putInt(SETTING_KEY_CALORIE, this.calorie);
         editor.putInt(SETTING_KEY_INCLINE, this.incline);
-        editor.putInt(SETTING_KEY_SPEED, this.speed);
+        editor.putFloat(SETTING_KEY_SPEED, this.speed);
         editor.commit();
         return true;
 
@@ -178,11 +178,11 @@ public class SettingModel {
         hasTimeChanged = false;
     }
 
-    public int getDistance() {
+    public float getDistance() {
         return distance;
     }
 
-    private boolean setDistance(int distance) {
+    private boolean setDistance(float distance) {
         hasDistanceChanged = (distance != this.distance);
 
         this.distance = distance;
@@ -225,11 +225,11 @@ public class SettingModel {
         return hasInclineChanged;
     }
 
-    public int getSpeed() {
+    public float getSpeed() {
         return speed;
     }
 
-    private boolean setSpeed(int speed) {
+    private boolean setSpeed(float speed) {
         hasSpeedChanged = (speed != this.speed);
         this.speed = speed;
         return hasSpeedChanged;
