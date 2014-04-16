@@ -116,6 +116,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
     private ImageButton startBtn;
     private ImageButton musicBtn;
     private ImageButton webBtn;
+    private ImageButton tvBtn;
     private TextView countDownText;
     private Button backBtn;
 
@@ -469,6 +470,9 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
 
         webBtn = (ImageButton) findViewById(R.id.surf_btn);
         webBtn.setOnClickListener(this);
+        
+        tvBtn = (ImageButton) findViewById(R.id.tv_btn);
+        tvBtn.setOnClickListener(this);
 
         countDownText = (TextView) findViewById(R.id.count_down_text);
 
@@ -638,11 +642,12 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
         fragmentTransaction.commit();
     }
 
-    private void switchToSurfFragment() {
+    private void switchToSurfFragment(int mode) {
         if (mFragmentManager == null) {
             return;
         }
-
+        SurfFragment.curMode=mode;
+        mSurfFragment.setMode();
         android.support.v4.app.FragmentTransaction fragmentTransaction = mFragmentManager
                 .beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, mSurfFragment);
@@ -877,7 +882,9 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
         } else if (viewId == R.id.music_btn) {
             switchToMusicFragment();
         } else if (viewId == R.id.surf_btn) {
-            switchToSurfFragment();
+            switchToSurfFragment(SurfFragment.free_mode);
+        } else if (viewId == R.id.tv_btn) {
+            switchToSurfFragment(SurfFragment.tv_mode);
         } else if (viewId == R.id.video_btn) {
             switchToVideoPlayerFragment();
         } else if (viewId == R.id.time_control

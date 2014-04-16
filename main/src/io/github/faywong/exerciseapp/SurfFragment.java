@@ -15,6 +15,13 @@ import android.widget.EditText;
 
 public class SurfFragment extends Fragment implements OnClickListener {
 
+	
+	final static public int free_mode = 1;
+    final static public int tv_mode = 2;
+    final static public int online_music_mode = 3;
+    final static public int online_video_mode = 4;
+    static public int curMode = free_mode;
+    
 	private static String TAG = "SurfFragment";
 	EditText url;
 	// TextView mTitle;
@@ -27,7 +34,7 @@ public class SurfFragment extends Fragment implements OnClickListener {
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url_) {
 			view.loadUrl(url_);
-			url.setText(url_);
+			//url.setText(url_);
 			// mTitle.setText("you are browsing web: "+url_);
 			return true;
 		}
@@ -111,14 +118,33 @@ public class SurfFragment extends Fragment implements OnClickListener {
 		backButton.setOnClickListener(this);
 		aboutButton.setOnClickListener(this);
 	}
-
+	public void setMode()
+	{
+		if(mWebView==null)
+			return;
+		if(curMode==free_mode)
+			mWebView.loadUrl("http://www.baidu.com");
+		else if(curMode==online_music_mode)
+		{
+			mWebView.loadUrl("http://fm.baidu.com/");
+		}
+		else if(curMode==online_video_mode)
+		{
+			mWebView.loadUrl("http://mini123.com/psv/");
+		}
+		else if(curMode==tv_mode)
+		{
+			mWebView.loadUrl("http://mini123.com/psv/psvtv.html");
+		}
+	}
 	private void setWebStyle() {
 		mWebView.getSettings().setJavaScriptEnabled(true);
 		mWebView.getSettings().setSupportZoom(true);
 		mWebView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
 		mWebView.requestFocus();
-		mWebView.loadUrl("http://www.baidu.com");
+		
 		mWebView.setWebViewClient(new MyWebViewClient());
+		setMode();
 	}
 
 	@Override
