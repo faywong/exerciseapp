@@ -3,20 +3,6 @@
     android:id="@+id/RelativeLayout_bg" android:layout_width="fill_parent"
     android:layout_height="fill_parent">
     <!-- 头部 -->
-    <RelativeLayout 
-        android:id="@+id/MyLayout_top"
-        android:orientation="horizontal" 
-        android:layout_width="fill_parent"
-        android:layout_height="25dp" 
-        android:layout_alignParentTop="true"
-        android:gravity="center">
-        <TextView
-	        android:id="@+id/WebTitle"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:textColor="#0000ff" 
-	        android:text="WebBrower" />
-    </RelativeLayout>
     <!-- 底部 -->
     <RelativeLayout
         android:id="@+id/MyLayout_bottom"
@@ -76,12 +62,13 @@
           </LinearLayout>
     </RelativeLayout>
     <!-- 中部 -->
-    <RelativeLayout 
-        android:orientation="horizontal"
-        android:layout_width="fill_parent" 
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@id/MyLayout_bottom" 
-        android:layout_below="@id/MyLayout_top">
+        android:layout_above="@id/MyLayout_bottom"
+        android:orientation="horizontal" >
+
         <WebView
 	           android:id="@+id/webshow"
 	           android:layout_width="fill_parent"

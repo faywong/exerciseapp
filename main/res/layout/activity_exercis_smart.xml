@@ -36,7 +36,7 @@
             android:paddingRight="16dp" >
 
             <ImageButton
-                android:id="@+id/user_btn"
+                android:id="@+id/aerobics_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="96dp"
                 android:background="@drawable/aerobics"
@@ -65,7 +65,7 @@
             android:paddingRight="16dp" >
 
             <ImageButton
-                android:id="@+id/system_btn"
+                android:id="@+id/fast_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="96dp"
                 android:background="@drawable/fast"
@@ -94,7 +94,7 @@
             android:paddingRight="16dp" >
 
             <ImageButton
-                android:id="@+id/about_btn"
+                android:id="@+id/streng_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="96dp"
                 android:background="@drawable/streng"
@@ -123,7 +123,7 @@
             android:paddingRight="16dp" >
 
             <ImageButton
-                android:id="@+id/factory_btn"
+                android:id="@+id/memorize_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="96dp"
                 android:background="@drawable/memorize"

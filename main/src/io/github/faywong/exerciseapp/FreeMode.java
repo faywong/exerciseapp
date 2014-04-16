@@ -75,6 +75,15 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
     final static private int CALORIE_ADJUST_STEP = 100;
     final static private int SPEED_ADJUST_STEP = 1;
     final static private int INCLINE_ADJUST_STEP = 1;
+    
+    final static public int free_mode = 1;
+    final static public int aerobics_mode = 2;
+    final static public int fast_mode = 3;
+    final static public int strength_mode = 4;
+    final static public int memorize_mode = 5;
+    
+    static public int curMode = free_mode;
+  
 
     static boolean firstStart = false;
     private WidgetGroup<Button, TextView> timeGroup;

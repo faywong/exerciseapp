@@ -3,6 +3,7 @@ package io.github.faywong.exerciseapp;
 import sportsSDK.PinSDK;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -54,6 +55,7 @@ public class Main extends Activity implements View.OnClickListener {
 			/*Intent intent = new Intent();
 			intent.setClass(this, FreeMode.class);
 			startActivity(intent);*/
+			FreeMode.curMode=FreeMode.free_mode;
 			finish();
 		} else if (v.getId() == R.id.intelli_mode_btn) {
 			
@@ -82,4 +84,20 @@ public class Main extends Activity implements View.OnClickListener {
 			return super.onKeyDown(keyCode, event);
 		}
 	}
+	 @Override 
+	    public void onActivityResult(int requestCode, int resultCode, Intent data){
+		 super.onActivityResult(requestCode, resultCode, data);
+
+	            if (resultCode == Activity.RESULT_OK){
+	            	Bundle bundle = data.getExtras();  
+	                int ret = bundle.getInt("back");  
+	                if(ret!=0)
+	                {
+	                	FreeMode.curMode=ret;
+	                	finish();
+	                }
+	            }else if (resultCode == Activity.RESULT_CANCELED){
+	            }
+	       
+	        }
 }

@@ -3,6 +3,7 @@ package io.github.faywong.exerciseapp;
 import sportsSDK.PinSDK;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,11 +12,14 @@ import android.widget.ImageButton;
 
 public class exerciseSmart extends Activity implements View.OnClickListener {
 
+	static public int returntolast =0;
+	static public int returntomain =1;
+	
 	Button backBtn;
-	ImageButton userBtn;
-	ImageButton systemBtn;
-	ImageButton aboutBtn;	
-	ImageButton factoryBtn;
+	ImageButton aerobicsBtn;
+	ImageButton strengthBtn;
+	ImageButton fastBtn;	
+	ImageButton memorizeBtn;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,15 +31,17 @@ public class exerciseSmart extends Activity implements View.OnClickListener {
 		backBtn.setOnClickListener(this); 
 		
 		
-		/*userBtn = (ImageButton)findViewById(R.id.user_btn);
-		userBtn.setOnClickListener(this);
-		systemBtn = (ImageButton)findViewById(R.id.system_btn);
-		systemBtn.setOnClickListener(this);
-		aboutBtn = (ImageButton)findViewById(R.id.about_btn);
-		aboutBtn.setOnClickListener(this);
+		aerobicsBtn = (ImageButton)findViewById(R.id.aerobics_btn);
+		aerobicsBtn.setOnClickListener(this);
 		
-		factoryBtn = (ImageButton)findViewById(R.id.factory_btn);
-		factoryBtn.setOnClickListener(this); */
+		strengthBtn = (ImageButton)findViewById(R.id.streng_btn);
+		strengthBtn.setOnClickListener(this);
+		
+		fastBtn = (ImageButton)findViewById(R.id.fast_btn);
+		fastBtn.setOnClickListener(this);
+		
+		memorizeBtn = (ImageButton)findViewById(R.id.memorize_btn);
+		memorizeBtn.setOnClickListener(this); 
 	}
 	
 	@Override
@@ -43,19 +49,38 @@ public class exerciseSmart extends Activity implements View.OnClickListener {
 		// TODO Auto-generated method stub
 		if (v == null) {
 			return;
-		} else if (v.getId() == R.id.user_btn) {
-			Intent intent = new Intent().setClass(this, userManage.class);
-			startActivityForResult(intent, 0);
-		} else if (v.getId() == R.id.system_btn) {
-			Intent intent = new Intent().setClass(this, systemSetting.class);
-			startActivityForResult(intent, 0);
+		} else if (v.getId() == R.id.aerobics_btn) {
+			Intent result = new Intent();
+		    result.putExtra("back", FreeMode.aerobics_mode);
+		    setResult(RESULT_OK, result);
+		    finish();
+	
+		} else if (v.getId() == R.id.fast_btn) {
+			Intent result = new Intent();
+		    result.putExtra("back", FreeMode.fast_mode);
+		    setResult(RESULT_OK, result);
+		    finish();
+
 		}  
-		 else if (v.getId() == R.id.factory_btn) {
-				Intent intent = new Intent().setClass(this, factorySetting.class);
-				startActivityForResult(intent, 0);
+		 else if (v.getId() == R.id.streng_btn) {
+			 Intent result = new Intent();
+			    result.putExtra("back", FreeMode.strength_mode);
+			    setResult(RESULT_OK, result);
+			    finish();
+				
 			}  
+		 else if (v.getId() == R.id.memorize_btn) {
+			 Intent result = new Intent();
+			    result.putExtra("back", FreeMode.memorize_mode);
+			    setResult(RESULT_OK, result);
+			    finish();
+				
+			} 
 		else if (v.getId() == R.id.header_leftbtn) {
-			finish();
+		    Intent result = new Intent();
+		    result.putExtra("back", 0);
+		    setResult(RESULT_OK, result);
+		    finish();
 		}
 	}
 }
