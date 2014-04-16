@@ -78,12 +78,12 @@
 
         </RadioGroup>
 
-        <android.support.v4.view.ViewPager
+        <io.github.faywong.exerciseapp.CustomViewPager
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp" >
-        </android.support.v4.view.ViewPager>
+        </io.github.faywong.exerciseapp.CustomViewPager>
 
     </LinearLayout>
 

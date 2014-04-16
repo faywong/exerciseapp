@@ -29,7 +29,7 @@ public class systemSetting extends Activity implements View.OnClickListener {
 
 	
 	private RadioButton mTab1, mTab2, mTab3,mTab4,mCurTab;
-	private ViewPager mViewPager;
+	private CustomViewPager mViewPager;
 	private List<View> mList;
 	
 	@Override
@@ -68,7 +68,7 @@ private void initView() {
 		mList.add(tab4View.getView());
 
 		
-		mViewPager = (ViewPager) this.findViewById(R.id.viewpager);
+		mViewPager = (CustomViewPager) this.findViewById(R.id.viewpager);
 
 		mViewPager.setAdapter(new TabAdapter(mList));
 
