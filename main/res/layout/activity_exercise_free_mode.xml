@@ -29,8 +29,10 @@
             <Button
                 android:id="@+id/freeback_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="&lt;返回" />
+                android:layout_height="45dp"
+                android:layout_marginRight="12dp"
+                android:background="@drawable/back_to_main"
+                />
 
             <RelativeLayout
                 android:id="@+id/time_control"
