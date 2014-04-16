@@ -3,8 +3,6 @@ package io.github.faywong.exerciseapp;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,12 +34,11 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import io.github.faywong.exerciseapp.R;
 import io.github.faywong.exerciseapp.common.WidgetGroup;
-import io.github.faywong.exerciseapp.thirdparty.VideoPlayerActivity;
 
 /**
  * All rights reserved.
@@ -139,7 +136,14 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
             countDownText.setTextColor(color.transparent);
         }
     };
-
+    
+    public static interface IFragmentControlHandler {
+        public View getControlView();
+        public void onSwitchedIn();
+        public void onSwitchedOut();
+        public void onToggleScreen();
+    }
+    
     private TextView timeHeadText;
     private TextView distanceHeadText;
     private TextView calorieHeadText;
@@ -168,6 +172,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
     private CountDownTimer mCountDownTimer;
     private AlertDialog mAlertDialog;
     private Handler mHandler;
+    public static FreeMode sInstance = null;
 
     private IHWStatusListener mHWStatusListener = new IHWStatusListener() {
 
@@ -198,8 +203,8 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
         @Override
         public void onHWStatusChanged(int errorCode, int calory, int pulse) {
             // TODO Auto-generated method stub
-            Log.d(TAG, "HW status changed[errorCode:" + errorCode + " calorie:"
-                    + calory + " pulse:" + pulse + "]");
+/*            Log.d(TAG, "HW status changed[errorCode:" + errorCode + " calorie:"
+                    + calory + " pulse:" + pulse + "]");*/
             if (errorCode != 0) {
                 Log.d(TAG, "Error occurred! errorCode: " + errorCode);
                 mHandler.post(new Runnable() {
@@ -221,6 +226,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
         }
 
     };
+    private LinearLayout mFragmentControlParentLayout;
 
     private void popUpErrorDialog(final int errorCode) {
         Log.d(TAG, "popUpErrorDialog() errorCode:" + errorCode);
@@ -277,7 +283,9 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise_free_mode);
+        sInstance = this;
         mHandler = new Handler();
+        mFragmentControlParentLayout = (LinearLayout) findViewById(R.id.fregment_control);
         mFragmentManager = getSupportFragmentManager();
         LayoutInflater.from(this);
         // initialize animations
@@ -635,11 +643,14 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
             return;
         }
 
+        mFragmentControlParentLayout.removeAllViews();
+        
         android.support.v4.app.FragmentTransaction fragmentTransaction = mFragmentManager
                 .beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container,
                 mVideoPlayerFragment);
         fragmentTransaction.commit();
+        mFragmentControlParentLayout.addView(mVideoPlayerFragment.getControlView());
     }
 
     private void switchToSurfFragment(int mode) {

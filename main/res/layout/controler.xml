@@ -6,7 +6,8 @@
     android:gravity="center"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <!--
+         <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dip"
@@ -38,6 +39,7 @@
             android:layout_gravity="center_vertical"
             android:text="00:00:00" />
     </LinearLayout>
+    -->
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -48,51 +50,52 @@
 
         <ImageButton
             android:id="@+id/button1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:background="#0000003D"
-            android:scaleType="fitCenter"
+            android:scaleType="fitXY"
             android:src="@drawable/eject" />
 
         <ImageButton
             android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:background="#0000003D"
-            android:scaleType="fitCenter"
+            android:scaleType="fitXY"
             android:src="@drawable/stepbackward" />
 
         <ImageButton
             android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:background="#0000003D"
+            android:src="@drawable/play"
             android:scaleType="fitCenter" />
 
         <ImageButton
             android:id="@+id/button4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:background="#0000003D"
-            android:scaleType="fitCenter"
+            android:scaleType="fitXY"
             android:src="@drawable/stepforward" />
 
         <ImageButton
             android:id="@+id/button5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:background="#0000003D"
-            android:scaleType="fitCenter"
+            android:scaleType="fitXY"
             android:src="@drawable/soundenable" />
     </LinearLayout>
 

@@ -55,7 +55,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
-public class VideoPlayerFragment extends Fragment implements OnClickListener {
+public class VideoPlayerFragment extends Fragment implements OnClickListener, FreeMode.IFragmentControlHandler {
 
     private static final String TAG = "VideoPlayerFragment";
     private boolean isOnline = false;
@@ -74,9 +74,9 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener {
     private int playedTime;
 
     private VideoView vv = null;
-    private SeekBar seekBar = null;
-    private TextView durationTextView = null;
-    private TextView playedTextView = null;
+    //private SeekBar seekBar = null;
+    //private TextView durationTextView = null;
+    //private TextView playedTextView = null;
     private GestureDetector mGestureDetector = null;
     private AudioManager mAudioManager = null;
 
@@ -94,9 +94,6 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener {
 
     private SoundView mSoundView = null;
     private PopupWindow mSoundWindow = null;
-
-    private View extralView = null;
-    private PopupWindow extralWindow = null;
 
     private static int screenWidth = 0;
     private static int screenHeight = 0;
@@ -124,7 +121,7 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener {
             switch (msg.what) {
 
                 case PROGRESS_CHANGED:
-
+/*
                     int i = vv.getCurrentPosition();
                     seekBar.setProgress(i);
 
@@ -144,7 +141,7 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener {
                             minute, second));
 
                     sendEmptyMessageDelayed(PROGRESS_CHANGED, 100);
-                    break;
+                    break;*/
 
                 case HIDE_CONTROLER:
                     hideController();
@@ -157,7 +154,7 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener {
 
     private Handler mBackgroundThreadHandler;
     private HandlerThread mHandlerThread;
-
+    
     @Override
     public View getView() {
         // TODO Auto-generated method stub
@@ -208,38 +205,33 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener {
             public boolean queueIdle() {
 
                 // TODO Auto-generated method stub
-                if (controler != null && vv.isShown()) {
+/*                if (controler != null && vv.isShown()) {
                     controler.showAtLocation(vv, Gravity.BOTTOM, 0, 0);
                     // controler.update(screenWidth, controlHeight);
                     controler.update(0, 0, screenWidth, controlHeight);
-                }
-
-                if (extralWindow != null && vv.isShown()) {
-                    extralWindow.showAtLocation(vv, Gravity.TOP, 0, 0);
-                    extralWindow.update(0, 25, screenWidth, 60);
-                }
+                }*/
 
                 // myHandler.sendEmptyMessageDelayed(HIDE_CONTROLER, TIME);
                 return false;
             }
         });
-        getControlView(parentLayout);
+        getControlView();
+        initVideoView(parentLayout);
         return parentLayout;
     }
 
     private void getScreenSize() {
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Display display = FreeMode.sInstance.getWindowManager().getDefaultDisplay();
         screenHeight = display.getHeight();
         screenWidth = display.getWidth();
         controlHeight = screenHeight / 4;
     }
 
     private void hideController() {
-        if (controler.isShowing()) {
+/*        if (controler.isShowing()) {
             controler.update(0, 0, 0, 0);
-            extralWindow.update(0, 0, screenWidth, 0);
             isControllerShow = false;
-        }
+        }*/
         if (mSoundWindow.isShowing()) {
             mSoundWindow.dismiss();
             isSoundShow = false;
@@ -251,14 +243,8 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener {
     }
 
     public void showController() {
-        controler.update(0, 0, screenWidth, controlHeight);
-        if (isFullScreen) {
-            extralWindow.update(0, 0, screenWidth, 60);
-        } else {
-            extralWindow.update(0, 25, screenWidth, 60);
-        }
-
-        isControllerShow = true;
+        //controler.update(0, 0, screenWidth, controlHeight);
+        //isControllerShow = true;
     }
 
     @Override
@@ -278,18 +264,17 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener {
             hideControllerDelay();
         }
 
-        if (getActivity().getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        if (FreeMode.sInstance.getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+            FreeMode.sInstance.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
     }
 
     @Override
     public void onStop() {
         // TODO Auto-generated method stub
-        if (controler.isShowing()) {
+/*        if (controler.isShowing()) {
             controler.dismiss();
-            extralWindow.dismiss();
-        }
+        }*/
         if (mSoundWindow.isShowing()) {
             mSoundWindow.dismiss();
         }
@@ -402,7 +387,7 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener {
 
                 Log.d(TAG, "screenWidth: " + screenWidth + " screenHeight: " + screenHeight);
                 vv.setVideoScale(screenWidth, screenHeight);
-                getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                FreeMode.sInstance.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
                 break;
 
@@ -427,90 +412,13 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener {
 
                 vv.setVideoScale(mWidth, mHeight);
 
-                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                FreeMode.sInstance.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
                 break;
         }
     }
-
-    private View getControlView(final View parentView) {
-        controlView = getActivity().getLayoutInflater().inflate(
-                R.layout.controler, null);
-        controler = new PopupWindow(controlView);
-        durationTextView = (TextView) controlView.findViewById(R.id.duration);
-        playedTextView = (TextView) controlView.findViewById(R.id.has_played);
-
-        mSoundView = new SoundView(getActivity());
-        mSoundView.setOnVolumeChangeListener(new OnVolumeChangedListener() {
-
-            @Override
-            public void setYourVolume(int index) {
-
-                cancelDelayHide();
-                updateVolume(index);
-                hideControllerDelay();
-            }
-        });
-
-        mSoundWindow = new PopupWindow(mSoundView);
-
-        extralView = getActivity().getLayoutInflater().inflate(R.layout.extral,
-                null);
-        extralWindow = new PopupWindow(extralView);
-
-        ImageButton backButton = (ImageButton) extralView
-                .findViewById(R.id.back);
-        ImageButton aboutButton = (ImageButton) extralView
-                .findViewById(R.id.about);
-
-        position = -1;
-
-        backButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                finish();
-            }
-
-        });
-        aboutButton.setOnClickListener(new OnClickListener() {
-
-            Dialog dialog;
-            OnClickListener mClickListener = new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // TODO Auto-generated method stub
-                    Log.d("DIALOG", "DISMISS");
-                    dialog.dismiss();
-                    // vv.seekTo(msec);
-                    vv.start();
-                }
-            };
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-
-                dialog = new Dialog(getActivity(), R.style.transDialog);
-                dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-                View view = getActivity().getLayoutInflater().inflate(
-                        R.layout.about, null);
-                dialog.setContentView(view);
-                view.findViewById(R.id.cancel).setOnClickListener(
-                        mClickListener);
-                vv.pause();
-                dialog.show();
-                cancelDelayHide();
-            }
-
-        });
-
-        bn1 = (ImageButton) controlView.findViewById(R.id.button1);
-        bn2 = (ImageButton) controlView.findViewById(R.id.button2);
-        bn3 = (ImageButton) controlView.findViewById(R.id.button3);
-        bn4 = (ImageButton) controlView.findViewById(R.id.button4);
-        bn5 = (ImageButton) controlView.findViewById(R.id.button5);
+    
+    private void initVideoView(final View parentView) {
 
         vv = (VideoView) parentView.findViewById(R.id.vv);
 
@@ -522,7 +430,7 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener {
                 vv.stopPlayback();
                 isOnline = false;
 
-                new AlertDialog.Builder(getActivity())
+                new AlertDialog.Builder(FreeMode.sInstance)
                         .setTitle("中止播放")
                         .setMessage("播放时遇到未知错误")
                         .setPositiveButton("确定",
@@ -543,7 +451,7 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener {
 
         });
 
-        Uri uri = getActivity().getIntent().getData();
+        Uri uri = FreeMode.sInstance.getIntent().getData();
         if (uri != null) {
             vv.stopPlayback();
             vv.setVideoURI(uri);
@@ -570,7 +478,7 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener {
         if (android.os.Environment.getExternalStorageState().equals(
                 android.os.Environment.MEDIA_MOUNTED)) {
 
-            Cursor cursor = getActivity().getContentResolver()
+            Cursor cursor = FreeMode.sInstance.getContentResolver()
                     .query(videoListUri,
                             new String[] {
                                     "_display_name", "_data"
@@ -603,12 +511,130 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener {
 
         });
 
+        vv.setOnPreparedListener(new OnPreparedListener() {
+
+            @Override
+            public void onPrepared(MediaPlayer arg0) {
+                // TODO Auto-generated method stub
+
+                setVideoScale(SCREEN_DEFAULT);
+/*                isFullScreen = false;
+                if (isControllerShow) {
+                    showController();
+                }
+
+                int i = vv.getDuration();
+                Log.d("onCompletion", "" + i);
+                seekBar.setMax(i);
+                i /= 1000;
+                int minute = i / 60;
+                int hour = minute / 60;
+                int second = i % 60;
+                minute %= 60;
+                durationTextView.setText(String.format("%02d:%02d:%02d", hour,
+                        minute, second));*/
+
+                vv.start();
+                bn3.setImageResource(R.drawable.pause);
+/*                hideControllerDelay();
+                myHandler.sendEmptyMessage(PROGRESS_CHANGED);*/
+            }
+        });
+
+        vv.setOnCompletionListener(new OnCompletionListener() {
+
+            @Override
+            public void onCompletion(MediaPlayer arg0) {
+                // TODO Auto-generated method stub
+                int n = playList.size();
+                isOnline = false;
+                if (++position < n) {
+                    vv.setVideoPath(playList.get(position).path);
+                } else {
+                    vv.stopPlayback();
+                    finish();
+                }
+            }
+        });
+    }
+
+    protected void finish() {
+        // TODO Auto-generated method stub
+        FreeMode.sInstance.getSupportFragmentManager().beginTransaction()
+                .remove(VideoPlayerFragment.this).commit();
+    }
+
+    @Override
+    public void onDestroy() {
+        // TODO Auto-generated method stub
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDestroyView() {
+        // TODO Auto-generated method stub
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onResume() {
+        // TODO Auto-generated method stub
+        super.onResume();
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        // TODO Auto-generated method stub
+        switch (v.getId()) {
+            case R.id.GoBtn:
+                break;
+            case R.id.BackBtn:
+                break;
+            case R.id.forwardBtn:
+                break;
+            case R.id.reloadBtn:
+                break;
+        }
+    }
+
+    @Override
+    public View getControlView() {
+        // TODO Auto-generated method stub
+        controlView = FreeMode.sInstance.getLayoutInflater().inflate(
+                R.layout.controler, null);
+        // controler = new PopupWindow(controlView);
+        //durationTextView = (TextView) controlView.findViewById(R.id.duration);
+        //playedTextView = (TextView) controlView.findViewById(R.id.has_played);
+
+        mSoundView = new SoundView(FreeMode.sInstance);
+        mSoundView.setOnVolumeChangeListener(new OnVolumeChangedListener() {
+
+            @Override
+            public void setYourVolume(int index) {
+
+                cancelDelayHide();
+                updateVolume(index);
+                hideControllerDelay();
+            }
+        });
+
+        mSoundWindow = new PopupWindow(mSoundView);
+
+        position = -1;
+
+        bn1 = (ImageButton) controlView.findViewById(R.id.button1);
+        bn2 = (ImageButton) controlView.findViewById(R.id.button2);
+        bn3 = (ImageButton) controlView.findViewById(R.id.button3);
+        bn4 = (ImageButton) controlView.findViewById(R.id.button4);
+        bn5 = (ImageButton) controlView.findViewById(R.id.button5);
+
         bn1.setAlpha(0xBB);
         bn2.setAlpha(0xBB);
         bn3.setAlpha(0xBB);
         bn4.setAlpha(0xBB);
 
-        mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager = (AudioManager) FreeMode.sInstance.getSystemService(Context.AUDIO_SERVICE);
         maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         currentVolume = mAudioManager
                 .getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -620,7 +646,7 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener {
             public void onClick(View arg0) {
                 // TODO Auto-generated method stub
                 Intent intent = new Intent();
-                intent.setClass(getActivity(),
+                intent.setClass(FreeMode.sInstance,
                         VideoChooseActivity.class);
                 VideoPlayerFragment.this.startActivityForResult(intent, 0);
                 cancelDelayHide();
@@ -725,7 +751,7 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener {
 
         });
 
-        seekBar = (SeekBar) controlView.findViewById(R.id.seekbar);
+/*        seekBar = (SeekBar) controlView.findViewById(R.id.seekbar);
         seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
             @Override
@@ -754,7 +780,7 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener {
                 // TODO Auto-generated method stub
                 myHandler.sendEmptyMessageDelayed(HIDE_CONTROLER, TIME);
             }
-        });
+        });*/
 
         getScreenSize();
 
@@ -812,99 +838,25 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener {
         });
 
         // vv.setVideoPath("http://202.108.16.171/cctv/video/A7/E8/69/27/A7E86927D2BF4D2FA63471D1C5F97D36/gphone/480_320/200/0.mp4");
-
-        vv.setOnPreparedListener(new OnPreparedListener() {
-
-            @Override
-            public void onPrepared(MediaPlayer arg0) {
-                // TODO Auto-generated method stub
-
-                setVideoScale(SCREEN_DEFAULT);
-                isFullScreen = false;
-                if (isControllerShow) {
-                    showController();
-                }
-
-                int i = vv.getDuration();
-                Log.d("onCompletion", "" + i);
-                seekBar.setMax(i);
-                i /= 1000;
-                int minute = i / 60;
-                int hour = minute / 60;
-                int second = i % 60;
-                minute %= 60;
-                durationTextView.setText(String.format("%02d:%02d:%02d", hour,
-                        minute, second));
-
-                /*
-                 * controler.showAtLocation(vv, Gravity.BOTTOM, 0, 0);
-                 * controler.update(screenWidth, controlHeight);
-                 * myHandler.sendEmptyMessageDelayed(HIDE_CONTROLER, TIME);
-                 */
-
-                vv.start();
-                bn3.setImageResource(R.drawable.pause);
-                hideControllerDelay();
-                myHandler.sendEmptyMessage(PROGRESS_CHANGED);
-            }
-        });
-
-        vv.setOnCompletionListener(new OnCompletionListener() {
-
-            @Override
-            public void onCompletion(MediaPlayer arg0) {
-                // TODO Auto-generated method stub
-                int n = playList.size();
-                isOnline = false;
-                if (++position < n) {
-                    vv.setVideoPath(playList.get(position).path);
-                } else {
-                    vv.stopPlayback();
-                    finish();
-                }
-            }
-        });
         return controlView;
     }
 
-    protected void finish() {
+    @Override
+    public void onSwitchedIn() {
         // TODO Auto-generated method stub
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .remove(VideoPlayerFragment.this).commit();
+        
     }
 
     @Override
-    public void onDestroy() {
+    public void onSwitchedOut() {
         // TODO Auto-generated method stub
-        super.onDestroy();
+        
     }
 
     @Override
-    public void onDestroyView() {
+    public void onToggleScreen() {
         // TODO Auto-generated method stub
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onResume() {
-        // TODO Auto-generated method stub
-        super.onResume();
-
-    }
-
-    @Override
-    public void onClick(View v) {
-        // TODO Auto-generated method stub
-        switch (v.getId()) {
-            case R.id.GoBtn:
-                break;
-            case R.id.BackBtn:
-                break;
-            case R.id.forwardBtn:
-                break;
-            case R.id.reloadBtn:
-                break;
-        }
+        
     }
 
 }
