@@ -19,11 +19,13 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name="io.github.faywong.exerciseapp.ExerciseApp"
         android:allowBackup="true"
+        android:alwaysRetainTaskState="true"
         android:icon="@drawable/ic_exercise"
         android:label="@string/app_name"
+        android:launchMode="singleTask"
         android:persistent="true"
-        android:name="io.github.faywong.exerciseapp.ExerciseApp"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         <activity
             android:name="io.github.faywong.exerciseapp.Main"
@@ -34,7 +36,6 @@
             android:stateNotNeeded="true"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="adjustPan" >
-           
         </activity>
         <activity
             android:name="io.github.faywong.exerciseapp.FreeMode"
@@ -42,7 +43,7 @@
             android:label="@string/app_name"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
-             <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -88,40 +89,37 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        
+
         <activity
             android:name="io.github.faywong.exerciseapp.exercissetting"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="landscape" >
         </activity>
-        
-         <activity
+        <activity
             android:name="io.github.faywong.exerciseapp.systemSetting"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="landscape" >
         </activity>
-        
-          <activity
+        <activity
             android:name="io.github.faywong.exerciseapp.userManage"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="landscape" >
         </activity>
-         <activity
+        <activity
             android:name="io.github.faywong.exerciseapp.factorySetting"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="landscape" >
         </activity>
-        
         <activity
             android:name="io.github.faywong.exerciseapp.thirdparty.WifiManagerMain"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar"
             android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="landscape" >
+            android:label="@string/app_name"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
 
         <!-- SeeJoyPlayer -->

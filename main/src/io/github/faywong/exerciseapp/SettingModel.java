@@ -29,6 +29,7 @@ public class SettingModel {
     private boolean hasSpeedChanged = false;
     private boolean hasInclineChanged = false;
     private boolean sessionStarted = false;
+    private boolean countDownStarted = false;
     private SettingObservable owner;
     private boolean hasDistanceChanged;
     private boolean hasCalorieChanged;
@@ -45,9 +46,6 @@ public class SettingModel {
         this.owner = owner;
     }
 
-    /**
-     * apply settings
-     */
     public boolean setSessionStarted(boolean started) {
         if (sessionStarted != started) {
             sessionStarted = started;
@@ -56,10 +54,23 @@ public class SettingModel {
         return false;
     }
 
+    
     public boolean isSessionStarted() {
         return sessionStarted;
     }
 
+    public boolean isCountDownStarted() {
+        return countDownStarted;
+    }
+    
+    public boolean setCountDownStarted(boolean started) {
+        if (countDownStarted != started) {
+            countDownStarted = started;
+            return true;
+        }
+        return false;
+    }
+    
     public boolean persistent(Context context) {
         if (context == null) {
             return false;

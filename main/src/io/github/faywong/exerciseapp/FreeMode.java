@@ -10,8 +10,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import sportsSDK.PinSDK;
-
 import android.R.color;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
@@ -46,7 +48,7 @@ import io.github.faywong.exerciseapp.thirdparty.VideoPlayerActivity;
  * 
  * @author faywong(philip584521@gmail.com)
  */
-public class FreeMode extends FragmentActivity implements View.OnClickListener {
+public class FreeMode extends FragmentActivity implements View.OnClickListener, OnClickListener {
     private static final String TAG = "FreeMode";
     private RelativeLayout timeControlLayout;
     private RelativeLayout timeControlPanel;
@@ -74,7 +76,6 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
     final static private int SPEED_ADJUST_STEP = 1;
     final static private int INCLINE_ADJUST_STEP = 1;
 
-    
     static boolean firstStart = false;
     private WidgetGroup<Button, TextView> timeGroup;
     // id of parent layout of header button control --> associated panel
@@ -154,19 +155,11 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
     private VideoPlayerFragment mVideoPlayerFragment;
     private ImageButton unityBtn;
     private UnityObserver mUnityObserver;
-    private IHWStatusListener mHWStatusListener = new IHWStatusListener() {
+    private CountDownTimer mCountDownTimer;
+    private AlertDialog mAlertDialog;
+    private Handler mHandler;
 
-//        @Override
-//        public void onStart() {
-//            // TODO Auto-generated method stub
-//            setSessionState(true);
-//        }
-//
-//        @Override
-//        public void onStop() {
-//            // TODO Auto-generated method stub
-//            setSessionState(false);
-//        }
+    private IHWStatusListener mHWStatusListener = new IHWStatusListener() {
 
         @Override
         public void onSpeedPlus() {
@@ -195,22 +188,86 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
         @Override
         public void onHWStatusChanged(int errorCode, int calory, int pulse) {
             // TODO Auto-generated method stub
-            Toast.makeText(FreeMode.this, "HW status changed[errorCode:" + errorCode + " calorie:"
-                    + calory + " pulse:" + pulse + "]", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "HW status changed[errorCode:" + errorCode + " calorie:"
+                    + calory + " pulse:" + pulse + "]");
+            if (errorCode != 0) {
+                Log.d(TAG, "Error occurred! errorCode: " + errorCode);
+                mHandler.post(new Runnable() {
+                    
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        setSessionState(false);
+                    }
+                });
+                FreeMode.this.popUpErrorDialog(errorCode);
+            }
         }
 
-		@Override
-		public void onStartOrStop() {
-			// TODO Auto-generated method stub 
-			
-		}
+        @Override
+        public void onStartOrStop() {
+            // TODO Auto-generated method stub
+            swapSessionState();
+        }
 
     };
+
+    private void popUpErrorDialog(final int errorCode) {
+        Log.d(TAG, "popUpErrorDialog() errorCode:" + errorCode);
+
+        String errorPrompt = "";
+        switch (errorCode) {
+            case 0:
+                Log.d(TAG, "Flow should not come here!");
+                break;
+            case 2:
+                errorPrompt = "电压过低";
+                break;
+            case 3:
+                errorPrompt = "电机没有插或电机电压测量故障";
+                break;        
+            case 4:
+                errorPrompt = "电压过高";
+                break;   
+                
+            case 5:
+                errorPrompt = "过流";
+                break;
+                
+            case 6:
+                errorPrompt = "输出短路";
+                break;   
+                
+            case 7:
+                errorPrompt = "IBGT短路";
+                break;   
+                
+            case 10:
+                errorPrompt = "系统故障";
+                break;   
+                
+            case 11:
+                errorPrompt = "安全开关脱落";
+                break;
+                
+        }
+        
+        if (mAlertDialog == null) {
+            mAlertDialog = new AlertDialog.Builder(this)
+            .create();
+            mAlertDialog.setTitle(R.string.error_dialog_title);
+        }
+        mAlertDialog.dismiss();
+        mAlertDialog.setMessage(errorPrompt + "(错误码: " + errorCode + " )");
+        mAlertDialog.setButton(
+                getString(R.string.confirm_error_notification), this);
+        mAlertDialog.show();
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise_free_mode);
-
+        mHandler = new Handler();
         mFragmentManager = getSupportFragmentManager();
         LayoutInflater.from(this);
         // initialize animations
@@ -227,7 +284,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
 
             @Override
             public void onAnimationRepeat(Animation arg0) {
-                // TODO Auto-generated method stub
+                // TODO Au to-generated method stub
 
             }
 
@@ -242,7 +299,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
         final Resources resources = getResources();
 
         // initialize time related views/handlers
-        backBtn =  (Button) findViewById(R.id.freeback_btn);
+        backBtn = (Button) findViewById(R.id.freeback_btn);
         backBtn.setOnClickListener(this);
         timeControlLayout = (RelativeLayout) findViewById(R.id.time_control);
         timeControlLayout.setOnClickListener(this);
@@ -501,30 +558,17 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
             mVideoPlayerFragment = new VideoPlayerFragment();
         }
 
-        Observer fakeObserver = new Observer() {
-
-            @Override
-            public void update(Observable observable, Object data) {
-                // TODO Auto-generated method stub
-                Log.d(TAG, "updated, object:" + data.toString());
-            }
-        };
-        mSettingObservable.addObserver(fakeObserver);
-
         mUnityObserver = new UnityObserver();
         mSettingObservable.addObserver(mUnityObserver);
-        
-        
-        
-        
-        PinSDK.getInstance();
-        
-        if(!firstStart)
+
+        PinSDK.getInstance().setHWStatusListener(mHWStatusListener);
+
+        if (!firstStart)
         {
-        	Intent intent = new Intent();
-			intent.setClass(this, Main.class);
-			startActivity(intent);
-			firstStart=true;
+            Intent intent = new Intent();
+            intent.setClass(this, Main.class);
+            startActivity(intent);
+            firstStart = true;
         }
     }
 
@@ -547,6 +591,8 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
         if (mUnityFragment != null) {
             mUnityFragment.onParentActiviytDestroyed();
         }
+        PinSDK.getInstance().setHWStatusListener(null);
+        ;
     }
 
     private void switchToUnityFragment() {
@@ -723,19 +769,24 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
         } else {
             countDownText.setTextColor(defaultColorStateList);
         }
+        if (mCountDownTimer == null) {
+            mCountDownTimer = new CountDownTimer(totalMillis, deltaMillis) {
+                public void onTick(long millisUntilFinished) {
+                    countDownText.setText("" + millisUntilFinished / 1000);
+                }
 
-        new CountDownTimer(totalMillis, deltaMillis) {
-            public void onTick(long millisUntilFinished) {
-                countDownText.setText("" + millisUntilFinished / 1000);
-            }
-
-            public void onFinish() {
-                countDownText.setText("GO!");
-                countDownText.clearAnimation();
-                countDownTextOut.setDuration(2000);
-                countDownText.startAnimation(countDownTextOut);
-            }
-        }.start();
+                public void onFinish() {
+                    countDownText.setText("GO!");
+                    countDownText.clearAnimation();
+                    countDownTextOut.setDuration(2000);
+                    countDownText.startAnimation(countDownTextOut);
+                    // countdown finished
+                    mSettingObservable.setCountDownStarted(false);
+                }
+            };
+        }
+        mCountDownTimer.cancel();
+        mCountDownTimer.start();
     }
 
     private static String getNewSpeedText(final String origin, boolean incr) {
@@ -774,9 +825,16 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
         if (started) {
             enableTargetSettingControls(false);
             startCountDown(6000, 1000);
+            mSettingObservable.setCountDownStarted(true);
+            ;
         } else {
             countDownText.setVisibility(View.GONE);
             enableTargetSettingControls(true);
+            if (mCountDownTimer != null) {
+                mCountDownTimer.cancel();
+                mSettingObservable.setCountDownStarted(false);
+                ;
+            }
             // TODO: stop the current exercise session
         }
 
@@ -800,15 +858,14 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
         Log.d(TAG, "onClick_() viewId:" + viewId);
         boolean containerBecomeVisible = false;
         int containerIdBecameVisible = 0;
-        
         if (viewId == R.id.start_btn) {
             swapSessionState();
-        } 
+        }
         else if (viewId == R.id.freeback_btn) {
-        	Intent intent = new Intent();
-			intent.setClass(this, Main.class);
-			startActivity(intent);
-        }else if (viewId == R.id.music_btn) {
+            Intent intent = new Intent();
+            intent.setClass(this, Main.class);
+            startActivity(intent);
+        } else if (viewId == R.id.music_btn) {
             switchToMusicFragment();
         } else if (viewId == R.id.surf_btn) {
             switchToSurfFragment();
@@ -930,15 +987,22 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener {
             panel.setVisibility(View.GONE);
         }
     }
+
     @Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
-		Log.d(TAG, "onKeyDown() keyCode:" + keyCode);
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			Log.d(TAG, "onKeyDown() BACK case");
-			return true;
-		} else {
-			return super.onKeyDown(keyCode, event);
-		}
-	}
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // TODO Auto-generated method stub
+        Log.d(TAG, "onKeyDown() keyCode:" + keyCode);
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Log.d(TAG, "onKeyDown() BACK case");
+            return true;
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        // TODO Auto-generated method stub
+        finish();
+    }
 }
