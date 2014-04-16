@@ -24,13 +24,19 @@ public class CustomViewPager extends ViewPager {
 	public void scrollTo(int x, int y) {
 			super.scrollTo(x, y);
 	}
-
+	
 	@Override
-	public boolean onTouchEvent(MotionEvent arg0) {
-		// TODO Auto-generated method stub
-		return false;//super.onTouchEvent(arg0);
-	}
+	public boolean onTouchEvent(MotionEvent event) {
 
+	return false;
+	}
+	 
+	@Override
+	public boolean onInterceptTouchEvent(MotionEvent event) {
+
+	return false;
+	}
+	
 	@Override
 	public void setCurrentItem(int item, boolean smoothScroll) {
 		// TODO Auto-generated method stub
