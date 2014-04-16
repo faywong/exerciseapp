@@ -24,4 +24,57 @@
             @color/dialog_back 
         </item>
     </style>
+    
+    
+    <style name="NonPhoneActivityTheme" parent="@android:Theme.Translucent.NoTitleBar">
+    </style>
+
+    <style name="NonPhoneDialogTheme" parent="@android:Theme.Holo.Light.Dialog">
+    </style>
+
+    <style name="SectionDivider">
+        <item name="android:background">#7e7e87</item>
+        <item name="android:layout_height">1dip</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="ContactDetailItemType">
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
+    <style name="ConfirmAddDetailViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="ConfirmAddDetailHeaderViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">150dip</item>
+    </style>
+
+    <style name="QuickContactListItemStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">?android:attr/listPreferredItemHeight</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="GroupMembershipSizeTextAppearance" parent="@android:style/TextAppearance.Small"/>
+
+    <style name="PeopleNavigationDropDownTextAppearance">
+        <item name="android:textColor">@color/primary_text_color</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="PeopleNavigationDropDownHeaderTextAppearance">
+        <item name="android:textColor">@color/primary_text_color</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+  
 </resources>

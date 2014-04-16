@@ -33,6 +33,13 @@ public class SettingObservable extends Observable {
             triggerUpdate();
         }
     }
+    
+    public void setCountDownStarted(boolean started) {
+        final boolean needUpdate = mSettingModel.setCountDownStarted(started);
+        if (needUpdate) {
+            triggerUpdate();
+        }
+    }
 
     public SettingObservable() {
         mSettingModel = new SettingModel(this);

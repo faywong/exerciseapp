@@ -12,5 +12,6 @@
     <color name="black_light">#222222</color>
     <color name="blue_light">#d50000ff</color>
     <color name="gray">#a0ffffff</color>
-    
-    </resources>
+    <color name="primary_text_color">#363636</color>
+
+</resources>
