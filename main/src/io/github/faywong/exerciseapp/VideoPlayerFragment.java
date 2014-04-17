@@ -112,6 +112,12 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
     private final static int SCREEN_FULL = 0;
     private final static int SCREEN_DEFAULT = 1;
 
+    
+    public final static int free_mode=1;
+    public final static int real_mode=2;
+    
+    public  int curMode=free_mode;
+    
     Handler myHandler = new Handler() {
 
         @Override
@@ -421,7 +427,12 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
     private void initVideoView(final View parentView) {
 
         vv = (VideoView) parentView.findViewById(R.id.vv);
-
+        if(curMode ==real_mode)
+        {
+        	String uri2 = "android.resource://" +getActivity().getPackageName() + "/" + R.raw.road1;
+        	vv.setVideoURI(Uri.parse(uri2));        
+        	vv.start();
+        }
         vv.setOnErrorListener(new OnErrorListener() {
 
             @Override
@@ -546,6 +557,13 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
             @Override
             public void onCompletion(MediaPlayer arg0) {
                 // TODO Auto-generated method stub
+            	if(curMode == real_mode)
+            	{
+            		String uri2 = "android.resource://" +getActivity().getPackageName() + "/" + R.raw.road1;
+                	vv.setVideoURI(Uri.parse(uri2));        
+                	vv.start();
+            		return;
+            	}
                 int n = playList.size();
                 isOnline = false;
                 if (++position < n) {

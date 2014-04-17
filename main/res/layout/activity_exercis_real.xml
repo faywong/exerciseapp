@@ -36,7 +36,7 @@
             android:paddingRight="16dp" >
 
             <ImageButton
-                android:id="@+id/user_btn"
+                android:id="@+id/real_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="96dp"
                 android:background="@drawable/real"
@@ -65,7 +65,7 @@
             android:paddingRight="16dp" >
 
             <ImageButton
-                android:id="@+id/system_btn"
+                android:id="@+id/hot_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="96dp"
                 android:background="@drawable/hot_mode"

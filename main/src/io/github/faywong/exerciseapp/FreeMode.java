@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import sportsSDK.PinSDK;
 import android.R.color;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -80,6 +81,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
     final static public int fast_mode = 3;
     final static public int strength_mode = 4;
     final static public int memorize_mode = 5;
+    final static public int real_mode = 5;
     
     static public int curMode = free_mode;
   
@@ -590,12 +592,24 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
         {
             Intent intent = new Intent();
             intent.setClass(this, Main.class);
-            startActivity(intent);
+            startActivityForResult(intent,0);
             firstStart = true;
         }
-
+        else
+        	initMode();
     }
 
+    private void initMode()
+    {
+    	if(curMode==free_mode)
+    	{
+    		
+    	}else if(curMode==real_mode)
+    	{
+    		this.switchToVideoPlayerFragment(VideoPlayerFragment.real_mode);
+    	}
+    	
+    }
     private void enableTargetSettingControls(final boolean enable) {
         timeControlLayout.setClickable(enable);
         distanceControlLayout.setClickable(enable);
@@ -641,7 +655,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
         fragmentTransaction.commit();
     }
 
-    private void switchToVideoPlayerFragment() {
+    private void switchToVideoPlayerFragment(int mode) {
         if (mFragmentManager == null) {
             return;
         }
@@ -653,6 +667,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
         fragmentTransaction.replace(R.id.fragment_container,
                 mVideoPlayerFragment);
         fragmentTransaction.commit();
+        mVideoPlayerFragment.curMode=mode;
         mFragmentControlParentLayout.addView(mVideoPlayerFragment.getControlView());
     }
 
@@ -911,7 +926,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
         } else if (viewId == R.id.tv_btn) {
             switchToSurfFragment(SurfFragment.tv_mode);
         } else if (viewId == R.id.video_btn) {
-            switchToVideoPlayerFragment();
+            switchToVideoPlayerFragment(VideoPlayerFragment.free_mode);
         } else if (viewId == R.id.time_control
                 || viewId == R.id.distance_control
                 || viewId == R.id.calorie_control
@@ -1046,4 +1061,12 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
         // TODO Auto-generated method stub
         finish();
     }
+    
+    @Override 
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+	 super.onActivityResult(requestCode, resultCode, data);
+
+            initMode();
+       
+        }
 }

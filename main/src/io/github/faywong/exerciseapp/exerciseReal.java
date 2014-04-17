@@ -12,7 +12,7 @@ import android.widget.ImageButton;
 public class exerciseReal extends Activity implements View.OnClickListener {
 
 	Button backBtn;
-	ImageButton userBtn;
+	ImageButton realBtn;
 	ImageButton systemBtn;
 	ImageButton aboutBtn;	
 	ImageButton factoryBtn;
@@ -28,9 +28,10 @@ public class exerciseReal extends Activity implements View.OnClickListener {
 		backBtn.setOnClickListener(this); 
 		
 		
-		/*userBtn = (ImageButton)findViewById(R.id.user_btn);
-		userBtn.setOnClickListener(this);
-		systemBtn = (ImageButton)findViewById(R.id.system_btn);
+		realBtn = (ImageButton)findViewById(R.id.real_btn);
+		realBtn.setOnClickListener(this);
+		
+		/*systemBtn = (ImageButton)findViewById(R.id.system_btn);
 		systemBtn.setOnClickListener(this);
 		aboutBtn = (ImageButton)findViewById(R.id.about_btn);
 		aboutBtn.setOnClickListener(this);
@@ -44,9 +45,11 @@ public class exerciseReal extends Activity implements View.OnClickListener {
 		// TODO Auto-generated method stub
 		if (v == null) {
 			return;
-		} else if (v.getId() == R.id.user_btn) {
-			Intent intent = new Intent().setClass(this, userManage.class);
-			startActivityForResult(intent, 0);
+		} else if (v.getId() == R.id.real_btn) {
+			Intent result = new Intent();
+		    result.putExtra("back", FreeMode.real_mode);
+		    setResult(RESULT_OK, result);
+		    finish();
 		} else if (v.getId() == R.id.system_btn) {
 			Intent intent = new Intent().setClass(this, systemSetting.class);
 			startActivityForResult(intent, 0);
