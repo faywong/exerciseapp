@@ -13,7 +13,6 @@ import java.util.LinkedList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -34,7 +33,6 @@ import android.os.Message;
 import android.os.MessageQueue.IdleHandler;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
@@ -42,7 +40,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnClickListener;
@@ -51,9 +48,6 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 
 public class VideoPlayerFragment extends Fragment implements OnClickListener, FreeMode.IFragmentControlHandler {
 
@@ -667,7 +661,7 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
                 Intent intent = new Intent();
                 intent.setClass(FreeMode.sInstance,
                         VideoChooseActivity.class);
-                VideoPlayerFragment.this.startActivityForResult(intent, 0);
+                FreeMode.sInstance.startActivityForResult(intent, 0);
                 cancelDelayHide();
             }
 
