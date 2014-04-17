@@ -918,7 +918,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
         else if (viewId == R.id.freeback_btn) {
             Intent intent = new Intent();
             intent.setClass(this, Main.class);
-            startActivity(intent);
+            startActivityForResult(intent,0);
         } else if (viewId == R.id.music_btn) {
             switchToMusicFragment();
         } else if (viewId == R.id.surf_btn) {

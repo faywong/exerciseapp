@@ -423,16 +423,19 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
                 break;
         }
     }
-    
-    private void initVideoView(final View parentView) {
-
-        vv = (VideoView) parentView.findViewById(R.id.vv);
-        if(curMode ==real_mode)
+    private void initMode()
+    {
+    	if(curMode ==real_mode)
         {
         	String uri2 = "android.resource://" +getActivity().getPackageName() + "/" + R.raw.road1;
         	vv.setVideoURI(Uri.parse(uri2));        
         	vv.start();
         }
+    }
+    private void initVideoView(final View parentView) {
+
+        vv = (VideoView) parentView.findViewById(R.id.vv);
+        
         vv.setOnErrorListener(new OnErrorListener() {
 
             @Override
@@ -559,9 +562,7 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
                 // TODO Auto-generated method stub
             	if(curMode == real_mode)
             	{
-            		String uri2 = "android.resource://" +getActivity().getPackageName() + "/" + R.raw.road1;
-                	vv.setVideoURI(Uri.parse(uri2));        
-                	vv.start();
+            		initMode();
             		return;
             	}
                 int n = playList.size();
@@ -598,7 +599,7 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
     public void onResume() {
         // TODO Auto-generated method stub
         super.onResume();
-
+        initMode();
     }
 
     @Override
