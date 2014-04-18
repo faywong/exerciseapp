@@ -151,9 +151,6 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
             super.handleMessage(msg);
         }
     };
-
-    private Handler mBackgroundThreadHandler;
-    private HandlerThread mHandlerThread;
     
     @Override
     public View getView() {
@@ -426,6 +423,7 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
         	vv.start();
         }
     }
+    
     private void initVideoView(final View parentView) {
 
         vv = (VideoView) parentView.findViewById(R.id.vv);
@@ -469,12 +467,7 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
             bn3.setImageResource(R.drawable.play);
         }
 
-        if (mHandlerThread == null) {
-            mHandlerThread = new HandlerThread("media_loader");
-            mHandlerThread.start();
-            mBackgroundThreadHandler = new Handler(mHandlerThread.getLooper());
-        }
-        mBackgroundThreadHandler.post(new Runnable() {
+        FreeMode.sInstance.mBackgroundThreadHandler.post(new Runnable() {
 
             @Override
             public void run() {
@@ -615,7 +608,7 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
     public View getControlView() {
         // TODO Auto-generated method stub
         controlView = FreeMode.sInstance.getLayoutInflater().inflate(
-                R.layout.controler, null);
+                R.layout.video_controller, null);
         // controler = new PopupWindow(controlView);
         //durationTextView = (TextView) controlView.findViewById(R.id.duration);
         //playedTextView = (TextView) controlView.findViewById(R.id.has_played);

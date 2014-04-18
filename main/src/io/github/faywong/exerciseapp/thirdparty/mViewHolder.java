@@ -2,7 +2,7 @@ package io.github.faywong.exerciseapp.thirdparty;
 
 import android.widget.Button;
 
-public class viewHolder {
+public class mViewHolder {
 
 	public static Button start;
 	public static Button stop;

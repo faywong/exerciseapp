@@ -18,13 +18,13 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class musicActivity extends ListActivity {
-	//²¥·Å¶ÔÏó
+	//ï¿½ï¿½ï¿½Å¶ï¿½ï¿½ï¿½
 	private MediaPlayer myMediaPlayer;
-	//²¥·ÅÁÐ±í
+	//ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
 	private List<String> myMusicList=new ArrayList<String>();
-	//µ±Ç°²¥·Å¸èÇúµÄË÷Òý
+	//ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	private int currentListItem=0;
-	//ÒôÀÖµÄÂ·¾¶
+	//ï¿½ï¿½ï¿½Öµï¿½Â·ï¿½ï¿½
 	private static final String MUSIC_PATH=new String("/sdcard/");
 	
     /** Called when the activity is first created. */
@@ -41,7 +41,7 @@ public class musicActivity extends ListActivity {
     }
     
     
-    //°ó¶¨ÒôÀÖ
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     void musicList(){
     	File home=new File(MUSIC_PATH);
     	if(home.listFiles(new MusicFilter()).length>0){
@@ -49,25 +49,25 @@ public class musicActivity extends ListActivity {
     			myMusicList.add(file.getName());
     		}
     		ArrayAdapter<String> musicList=new ArrayAdapter<String>
-    		(musicActivity.this,R.layout.musicitme, myMusicList);
+    		(musicActivity.this,R.layout.musicitem, myMusicList);
     		setListAdapter(musicList);
     	}
     }
     
-    //»ñÈ¡°´Å¥
+    //ï¿½ï¿½È¡ï¿½ï¿½Å¥
    void findView(){
-	   viewHolder.start=(Button)findViewById(R.id.start);
-	   viewHolder.stop=(Button)findViewById(R.id.stop);
-	   viewHolder.next=(Button)findViewById(R.id.next);
-	   viewHolder.pause=(Button)findViewById(R.id.pause);
-	   viewHolder.last=(Button)findViewById(R.id.last);
+	   mViewHolder.start=(Button)findViewById(R.id.start);
+	   mViewHolder.stop=(Button)findViewById(R.id.stop);
+	   mViewHolder.next=(Button)findViewById(R.id.next);
+	   mViewHolder.pause=(Button)findViewById(R.id.pause);
+	   mViewHolder.last=(Button)findViewById(R.id.last);
    }
    
    
-   //¼àÌýÊÂ¼þ
+   //ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½
    void listener(){
 	   //Í£Ö¹
-	   viewHolder.stop.setOnClickListener(new OnClickListener() {
+	   mViewHolder.stop.setOnClickListener(new OnClickListener() {
 		
 		@Override
 		public void onClick(View v) {
@@ -77,8 +77,8 @@ public class musicActivity extends ListActivity {
 			}
 		}
 	});
-	   //¿ªÊ¼
-	   viewHolder.start.setOnClickListener(new OnClickListener() {
+	   //ï¿½ï¿½Ê¼
+	   mViewHolder.start.setOnClickListener(new OnClickListener() {
 		
 		@Override
 		public void onClick(View v) {
@@ -86,8 +86,8 @@ public class musicActivity extends ListActivity {
 			playMusic(MUSIC_PATH+myMusicList.get(currentListItem));
 		}
 	});
-	   //ÏÂÒ»Ê×
-	   viewHolder.next.setOnClickListener(new OnClickListener() {
+	   //ï¿½ï¿½Ò»ï¿½ï¿½
+	   mViewHolder.next.setOnClickListener(new OnClickListener() {
 		
 		@Override
 		public void onClick(View v) {
@@ -95,8 +95,8 @@ public class musicActivity extends ListActivity {
 			nextMusic();
 		}
 	});
-	   //ÔÝÍ£
-	   viewHolder.pause.setOnClickListener(new OnClickListener() {
+	   //ï¿½ï¿½Í£
+	   mViewHolder.pause.setOnClickListener(new OnClickListener() {
 		
 		@Override
 		public void onClick(View v) {
@@ -108,8 +108,8 @@ public class musicActivity extends ListActivity {
 			}
 		}
 	});
-	   //ÉÏÒ»Ê×
-	   viewHolder.last.setOnClickListener(new OnClickListener() {
+	   //ï¿½ï¿½Ò»ï¿½ï¿½
+	   mViewHolder.last.setOnClickListener(new OnClickListener() {
 		
 		@Override
 		public void onClick(View v) {
@@ -121,7 +121,7 @@ public class musicActivity extends ListActivity {
 	   
    }
    
-   //²¥·ÅÒôÀÖ 
+   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
    void playMusic(String path){
 	   try { 
 		myMediaPlayer.reset();
@@ -142,7 +142,7 @@ public class musicActivity extends ListActivity {
 	}
    }
    
-   //ÏÂÒ»Ê×
+   //ï¿½ï¿½Ò»ï¿½ï¿½
    void nextMusic(){
 	   if(++currentListItem>=myMusicList.size()){
 		   currentListItem=0;
@@ -152,7 +152,7 @@ public class musicActivity extends ListActivity {
 	   }
    }
    
-   //ÉÏÒ»Ê×
+   //ï¿½ï¿½Ò»ï¿½ï¿½
    void lastMusic(){
 	   if(currentListItem!=0)
 		   {
@@ -166,7 +166,7 @@ public class musicActivity extends ListActivity {
 	   }
    }
    
-   //µ±ÓÃ»§·µ»ØÊ±½áÊøÒôÀÖ²¢ÊÍ·ÅÒôÀÖ¶ÔÏó
+   //ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö²ï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½ï¿½ï¿½
 	   @Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub
@@ -179,7 +179,7 @@ public class musicActivity extends ListActivity {
 		return super.onKeyDown(keyCode, event);
 	}
    
-	   //µ±Ñ¡ÔñÁÐ±íÏîÊ±²¥·ÅÒôÀÖ 
+	   //ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 	   @Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		// TODO Auto-generated method stub

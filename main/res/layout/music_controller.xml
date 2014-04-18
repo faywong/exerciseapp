@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/music_control_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
+
+    <Button
+        android:id="@+id/last"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical"
+        android:background="@drawable/music_last" >
+    </Button>
+
+    <Button
+        android:id="@+id/stop"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical"
+        android:background="@drawable/music_stop" >
+    </Button>
+
+    <Button
+        android:id="@+id/start"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical"
+        android:background="@drawable/music_start" >
+    </Button>
+
+    <Button
+        android:id="@+id/pause"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical"
+        android:background="@drawable/music_pause" >
+    </Button>
+
+    <Button
+        android:id="@+id/next"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical"
+        android:background="@drawable/music_next" >
+    </Button>
+
+</LinearLayout>
