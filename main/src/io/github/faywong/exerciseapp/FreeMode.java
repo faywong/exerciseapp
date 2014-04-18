@@ -182,7 +182,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
     private UnityObserver mUnityObserver;
     private CountDownTimer mCountDownTimer;
     private AlertDialog mAlertDialog;
-    private Handler mHandler;
+    public Handler mHandler;
     public static FreeMode sInstance = null;
 
     private IHWStatusListener mHWStatusListener = new IHWStatusListener() {
@@ -242,21 +242,10 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
     private LinearLayout mFragmentControlParentLayout;
     private IntentFilter mIntentFilter;
     private int mExerciseTime = 0;
-    
-    private BroadcastReceiver mReceiver = new BroadcastReceiver () {
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // TODO Auto-generated method stub
-            if (intent.getAction().equals(Intent.ACTION_TIME_TICK)) {
-                mExerciseTime++;
-                Log.d(TAG, "mExerciseTime: " + mExerciseTime + "s");
-            }
-        }
-    
-    };
     private HandlerThread mHandlerThread;
     public Handler mBackgroundThreadHandler;
+    private TextView timeElapsedText;
 
     private void popUpErrorDialog(final int errorCode) {
         Log.d(TAG, "popUpErrorDialog() errorCode:" + errorCode);
@@ -354,6 +343,8 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
 
         final Resources resources = getResources();
 
+        timeElapsedText = (TextView) findViewById(R.id.time_elapsed);
+        
         // initialize time related views/handlers
         backBtn = (Button) findViewById(R.id.freeback_btn);
         backBtn.setOnClickListener(this);
@@ -732,12 +723,6 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
     protected void onResume() {
         // TODO Auto-generated method stub
         super.onResume();
-        
-        if (mIntentFilter == null) {
-            mIntentFilter = new IntentFilter();
-        }
-        mIntentFilter.addAction(Intent.ACTION_TIME_TICK);
-        registerReceiver(mReceiver, mIntentFilter);
     }
 
     @Override
@@ -813,11 +798,6 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
         // TODO Auto-generated method stub
         super.onStop();
         dismissAllPanels();
-
-        if (mIntentFilter != null) {
-            unregisterReceiver(mReceiver);
-            mIntentFilter = null;
-        }
     }
 
     @Override
@@ -872,6 +852,8 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
         return parse(INCLINE_PATTERN, targetString);
     }
 
+    private int mCountDownValue = 5;
+    
     private void startCountDown(long totalMillis, long deltaMillis) {
         countDownText.setVisibility(View.VISIBLE);
         if (defaultColorStateList == null) {
@@ -882,21 +864,45 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
         if (mCountDownTimer == null) {
             mCountDownTimer = new CountDownTimer(totalMillis, deltaMillis) {
                 public void onTick(long millisUntilFinished) {
-                    countDownText.setText("" + millisUntilFinished / 1000);
+                    if (mCountDownValue > 0) {
+                        mSettingObservable.setCountDownValue(mCountDownValue);
+                        mSettingObservable.setCountDownStarted(true);
+                        countDownText.setText("" + mCountDownValue--);
+                    } else if (mCountDownValue == 0) {
+                        countDownText.setText("GO!");
+                        countDownText.clearAnimation();
+                        countDownTextOut.setDuration(2000);
+                        countDownText.startAnimation(countDownTextOut);
+                        // countdown finished
+                        mSettingObservable.setCountDownStarted(false);
+                        mCountDownValue = -1;
+                    }
+                    if (mCountDownValue == -1) {
+                        mExerciseTime++;
+                        // Log.d(TAG, "count down time:" + mExerciseTime);
+                        FreeMode.this.mHandler.post(new Runnable() {
+                            
+                            @Override
+                            public void run() {
+                                // TODO Auto-generated method stub
+                                FreeMode.this.updateElapsedTimeText(mExerciseTime);
+                            }
+                        });
+                    }
                 }
 
                 public void onFinish() {
-                    countDownText.setText("GO!");
-                    countDownText.clearAnimation();
-                    countDownTextOut.setDuration(2000);
-                    countDownText.startAnimation(countDownTextOut);
-                    // countdown finished
-                    mSettingObservable.setCountDownStarted(false);
+
                 }
             };
         }
         mCountDownTimer.cancel();
         mCountDownTimer.start();
+    }
+    
+    private void updateElapsedTimeText(final int elapsedTimeSeconds) {
+        timeElapsedText.setText(elapsedTimeSeconds / 3600 + "h " + 
+                (elapsedTimeSeconds % 3600) / 60  + "m " + ((elapsedTimeSeconds % 3600)) % 60 + "s");
     }
 
     private static String getNewSpeedText(final String origin, boolean incr) {
@@ -930,14 +936,16 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
             startBtn.setBackgroundResource(R.drawable.start);
         } else {
             startBtn.setBackgroundResource(R.drawable.stop);
+            mExerciseTime = 0;
+            mCountDownValue = 5;
+            updateElapsedTimeText(mExerciseTime);
         }
         sessionStarted.set((!sessionStarted.get()));
         final boolean started = sessionStarted.get();
         if (started) {
             enableTargetSettingControls(false);
-            startCountDown(6000, 1000);
+            startCountDown(Integer.MAX_VALUE, 1000);
             mSettingObservable.setCountDownStarted(true);
-            ;
         } else {
             countDownText.setVisibility(View.GONE);
             enableTargetSettingControls(true);

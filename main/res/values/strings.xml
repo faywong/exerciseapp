@@ -58,7 +58,8 @@
     <string name="error_dialog_title">硬件异常，请联系工作人员</string> 
     <string name="confirm_error_notification">我知道了</string> 
     
-    
+    <string name="time_elapsed_label">已运动时间</string> 
+        
 	<!--     SeeJoPlayer -->
     <string name="path">/sdcard/test0.mp4</string>
     

@@ -18,6 +18,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -296,6 +297,7 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
         if (file == null || !file.exists()) {
             return;
         }
+        
         file.listFiles(new FileFilter() {
 
             @Override
@@ -326,9 +328,11 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub
+        Log.d(TAG, "onActivityResult() req:" + requestCode + " data:" + data);
         if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
 
             vv.stopPlayback();
+
 
             int result = data.getIntExtra("CHOOSE", -1);
             Log.d("RESULT", "" + result);
@@ -428,6 +432,10 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
 
         vv = (VideoView) parentView.findViewById(R.id.vv);
         
+        vv.clearAnimation();
+        
+        vv.setBackgroundDrawable(null);
+        
         vv.setOnErrorListener(new OnErrorListener() {
 
             @Override
@@ -519,6 +527,26 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
                 // TODO Auto-generated method stub
 
                 setVideoScale(SCREEN_DEFAULT);
+                Log.d(TAG, "faywong OnPreparedListener()");
+
+/*                FreeMode.sInstance.mHandler.postDelayed(new Runnable() {
+                    
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        if (vv != null) {
+                            if (vv.isPlaying()) {
+                                bn3.setImageResource(R.drawable.pause);
+                                Log.d(TAG, "faywong pause");
+                                hideControllerDelay();
+                            } else {
+                                bn3.setImageResource(R.drawable.play);
+                                Log.d(TAG, "faywong play");
+                            }
+                        }
+                    }
+                }, 200);*/
+                
 /*                isFullScreen = false;
                 if (isControllerShow) {
                     showController();
@@ -536,7 +564,11 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
                         minute, second));*/
 
                 vv.start();
+                Drawable pauseDrawable = FreeMode.sInstance.getResources().getDrawable(R.drawable.pause);
                 bn3.setImageResource(R.drawable.pause);
+                bn3.setImageDrawable(pauseDrawable);
+                Log.d(TAG, "faywong OnPreparedListener() setImageResource() pause");
+
 /*                hideControllerDelay();
                 myHandler.sendEmptyMessage(PROGRESS_CHANGED);*/
             }
@@ -654,10 +686,9 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
                 Intent intent = new Intent();
                 intent.setClass(FreeMode.sInstance,
                         VideoChooseActivity.class);
-                FreeMode.sInstance.startActivityForResult(intent, 0);
+                VideoPlayerFragment.this.startActivityForResult(intent, 0);
                 cancelDelayHide();
             }
-
         });
 
         bn4.setOnClickListener(new OnClickListener() {
@@ -677,7 +708,8 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
             }
 
         });
-
+        
+        // start/pause button
         bn3.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -687,10 +719,12 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
                 if (isPaused) {
                     vv.start();
                     bn3.setImageResource(R.drawable.pause);
+                    Log.d(TAG, "faywong pause case 1");
                     hideControllerDelay();
                 } else {
                     vv.pause();
                     bn3.setImageResource(R.drawable.play);
+                    Log.d(TAG, "faywong play case 1");
                 }
                 isPaused = !isPaused;
             }

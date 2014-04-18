@@ -30,6 +30,7 @@ public class SettingModel {
     private boolean hasInclineChanged = false;
     private boolean sessionStarted = false;
     private boolean countDownStarted = false;
+    private int countDown = 0;
     private SettingObservable owner;
     private boolean hasDistanceChanged;
     private boolean hasCalorieChanged;
@@ -69,6 +70,14 @@ public class SettingModel {
             return true;
         }
         return false;
+    }
+    
+    public void setCountDownValue(int countDown) {
+        this.countDown = countDown;
+    }
+    
+    public int getCountDownValue() {
+        return this.countDown;
     }
     
     public boolean persistent(Context context) {

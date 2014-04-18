@@ -40,6 +40,10 @@ public class SettingObservable extends Observable {
             triggerUpdate();
         }
     }
+    
+    public void setCountDownValue(int val) {
+        mSettingModel.setCountDownValue(val);
+    }
 
     public SettingObservable() {
         mSettingModel = new SettingModel(this);

@@ -13,8 +13,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
         tools:context=".FreeMode" >
 
         <LinearLayout
@@ -28,7 +26,7 @@
 
             <Button
                 android:id="@+id/freeback_btn"
-                android:layout_width="wrap_content"
+                android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_marginRight="12dp"
                 android:background="@drawable/back_to_main"
@@ -206,6 +204,32 @@
                     android:layout_marginLeft="4dp"
                     android:layout_toRightOf="@id/incline_icon"
                     android:text="@string/default_incline_display" >
+                </TextView>
+            </RelativeLayout>
+           
+           <RelativeLayout
+                android:id="@+id/current_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:clickable="false" >
+
+                <TextView
+                    android:id="@+id/time_elapsed_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/time_elapsed_label" >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/time_elapsed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/time_elapsed_label"
+                    android:layout_marginLeft="4dp"
+                    android:layout_centerHorizontal="true"
+                    android:text="0s" >
                 </TextView>
             </RelativeLayout>
 
