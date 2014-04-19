@@ -94,6 +94,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
     private DecimalFormat mDecimalFormator = new DecimalFormat("##0.00");
 
     static boolean firstStart = false;
+    static boolean firstTimeStart = false;
     private WidgetGroup<Button, TextView> timeGroup;
     // id of parent layout of header button control --> associated panel
     // WidgetGroup
@@ -633,6 +634,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
 
         if (!firstStart)
         {
+            firstTimeStart = true;
             Intent intent = new Intent();
             intent.setClass(this, Main.class);
             startActivityForResult(intent, 0);
@@ -832,6 +834,22 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
         // TODO Auto-generated method stub
         super.onStop();
         dismissAllPanels();
+        
+        Log.d(TAG, "firstStart:" + firstStart);
+        if (firstTimeStart) {
+            firstTimeStart = false; 
+            return;
+        }
+/*        
+        if (mVideoPlayerFragment != null) {
+            mVideoPlayerFragment.finish();
+            mVideoPlayerFragment = null;
+        }*/
+        
+        if (mMusicFragment != null) {
+            mMusicFragment.stop();
+            mMusicFragment = null;
+        }
     }
 
     @Override
@@ -1133,6 +1151,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
         }
         onClick_(v.getId());
     }
+    
 
     private void onClick_(final int viewId) {
         Log.d(TAG, "onClick_() viewId:" + viewId);

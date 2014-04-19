@@ -155,10 +155,16 @@ public class MusicFragment extends ListFragment implements FreeMode.IFragmentCon
 
     protected void finish() {
         // TODO Auto-generated method stub
-        myMediaPlayer.stop();
-        myMediaPlayer.release();
+        stop();
         FreeMode.sInstance.getSupportFragmentManager().beginTransaction()
                 .remove(MusicFragment.this).commit();
+    }
+    
+    public void stop() {
+        if (myMediaPlayer != null) {
+            myMediaPlayer.stop();
+            myMediaPlayer.release();
+        }
     }
 
     // ��ȡ��ť
