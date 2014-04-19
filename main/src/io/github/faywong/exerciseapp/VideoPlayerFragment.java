@@ -515,7 +515,7 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
             @Override
             public void doMyThings() {
                 // TODO Auto-generated method stub
-                setVideoScale(SCREEN_DEFAULT);
+                setVideoScale(SCREEN_FULL);
             }
 
         });
@@ -526,7 +526,7 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
             public void onPrepared(MediaPlayer arg0) {
                 // TODO Auto-generated method stub
 
-                setVideoScale(SCREEN_DEFAULT);
+                setVideoScale(SCREEN_FULL);
                 Log.d(TAG, "faywong OnPreparedListener()");
 
 /*                FreeMode.sInstance.mHandler.postDelayed(new Runnable() {
@@ -830,7 +830,7 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
             public boolean onDoubleTap(MotionEvent e) {
                 // TODO Auto-generated method stub
                 if (isFullScreen) {
-                    setVideoScale(SCREEN_DEFAULT);
+                    setVideoScale(SCREEN_FULL);
                 } else {
                     setVideoScale(SCREEN_FULL);
                 }

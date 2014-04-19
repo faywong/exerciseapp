@@ -13,7 +13,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class SurfFragment extends Fragment implements OnClickListener {
+public class SurfFragment extends Fragment implements OnClickListener, FreeMode.IFragmentControlHandler {
 
 	
 	final static public int free_mode = 1;
@@ -81,12 +81,24 @@ public class SurfFragment extends Fragment implements OnClickListener {
 			Log.e(TAG, "parentLayout is null");
 			return null;
 		}
-
-		setControl(parentLayout);
-		setWebStyle();
-
+        mWebView = (WebView) parentLayout.findViewById(R.id.webshow);
+        url = (EditText) parentLayout.findViewById(R.id.urltext);
+        setWebStyle();
 		return parentLayout;
 	}
+
+    @Override
+    public View getControlView() {
+        // TODO Auto-generated method stub
+        View parentLayout = LayoutInflater.from(FreeMode.sInstance).inflate(R.layout.surf_controller,
+                null, false);
+        if (parentLayout == null) {
+            Log.e(TAG, "parentLayout is null");
+            return null;
+        }
+        initControls(parentLayout);
+        return parentLayout;
+    }
 
 	@Override
 	public void onDestroy() {
@@ -107,17 +119,15 @@ public class SurfFragment extends Fragment implements OnClickListener {
 
 	}
 
-	private void setControl(View parentView) {
-		url = (EditText) parentView.findViewById(R.id.urltext);
-		mWebView = (WebView) parentView.findViewById(R.id.webshow);
+	private void initControls(View parentView) {
 		goButton = (Button) parentView.findViewById(R.id.GoBtn);
 		backButton = (Button) parentView.findViewById(R.id.BackBtn);
 		aboutButton = (Button) parentView.findViewById(R.id.reloadBtn);
-		// mTitle=(TextView)parentView.findViewById(R.id.WebTitle);
 		goButton.setOnClickListener(this);
 		backButton.setOnClickListener(this);
 		aboutButton.setOnClickListener(this);
 	}
+	
 	public void setMode()
 	{
 		if(mWebView==null)
@@ -137,6 +147,7 @@ public class SurfFragment extends Fragment implements OnClickListener {
 			mWebView.loadUrl("http://mini123.com/psv/psvtv.html");
 		}
 	}
+	
 	private void setWebStyle() {
 		mWebView.getSettings().setJavaScriptEnabled(true);
 		mWebView.getSettings().setSupportZoom(true);
@@ -173,5 +184,23 @@ public class SurfFragment extends Fragment implements OnClickListener {
 			break;
 		}
 	}
+
+    @Override
+    public void onSwitchedIn() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onSwitchedOut() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onToggleScreen() {
+        // TODO Auto-generated method stub
+        
+    }
 
 }

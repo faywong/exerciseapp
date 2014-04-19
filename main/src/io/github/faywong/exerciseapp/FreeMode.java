@@ -670,6 +670,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
         if (mFragmentManager == null) {
             return;
         }
+        mFragmentControlParentLayout.removeAllViews();
 
         android.support.v4.app.FragmentTransaction fragmentTransaction = mFragmentManager
                 .beginTransaction();
@@ -712,12 +713,17 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
         if (mFragmentManager == null) {
             return;
         }
+        
+        mFragmentControlParentLayout.removeAllViews();
+
         SurfFragment.curMode = mode;
         mSurfFragment.setMode();
+        
         android.support.v4.app.FragmentTransaction fragmentTransaction = mFragmentManager
                 .beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, mSurfFragment);
         fragmentTransaction.commit();
+        mFragmentControlParentLayout.addView(mSurfFragment.getControlView());
     }
     
     @Override
