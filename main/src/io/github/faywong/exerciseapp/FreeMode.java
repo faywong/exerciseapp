@@ -1,6 +1,7 @@
 
 package io.github.faywong.exerciseapp;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -90,6 +91,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
     final static public int real_mode = 5;
 
     static public int curMode = free_mode;
+    private DecimalFormat mDecimalFormator = new DecimalFormat("##0.00");
 
     static boolean firstStart = false;
     private WidgetGroup<Button, TextView> timeGroup;
@@ -909,12 +911,15 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
                         mFinishedDistance += deltaDistance;
                         
                         if (!isValueZero(mTargetDistance)) {
-                            float newDistance = FreeMode.this.getCurrentDistance() - deltaDistance;
-                            if (isValueZero(newDistance)) {
+                            float remainedDistance = mTargetDistance - mFinishedDistance;
+                            Log.d(TAG, "remainedDistance:" + remainedDistance + " deltaDistance:" + deltaDistance);
+                            if (Math.abs(remainedDistance - 0.0) < 0.001) {
                                 FreeMode.this.finishExercisePlan();
                             } else {
                                 // remaining distance
-                                FreeMode.this.setCurrentDistance(newDistance);
+                                float tmp = Float.parseFloat(String.format("%.3f", remainedDistance));
+                                //Log.d(TAG, "tmp:" + tmp);
+                                FreeMode.this.setCurrentDistance(tmp);
                             }
                         }
                         
@@ -963,11 +968,10 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
     }
     
     private void setCurrentDistance(float newDistance) {
-        final String newValue = String.format(DISTANCE_DISPLAY_FORMAT, String
-                .valueOf(Math.max(newDistance,
-                        0)));
+        final String newValue = String.format("%.3fkm", Math.max(newDistance,
+                        0.001));
         distanceValueText.setText(newValue);
-        distanceValueText.setText(newValue);
+        distanceHeadText.setText(newValue);
     }
     
     private float getCurrentSpeed() {
@@ -1061,13 +1065,14 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
                 return;
             }
             
-            Toast.makeText(this, "千万请确保设置了合理的速度及坡度值！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "千万请确保设置了合理的速度及坡度值！", Toast.LENGTH_LONG).show();
             
             startBtn.setBackgroundResource(R.drawable.stop);
             mExerciseTime = 0;
             mCountDownValue = 5;
             mFinishedDistance = 0;
             mConsumedEnergy = 0;
+            setCurrentDistance(0.0f);
             updateElapsedTimeText(mExerciseTime);
         }
         sessionStarted.set((!sessionStarted.get()));
