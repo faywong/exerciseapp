@@ -40,7 +40,7 @@
     <string name="speed_selection_8km_per_h">8.0km/h</string>
     <string name="speed_selection_10km_per_h">10.0km/h</string>
     <string name="speed_selection_12km_per_h">12.0km/h</string>
-    <string name="default_speed_display">0km/h</string>
+    <string name="default_speed_display">4.0km/h</string>
     
     <string name="incline_selection_0_percent">0%</string>
     <string name="incline_selection_3_percent">3%</string>

@@ -43,6 +43,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import io.github.faywong.exerciseapp.R;
 import io.github.faywong.exerciseapp.common.WidgetGroup;
 
@@ -73,7 +74,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
     final static private Pattern SPEED_PATTERN = Pattern.compile("([0-9]*\\.?[0-9]+)km/h");
     final static private Pattern INCLINE_PATTERN = Pattern.compile("(\\d+)%");
 
-    final static private int TIME_ADJUST_STEP = 10;
+    final static private int TIME_ADJUST_STEP = 1;
     final static private int DISTANCE_ADJUST_STEP = 1;
     final static private int CALORIE_ADJUST_STEP = 100;
     final static private int SPEED_ADJUST_STEP = 1;
@@ -853,6 +854,11 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
     }
 
     private int mCountDownValue = 5;
+    private float mTargetDistance;
+    private int mTargetTime;
+    private int mTargetCalorie;
+    private int mConsumedEnergy;
+    private float mFinishedDistance = 0;
     
     private void startCountDown(long totalMillis, long deltaMillis) {
         countDownText.setVisibility(View.VISIBLE);
@@ -863,6 +869,8 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
         }
         if (mCountDownTimer == null) {
             mCountDownTimer = new CountDownTimer(totalMillis, deltaMillis) {
+
+
                 public void onTick(long millisUntilFinished) {
                     if (mCountDownValue > 0) {
                         mSettingObservable.setCountDownValue(mCountDownValue);
@@ -879,15 +887,45 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
                     }
                     if (mCountDownValue == -1) {
                         mExerciseTime++;
-                        // Log.d(TAG, "count down time:" + mExerciseTime);
-                        FreeMode.this.mHandler.post(new Runnable() {
-                            
-                            @Override
-                            public void run() {
-                                // TODO Auto-generated method stub
-                                FreeMode.this.updateElapsedTimeText(mExerciseTime);
+                        
+                        // update time value
+                        if (mExerciseTime / 60 > 0 && mTargetTime != 0) {
+                            final int newTime = mTargetTime - mExerciseTime / 60;
+                            if (newTime <= 0) {
+                                FreeMode.this.finishExercisePlan();
+                            } else {
+                                FreeMode.this.setCurrentTime(mTargetTime - mExerciseTime / 60);
                             }
-                        });
+                        }
+                        
+                        // update distance value
+                        final float deltaDistance = FreeMode.this.getCurrentSpeed() / 3600;
+                        mFinishedDistance += deltaDistance;
+                        
+                        if (!isValueZero(mTargetDistance)) {
+                            float newDistance = FreeMode.this.getCurrentDistance() - deltaDistance;
+                            if (isValueZero(newDistance)) {
+                                FreeMode.this.finishExercisePlan();
+                            } else {
+                                // remaining distance
+                                FreeMode.this.setCurrentDistance(newDistance);
+                            }
+                        }
+                        
+                        mConsumedEnergy = (int)(mExerciseTime / 3600.0 * mUserWeight * 30 * (FreeMode.this.getCurrentSpeed() * 1000 / 60) / 400);
+                        final int remainedCalorie = mTargetCalorie - mConsumedEnergy;
+                        if (mTargetCalorie != 0) {
+                            if (remainedCalorie <= 0) {
+                                FreeMode.this.finishExercisePlan();
+                            } else {
+                                FreeMode.this.setCurrentCalorie(remainedCalorie);
+                            }
+                        }
+                        
+                        // Log.d(TAG, "mConsumedEnergy: " + mConsumedEnergy);
+
+                        // Log.d(TAG, "count down time:" + mExerciseTime);
+                        FreeMode.this.updateElapsedTimeText(mExerciseTime);
                     }
                 }
 
@@ -898,6 +936,63 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
         }
         mCountDownTimer.cancel();
         mCountDownTimer.start();
+    }
+    
+    // in the unit of kg
+    private int mUserWeight = 65;
+    
+    private void finishExercisePlan() {
+        Toast.makeText(FreeMode.this, "您的运动计划已完成，:)", Toast.LENGTH_SHORT).show();
+        swapSessionState();
+        FreeMode.this.setCurrentTime(0);
+        mExerciseTime = 0;
+        mCountDownValue = 5;
+        updateElapsedTimeText(mExerciseTime);
+        FreeMode.this.mCountDownTimer.cancel();
+    }
+    
+    private float getCurrentDistance() {
+        final String oldString = distanceHeadText.getText().toString();
+        return parseDistance(oldString);
+    }
+    
+    private void setCurrentDistance(float newDistance) {
+        final String newValue = String.format(DISTANCE_DISPLAY_FORMAT, String
+                .valueOf(Math.max(newDistance,
+                        0)));
+        distanceValueText.setText(newValue);
+        distanceValueText.setText(newValue);
+    }
+    
+    private float getCurrentSpeed() {
+        final String oldString = speedHeadText.getText().toString();
+        return parseSpeed(oldString);
+    }
+    
+    private int getCurrentTime() {
+        final String oldString = timeHeadText.getText().toString();
+        return parseTime(oldString);
+    }
+    
+    private void setCurrentTime(int newTime) {
+        final String newValue = String.format(TIME_DISPLAY_FORMAT, String
+                .valueOf(Math.max(newTime,
+                        0)));
+        timeValueText.setText(newValue);
+        timeHeadText.setText(newValue);
+    }
+    
+    private int getCurrentCalorie() {
+        final String oldString = calorieHeadText.getText().toString();
+        return parseCalorie(oldString);
+    }
+    
+    private void setCurrentCalorie(int newCalorie) {
+        final String newValue = String.format(CALORIE_DISPLAY_FORMAT, String
+                .valueOf(Math.max(newCalorie,
+                        0)));
+        calorieValueText.setText(newValue);
+        calorieHeadText.setText(newValue);
     }
     
     private void updateElapsedTimeText(final int elapsedTimeSeconds) {
@@ -929,15 +1024,44 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
             swapSessionState();
         }
     }
+    
+    private boolean isValueZero(float val) {
+        return (Math.abs(val - 0.0) < 0.1);
+    }
 
     private void swapSessionState() {
         dismissAllPanels();
         if (sessionStarted.get()) {
+            setCurrentTime(0);
             startBtn.setBackgroundResource(R.drawable.start);
         } else {
+            
+            // check user settings
+            mTargetDistance = getCurrentDistance();
+            mTargetTime = getCurrentTime();
+            mTargetCalorie = getCurrentCalorie();
+            
+            Log.d(TAG, "distance: " + mTargetDistance);
+            Log.d(TAG, "time: " + mTargetTime);
+            Log.d(TAG, "calorie: " + mTargetCalorie);
+            
+            if (mTargetCalorie == 0 && mTargetTime == 0 && Math.abs(mTargetDistance - 0.0) < 0.1) {
+                Toast.makeText(this, "请设置时间、距离、卡路里中任意一项目标后开始运动", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (isValueZero(getCurrentSpeed())) {
+                Toast.makeText(this, "请设置合理的速度后开始运动", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            
+            Toast.makeText(this, "千万请确保设置了合理的速度及坡度值！", Toast.LENGTH_SHORT).show();
+            
             startBtn.setBackgroundResource(R.drawable.stop);
             mExerciseTime = 0;
             mCountDownValue = 5;
+            mFinishedDistance = 0;
+            mConsumedEnergy = 0;
             updateElapsedTimeText(mExerciseTime);
         }
         sessionStarted.set((!sessionStarted.get()));
@@ -1020,7 +1144,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
             final int oldTime = parseTime(oldString);
             final String newValue = String.format(TIME_DISPLAY_FORMAT, String
                     .valueOf(Math.max(oldTime - TIME_ADJUST_STEP,
-                            TIME_ADJUST_STEP)));
+                            TIME_ADJUST_STEP / TIME_ADJUST_STEP)));
             timeValueText.setText(newValue);
             timeHeadText.setText(newValue);
         } else if (viewId == R.id.add_distance_btn) {
