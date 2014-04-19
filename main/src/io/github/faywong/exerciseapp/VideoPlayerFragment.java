@@ -596,8 +596,9 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
         });
     }
 
-    protected void finish() {
+    public void finish() {
         // TODO Auto-generated method stub
+        vv.stopPlayback();
         FreeMode.sInstance.getSupportFragmentManager().beginTransaction()
                 .remove(VideoPlayerFragment.this).commit();
     }

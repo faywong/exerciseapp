@@ -29,8 +29,7 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_marginRight="12dp"
-                android:background="@drawable/back_to_main"
-                />
+                android:background="@drawable/back_to_main" />
 
             <RelativeLayout
                 android:id="@+id/time_control"
@@ -42,6 +41,7 @@
                     android:id="@+id/time_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
                     android:text="时间" >
                 </TextView>
 
@@ -78,6 +78,7 @@
                     android:id="@+id/distance_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
                     android:text="距离(KM)" >
                 </TextView>
 
@@ -114,6 +115,7 @@
                     android:id="@+id/calorie_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
                     android:text="卡路里(Kcal)" >
                 </TextView>
 
@@ -150,6 +152,7 @@
                     android:id="@+id/speed_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
                     android:text="速度(Km/h)" >
                 </TextView>
 
@@ -185,6 +188,7 @@
                     android:id="@+id/incline_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
                     android:text="坡度(%)" >
                 </TextView>
 
@@ -206,8 +210,10 @@
                     android:text="@string/default_incline_display" >
                 </TextView>
             </RelativeLayout>
-           
-           <RelativeLayout
+
+            <!-- 累计运动时间 -->
+
+            <RelativeLayout
                 android:id="@+id/current_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -227,8 +233,34 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/time_elapsed_label"
-                    android:layout_marginLeft="4dp"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="4dp"
+                    android:text="0s" >
+                </TextView>
+            </RelativeLayout>
+            
+            <RelativeLayout
+                android:id="@+id/heart_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:clickable="false" >
+
+                <TextView
+                    android:id="@+id/heart_rate_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/heart_rate_label" >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/heart_rate_label_val"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/heart_rate_label"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="4dp"
                     android:text="0s" >
                 </TextView>
             </RelativeLayout>
@@ -321,12 +353,13 @@
                 android:contentDescription="@string/exercise_start_stop_content_desc"
                 android:scaleType="fitXY" >
             </ImageButton>
+
             <LinearLayout
                 android:id="@+id/fregment_control"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginLeft="10dp"
+                android:layout_weight="1"
                 android:orientation="horizontal" >
             </LinearLayout>
         </LinearLayout>
@@ -337,6 +370,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textSize="166sp" />
+        android:textSize="120sp" />
 
 </FrameLayout>

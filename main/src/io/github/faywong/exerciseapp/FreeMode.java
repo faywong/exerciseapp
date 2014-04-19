@@ -232,6 +232,18 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
                     }
                 });
                 FreeMode.this.popUpErrorDialog(errorCode);
+            } else if (FreeMode.this.sessionStarted.get()) {
+                final int finalPulse = pulse;
+                // Log.d(TAG, "onHWStatusChanged() pulse: " + finalPulse);
+                mHandler.post(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                       FreeMode.this.heartRateText.setText(finalPulse + "");
+                    }
+                    
+                });
             }
         }
 
@@ -249,6 +261,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
     private HandlerThread mHandlerThread;
     public Handler mBackgroundThreadHandler;
     private TextView timeElapsedText;
+    private TextView heartRateText;
 
     private void popUpErrorDialog(final int errorCode) {
         Log.d(TAG, "popUpErrorDialog() errorCode:" + errorCode);
@@ -515,6 +528,8 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
         tvBtn.setOnClickListener(this);
 
         countDownText = (TextView) findViewById(R.id.count_down_text);
+        
+        heartRateText = (TextView) findViewById(R.id.heart_rate_label_val);
 
         final GestureDetector gdt = new GestureDetector(this,
                 new OnGestureListener() {
@@ -657,6 +672,16 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
         super.onDestroy();
         if (mUnityFragment != null) {
             mUnityFragment.onParentActiviytDestroyed();
+        }
+        
+        if (mVideoPlayerFragment != null) {
+            mVideoPlayerFragment.finish();
+            mVideoPlayerFragment = null;
+        }
+        
+        if (mMusicFragment != null) {
+            mMusicFragment.finish();
+            mMusicFragment = null;
         }
         
         PinSDK.getInstance().setHWStatusListener(null);
@@ -969,7 +994,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
     
     private void setCurrentDistance(float newDistance) {
         final String newValue = String.format("%.3fkm", Math.max(newDistance,
-                        0.001));
+                        0.000f));
         distanceValueText.setText(newValue);
         distanceHeadText.setText(newValue);
     }
@@ -1074,6 +1099,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
             mConsumedEnergy = 0;
             setCurrentDistance(0.0f);
             updateElapsedTimeText(mExerciseTime);
+            heartRateText.setText("");;
         }
         sessionStarted.set((!sessionStarted.get()));
         final boolean started = sessionStarted.get();
