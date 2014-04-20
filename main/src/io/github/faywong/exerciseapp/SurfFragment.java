@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.webkit.WebSettings.LayoutAlgorithm;
+import android.webkit.WebSettings.ZoomDensity;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -153,7 +155,12 @@ public class SurfFragment extends Fragment implements OnClickListener, FreeMode.
 		mWebView.getSettings().setSupportZoom(true);
 		mWebView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
 		mWebView.requestFocus();
+		mWebView.getSettings().setUserAgentString("MicroMessager");
 		
+		mWebView.getSettings().setSupportZoom(true);
+		mWebView.getSettings().setBuiltInZoomControls(true);
+		mWebView.getSettings().setUseWideViewPort(true);
+		mWebView.setInitialScale(2);
 		mWebView.setWebViewClient(new MyWebViewClient());
 		setMode();
 	}
