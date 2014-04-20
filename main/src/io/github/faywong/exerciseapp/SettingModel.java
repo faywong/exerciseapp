@@ -30,6 +30,7 @@ public class SettingModel {
     private boolean hasInclineChanged = false;
     private boolean sessionStarted = false;
     private boolean countDownStarted = false;
+    private int lastErrorCode = -1;
     private int countDown = 0;
     private SettingObservable owner;
     private boolean hasDistanceChanged;
@@ -254,5 +255,16 @@ public class SettingModel {
                 + " incline:" + incline
                 + "]";
     }
+
+    public void setLastErrorCode(int error) {
+        // TODO Auto-generated method stub
+        lastErrorCode = error;
+    }
+    
+    public int getLastErrorCode() {
+        // TODO Auto-generated method stub
+        return lastErrorCode;
+    }
+
 
 }

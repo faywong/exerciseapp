@@ -131,6 +131,7 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
 
     private ArrayList<RelativeLayout> panelLayouts = new ArrayList<RelativeLayout>();
     private Handler hander = new Handler();
+    private int mLastErrorCode = -1;
     private Runnable operationTimeOutRunable = new Runnable() {
 
         @Override
@@ -222,6 +223,9 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
              * Log.d(TAG, "HW status changed[errorCode:" + errorCode +
              * " calorie:" + calory + " pulse:" + pulse + "]");
              */
+            mLastErrorCode = errorCode;
+            FreeMode.this.mSettingObservable.setLastErrorCode(mLastErrorCode);
+            
             if (errorCode != 0) {
                 Log.d(TAG, "Error occurred! errorCode: " + errorCode);
                 mHandler.post(new Runnable() {
@@ -850,6 +854,8 @@ public class FreeMode extends FragmentActivity implements View.OnClickListener, 
             mMusicFragment.stop();
             mMusicFragment = null;
         }
+        
+        setSessionState(false);
     }
 
     @Override

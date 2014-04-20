@@ -34,6 +34,13 @@ public class SettingObservable extends Observable {
         }
     }
     
+    public void setLastErrorCode(int error) {
+        mSettingModel.setLastErrorCode(error);
+/*        if (needUpdate) {
+            triggerUpdate();
+        }*/
+    }
+    
     public void setCountDownStarted(boolean started) {
         final boolean needUpdate = mSettingModel.setCountDownStarted(started);
         if (needUpdate) {
