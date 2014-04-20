@@ -59,6 +59,7 @@
     <string name="confirm_error_notification">我知道了</string> 
     
     <string name="time_elapsed_label">已运动时间</string> 
+    <string name="heart_rate_label">心率</string> 
         
 	<!--     SeeJoPlayer -->
     <string name="path">/sdcard/test0.mp4</string>

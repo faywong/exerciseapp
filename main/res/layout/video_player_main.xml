@@ -9,6 +9,7 @@
 	<io.github.faywong.exerciseapp.thirdparty.VideoView
 	android:id="@+id/vv"  
     android:layout_width="fill_parent" 
-    android:layout_height="fill_parent" 
+    android:layout_height="fill_parent"
+    android:background="@color/transparent"
     />
 </LinearLayout>

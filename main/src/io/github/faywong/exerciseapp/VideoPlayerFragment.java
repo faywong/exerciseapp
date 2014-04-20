@@ -50,7 +50,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 
-public class VideoPlayerFragment extends Fragment implements OnClickListener, FreeMode.IFragmentControlHandler {
+public class VideoPlayerFragment extends Fragment implements OnClickListener,
+        FreeMode.IFragmentControlHandler {
 
     private static final String TAG = "VideoPlayerFragment";
     private boolean isOnline = false;
@@ -69,9 +70,9 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
     private int playedTime;
 
     private VideoView vv = null;
-    //private SeekBar seekBar = null;
-    //private TextView durationTextView = null;
-    //private TextView playedTextView = null;
+    // private SeekBar seekBar = null;
+    // private TextView durationTextView = null;
+    // private TextView playedTextView = null;
     private GestureDetector mGestureDetector = null;
     private AudioManager mAudioManager = null;
 
@@ -107,12 +108,11 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
     private final static int SCREEN_FULL = 0;
     private final static int SCREEN_DEFAULT = 1;
 
-    
-    public final static int free_mode=1;
-    public final static int real_mode=2;
-    
-    public  int curMode=free_mode;
-    
+    public final static int free_mode = 1;
+    public final static int real_mode = 2;
+
+    public int curMode = free_mode;
+
     Handler myHandler = new Handler() {
 
         @Override
@@ -122,27 +122,17 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
             switch (msg.what) {
 
                 case PROGRESS_CHANGED:
-/*
-                    int i = vv.getCurrentPosition();
-                    seekBar.setProgress(i);
-
-                    if (isOnline) {
-                        int j = vv.getBufferPercentage();
-                        seekBar.setSecondaryProgress(j * seekBar.getMax() / 100);
-                    } else {
-                        seekBar.setSecondaryProgress(0);
-                    }
-
-                    i /= 1000;
-                    int minute = i / 60;
-                    int hour = minute / 60;
-                    int second = i % 60;
-                    minute %= 60;
-                    playedTextView.setText(String.format("%02d:%02d:%02d", hour,
-                            minute, second));
-
-                    sendEmptyMessageDelayed(PROGRESS_CHANGED, 100);
-                    break;*/
+                    /*
+                     * int i = vv.getCurrentPosition(); seekBar.setProgress(i);
+                     * if (isOnline) { int j = vv.getBufferPercentage();
+                     * seekBar.setSecondaryProgress(j * seekBar.getMax() / 100);
+                     * } else { seekBar.setSecondaryProgress(0); } i /= 1000;
+                     * int minute = i / 60; int hour = minute / 60; int second =
+                     * i % 60; minute %= 60;
+                     * playedTextView.setText(String.format("%02d:%02d:%02d",
+                     * hour, minute, second));
+                     * sendEmptyMessageDelayed(PROGRESS_CHANGED, 100); break;
+                     */
 
                 case HIDE_CONTROLER:
                     hideController();
@@ -152,7 +142,7 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
             super.handleMessage(msg);
         }
     };
-    
+
     @Override
     public View getView() {
         // TODO Auto-generated method stub
@@ -203,11 +193,12 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
             public boolean queueIdle() {
 
                 // TODO Auto-generated method stub
-/*                if (controler != null && vv.isShown()) {
-                    controler.showAtLocation(vv, Gravity.BOTTOM, 0, 0);
-                    // controler.update(screenWidth, controlHeight);
-                    controler.update(0, 0, screenWidth, controlHeight);
-                }*/
+                /*
+                 * if (controler != null && vv.isShown()) {
+                 * controler.showAtLocation(vv, Gravity.BOTTOM, 0, 0); //
+                 * controler.update(screenWidth, controlHeight);
+                 * controler.update(0, 0, screenWidth, controlHeight); }
+                 */
 
                 // myHandler.sendEmptyMessageDelayed(HIDE_CONTROLER, TIME);
                 return false;
@@ -226,10 +217,10 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
     }
 
     private void hideController() {
-/*        if (controler.isShowing()) {
-            controler.update(0, 0, 0, 0);
-            isControllerShow = false;
-        }*/
+        /*
+         * if (controler.isShowing()) { controler.update(0, 0, 0, 0);
+         * isControllerShow = false; }
+         */
         if (mSoundWindow.isShowing()) {
             mSoundWindow.dismiss();
             isSoundShow = false;
@@ -241,8 +232,8 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
     }
 
     public void showController() {
-        //controler.update(0, 0, screenWidth, controlHeight);
-        //isControllerShow = true;
+        // controler.update(0, 0, screenWidth, controlHeight);
+        // isControllerShow = true;
     }
 
     @Override
@@ -270,9 +261,9 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
     @Override
     public void onStop() {
         // TODO Auto-generated method stub
-/*        if (controler.isShowing()) {
-            controler.dismiss();
-        }*/
+        /*
+         * if (controler.isShowing()) { controler.dismiss(); }
+         */
         if (mSoundWindow.isShowing()) {
             mSoundWindow.dismiss();
         }
@@ -297,7 +288,7 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
         if (file == null || !file.exists()) {
             return;
         }
-        
+
         file.listFiles(new FileFilter() {
 
             @Override
@@ -332,7 +323,6 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
         if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
 
             vv.stopPlayback();
-
 
             int result = data.getIntExtra("CHOOSE", -1);
             Log.d("RESULT", "" + result);
@@ -413,29 +403,32 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
 
                 vv.setVideoScale(mWidth, mHeight);
 
-                FreeMode.sInstance.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                FreeMode.sInstance.getWindow().clearFlags(
+                        WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
                 break;
         }
     }
+
     private void initMode()
     {
-    	if(curMode ==real_mode)
+        if (curMode == real_mode)
         {
-        	String uri2 = "android.resource://" +getActivity().getPackageName() + "/" + R.raw.road1;
-        	vv.setVideoURI(Uri.parse(uri2));        
-        	vv.start();
+            String uri2 = "android.resource://" + getActivity().getPackageName() + "/"
+                    + R.raw.road1;
+            vv.setVideoURI(Uri.parse(uri2));
+            vv.start();
         }
     }
-    
+
     private void initVideoView(final View parentView) {
 
         vv = (VideoView) parentView.findViewById(R.id.vv);
-        
+
         vv.clearAnimation();
-        
+
         vv.setBackgroundDrawable(null);
-        
+
         vv.setOnErrorListener(new OnErrorListener() {
 
             @Override
@@ -529,48 +522,37 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
                 setVideoScale(SCREEN_FULL);
                 Log.d(TAG, "faywong OnPreparedListener()");
 
-/*                FreeMode.sInstance.mHandler.postDelayed(new Runnable() {
-                    
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        if (vv != null) {
-                            if (vv.isPlaying()) {
-                                bn3.setImageResource(R.drawable.pause);
-                                Log.d(TAG, "faywong pause");
-                                hideControllerDelay();
-                            } else {
-                                bn3.setImageResource(R.drawable.play);
-                                Log.d(TAG, "faywong play");
-                            }
-                        }
-                    }
-                }, 200);*/
-                
-/*                isFullScreen = false;
-                if (isControllerShow) {
-                    showController();
-                }
+                /*
+                 * FreeMode.sInstance.mHandler.postDelayed(new Runnable() {
+                 * @Override public void run() { // TODO Auto-generated method
+                 * stub if (vv != null) { if (vv.isPlaying()) {
+                 * bn3.setImageResource(R.drawable.pause); Log.d(TAG,
+                 * "faywong pause"); hideControllerDelay(); } else {
+                 * bn3.setImageResource(R.drawable.play); Log.d(TAG,
+                 * "faywong play"); } } } }, 200);
+                 */
 
-                int i = vv.getDuration();
-                Log.d("onCompletion", "" + i);
-                seekBar.setMax(i);
-                i /= 1000;
-                int minute = i / 60;
-                int hour = minute / 60;
-                int second = i % 60;
-                minute %= 60;
-                durationTextView.setText(String.format("%02d:%02d:%02d", hour,
-                        minute, second));*/
+                /*
+                 * isFullScreen = false; if (isControllerShow) {
+                 * showController(); } int i = vv.getDuration();
+                 * Log.d("onCompletion", "" + i); seekBar.setMax(i); i /= 1000;
+                 * int minute = i / 60; int hour = minute / 60; int second = i %
+                 * 60; minute %= 60;
+                 * durationTextView.setText(String.format("%02d:%02d:%02d",
+                 * hour, minute, second));
+                 */
 
                 vv.start();
-                Drawable pauseDrawable = FreeMode.sInstance.getResources().getDrawable(R.drawable.pause);
+                Drawable pauseDrawable = FreeMode.sInstance.getResources().getDrawable(
+                        R.drawable.pause);
                 bn3.setImageResource(R.drawable.pause);
                 bn3.setImageDrawable(pauseDrawable);
                 Log.d(TAG, "faywong OnPreparedListener() setImageResource() pause");
 
-/*                hideControllerDelay();
-                myHandler.sendEmptyMessage(PROGRESS_CHANGED);*/
+                /*
+                 * hideControllerDelay();
+                 * myHandler.sendEmptyMessage(PROGRESS_CHANGED);
+                 */
             }
         });
 
@@ -579,11 +561,11 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
             @Override
             public void onCompletion(MediaPlayer arg0) {
                 // TODO Auto-generated method stub
-            	if(curMode == real_mode)
-            	{
-            		initMode();
-            		return;
-            	}
+                if (curMode == real_mode)
+                {
+                    initMode();
+                    return;
+                }
                 int n = playList.size();
                 isOnline = false;
                 if (++position < n) {
@@ -596,8 +578,11 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
         });
     }
 
-    protected void finish() {
+    public void finish() {
         // TODO Auto-generated method stub
+        if (vv != null) {
+            vv.stopPlayback();
+        }
         FreeMode.sInstance.getSupportFragmentManager().beginTransaction()
                 .remove(VideoPlayerFragment.this).commit();
     }
@@ -642,8 +627,10 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
         controlView = FreeMode.sInstance.getLayoutInflater().inflate(
                 R.layout.video_controller, null);
         // controler = new PopupWindow(controlView);
-        //durationTextView = (TextView) controlView.findViewById(R.id.duration);
-        //playedTextView = (TextView) controlView.findViewById(R.id.has_played);
+        // durationTextView = (TextView)
+        // controlView.findViewById(R.id.duration);
+        // playedTextView = (TextView)
+        // controlView.findViewById(R.id.has_played);
 
         mSoundView = new SoundView(FreeMode.sInstance);
         mSoundView.setOnVolumeChangeListener(new OnVolumeChangedListener() {
@@ -708,7 +695,7 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
             }
 
         });
-        
+
         // start/pause button
         bn3.setOnClickListener(new OnClickListener() {
 
@@ -791,36 +778,19 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
 
         });
 
-/*        seekBar = (SeekBar) controlView.findViewById(R.id.seekbar);
-        seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-
-            @Override
-            public void onProgressChanged(SeekBar seekbar, int progress,
-                    boolean fromUser) {
-                // TODO Auto-generated method stub
-
-                if (fromUser) {
-
-                    if (!isOnline) {
-                        vv.seekTo(progress);
-                    }
-
-                }
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar arg0) {
-                // TODO Auto-generated method stub
-                myHandler.removeMessages(HIDE_CONTROLER);
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // TODO Auto-generated method stub
-                myHandler.sendEmptyMessageDelayed(HIDE_CONTROLER, TIME);
-            }
-        });*/
+        /*
+         * seekBar = (SeekBar) controlView.findViewById(R.id.seekbar);
+         * seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+         * @Override public void onProgressChanged(SeekBar seekbar, int
+         * progress, boolean fromUser) { // TODO Auto-generated method stub if
+         * (fromUser) { if (!isOnline) { vv.seekTo(progress); } } }
+         * @Override public void onStartTrackingTouch(SeekBar arg0) { // TODO
+         * Auto-generated method stub myHandler.removeMessages(HIDE_CONTROLER);
+         * }
+         * @Override public void onStopTrackingTouch(SeekBar seekBar) { // TODO
+         * Auto-generated method stub
+         * myHandler.sendEmptyMessageDelayed(HIDE_CONTROLER, TIME); } });
+         */
 
         getScreenSize();
 
@@ -884,19 +854,19 @@ public class VideoPlayerFragment extends Fragment implements OnClickListener, Fr
     @Override
     public void onSwitchedIn() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void onSwitchedOut() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void onToggleScreen() {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

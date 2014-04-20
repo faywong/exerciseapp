@@ -13,5 +13,6 @@
     <color name="blue_light">#d50000ff</color>
     <color name="gray">#a0ffffff</color>
     <color name="primary_text_color">#363636</color>
-
+    <color name="transparent">#00000000</color>
+    
 </resources>
