@@ -7,7 +7,7 @@ An application for exercise in gym.
 
 Author
 ======
-faywong<philip584521@gmail.com>
+faywong &lt;philip584521@gmail.com&gt;
 
 Copyright
 =========
