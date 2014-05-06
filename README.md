@@ -1,13 +1,12 @@
 exerciseapp
 ===========
-
-ExerciseApp
-
 An application for exercise in gym.
+
 
 Author
 ======
 faywong &lt;philip584521@gmail.com&gt;
+
 
 Copyright
 =========
